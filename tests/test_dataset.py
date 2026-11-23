@@ -27,3 +27,10 @@ def test_regime_matrices():
     assert set(r.drop(columns=["iso3", "year"]).stack().unique()).issubset({0, 1})
     q = pd.read_csv(settings.PROCESSED / "regime_matrix_quarterly.csv")
     assert q.shape[0] == 2048
+
+
+def test_capital_stock_uses_rnna():
+    a = pd.read_parquet(settings.PROCESSED / "macro_annual_long.parquet")
+    v = a[(a.iso3 == "BRA") & (a.year == 2019) & (a.variable == "capital_stock")]["value"].iloc[0]
+    # rnna (milhões USD 2017) ~ 12,7 milhões; rkna (índice 2017=1) ~ 1,02
+    assert v > 1_000_000

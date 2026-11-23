@@ -1,0 +1,7 @@
+﻿pais,variable,peak,peak_horizon,n,lags_usados,stable,sample_end
+BRA,output_gap,-0.3205117327847089,5,108,2,True,2025-12-31
+BRA,inflation,0.37996312294280377,2,108,2,True,2025-12-31
+USA,output_gap,0.07581006786437955,3,105,1,True,2025-03-31
+USA,inflation,-0.23029717459679067,9,105,1,True,2025-03-31
+MEX,output_gap,-0.30841821219955873,1,102,1,True,2024-06-30
+MEX,inflation,-0.03124524757162198,5,102,1,True,2024-06-30

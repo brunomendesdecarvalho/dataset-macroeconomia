@@ -105,6 +105,8 @@ def codebook() -> None:
         "- **Spread de crédito**: não há série trimestral harmonizada; a variável foi removida do dataset e a lacuna está registrada na auditoria.",
         "- **PIB real**: milhões de LC a preços constantes; a base varia por país. Não comparar níveis entre países sem `gdp_real_usd`.",
         "- **PPPs**: `gdp_ppp_usd` em milhões de int$ (WEO PPPGDP × 1000).",
+        "- **FRED**: os templates usam `{ISO2}` (código de 2 letras); o ID exato de cada país/série está em `source_code`. Para EUA/MEX, o SVAR empírico usa `short_rate` e `reer`.",
+        "- **Capital**: `capital_stock` usa `rnna` (PWT, capital a preços nacionais constantes, milhões USD 2017), não `rkna` (índice 2017=1).",
         "- **Forecast**: 2026 é ano em curso (preliminary); 2027+ não entra. Projeções WEO/GMD para 2026 são marcadas.",
         "",
         "## 4. Registro de fontes",

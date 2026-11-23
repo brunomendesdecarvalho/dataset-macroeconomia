@@ -247,7 +247,7 @@ groups:
     justification: "Referência de fronteira tecnológica e de política monetária."
   QUARTERLY_CORE:
     name: Núcleo trimestral
-    members: [BRA, USA, DEU, GBR, JPN, CAN, MEX, AUS, FRA, ITA, KOR, ZAF, TUR, IND, IDN, CHN]
+    members: [BRA, USA, DEU, GBR, JPN, CAN, MEX, AUS, FRA, ITA, KOR, ZAF, TUR, IDN, ARG, SAU]
     justification: >-
       Países com PIB trimestral encadeado e deflator/CPI trimestral estáveis em
       FRED/OCDE-MEI, IBGE e BCB. O núcleo mínimo solicitado (BRA, USA, DEU, GBR,

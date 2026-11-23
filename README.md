@@ -24,6 +24,7 @@ Dataset anual (1960–2026) e trimestral (1995T1–2026T4) para **22 países + a
 | Cobertura país × variável | `data/processed/coverage_matrix_annual.csv`, `coverage.csv` |
 | DSGE pequeno (posterior, IRF, FEVD, identificação) | `data/processed/dsge_small_*` |
 | DSGE médio (calibração, momentos, sensibilidade) | `data/processed/dsge_medium_*` |
+| Módulo empírico (Taylor, Phillips, SVAR, LP) | `docs/07_empirical_svar.md`, `src/macrodata/empirical.py` |
 
 ### Números-chave
 
@@ -51,6 +52,7 @@ make fetch      # baixa/cacheia GMD, WDI, WEO, PWT, FRED, BCB, IBGE, Focus
 make build      # harmoniza e grava o dataset
 make validate   # cross-source, identidades, ADF/KPSS, Bai-Perron, Chow
 make dsge       # estima NK pequeno (BRA/EUA) + simula SW-lite
+make empirical  # Taylor, Phillips, SVAR recursivo e Projeções Locais (Brasil/EUA/MEX)
 make reports    # figuras, tabelas e docs
 make test       # pytest
 ```

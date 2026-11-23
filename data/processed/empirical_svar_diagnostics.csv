@@ -1,0 +1,3 @@
+﻿pais,n,lags_aic,lags_bic,lags_usados,estavel,max_modulo_raiz_inversa,whiteness_p,n_boot_ok,sample_start,sample_end
+BRA,108,4,2,2,True,0.8083931398675435,0.002161569942703718,400,1999-03-31,2025-12-31
+BRA_core,108,2,2,2,True,0.8023792251833196,0.013088947323087713,200,1999-03-31,2025-12-31

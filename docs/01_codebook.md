@@ -59,6 +59,8 @@ Extração: **2026-11-23T16:43:19Z**. Âncora: **Brasil**. Anual 1960–2026; tr
 - **Spread de crédito**: não há série trimestral harmonizada; a variável foi removida do dataset e a lacuna está registrada na auditoria.
 - **PIB real**: milhões de LC a preços constantes; a base varia por país. Não comparar níveis entre países sem `gdp_real_usd`.
 - **PPPs**: `gdp_ppp_usd` em milhões de int$ (WEO PPPGDP × 1000).
+- **FRED**: os templates usam `{ISO2}` (código de 2 letras); o ID exato de cada país/série está em `source_code`. Para EUA/MEX, o SVAR empírico usa `short_rate` e `reer`.
+- **Capital**: `capital_stock` usa `rnna` (PWT, capital a preços nacionais constantes, milhões USD 2017), não `rkna` (índice 2017=1).
 - **Forecast**: 2026 é ano em curso (preliminary); 2027+ não entra. Projeções WEO/GMD para 2026 são marcadas.
 
 ## 4. Registro de fontes
@@ -142,7 +144,7 @@ Extração: **2026-11-23T16:43:19Z**. Âncora: **Brasil**. Anual 1960–2026; tr
 | population_wdi | A | População (WDI) | pessoas | WDI | SP.POP.TOTL | log | validation | SOLOW | 23.0 | 98.50746268656717 | Validação da população. |
 | world_gdp_real | A | PIB real mundial | USD constantes de 2015 | WDI | NY.GDP.MKTP.KD | log | exogenous | MF,DSGE_M | 23.0 | 98.50746268656717 | 1960–2025/26 |
 | world_gdp_growth | A | Crescimento do PIB mundial | % a.a. | derived | dlog(world_gdp_real) | yoy | exogenous | MF,DSGE_M | 1.0 | 97.01492537313432 | Choque externo comum. |
-| capital_stock | A | Estoque de capital | milhões de USD constantes de 2017 | PWT | rkna | log | endogenous | SOLOW,DSGE_M | 22.0 | 89.55223880597015 | 1950–2019 |
+| capital_stock | A | Estoque de capital | milhões de USD constantes de 2017 | PWT | rnna | log | endogenous | SOLOW,DSGE_M | 22.0 | 89.55223880597015 | 1950–2019 |
 | tfp | A | PTF (TFP) | índice 2017=1 | PWT | rtfpna | log | endogenous | SOLOW,DSGE_M | 22.0 | 89.55223880597015 | 1950–2019 |
 | employment | A | Emprego | milhões de trabalhadores | PWT | emp | log | endogenous | SOLOW,DSGE_M | 22.0 | 89.55223880597015 | 1950–2019 |
 | hours_worked | A | Horas trabalhadas por trabalhador | horas/ano | PWT | avh | log | endogenous | DSGE_M | 21.0 | 89.55223880597015 | 1950–2019 |
@@ -165,18 +167,18 @@ Extração: **2026-11-23T16:43:19Z**. Âncora: **Brasil**. Anual 1960–2026; tr
 | currency_crisis | A | Crise cambial (dummy) | 0/1 | GMD | CurrencyCrisis | dummy | regime | MF,DSGE_M | 21.0 | 86.56716417910448 | Dummy anual do GMD. |
 | sovereign_debt_crisis | A | Crise de dívida soberana (dummy) | 0/1 | GMD | SovDebtCrisis | dummy | regime | DSGE_M | 21.0 | 86.56716417910448 | Dummy anual do GMD. |
 | output_per_worker | A | Produto por trabalhador | LC constantes por trabalhador | derived | gdp_real/employment | log | endogenous | SOLOW,DSGE_M | 22.0 | 89.55223880597015 | Produtividade média do trabalho. |
-| gdp_real | Q | PIB real trimestral | milhões de LC, preços constantes, SA | FRED | NGDPRSAXDC{ISO3}Q | log | endogenous | ADAS,DSGE_S,DSGE_M | 16.0 | 98.4375 | 1996–2026T2 |
+| gdp_real | Q | PIB real trimestral | milhões de LC, preços constantes, SA | FRED | NGDPRSAXDC{ISO2}Q | log | endogenous | ADAS,DSGE_S,DSGE_M | 16.0 | 98.4375 | 1996–2026T2 |
 | gdp_real_growth | Q | Crescimento trimestral do PIB | % a.a. (SAAR) | derived | 400*dlog(gdp_real) | yoy | endogenous | ADAS,DSGE_S,DSGE_M | 16.0 | 97.65625 | 1996–2026T2 |
 | potential_gdp | Q | PIB potencial trimestral | milhões de LC constantes | derived | HP(log(gdp_real), λ=1600) | hp_trend | latent | ADAS,DSGE_S,DSGE_M | 16.0 | 98.4375 | 1996–2026T2 |
 | output_gap | Q | Hiato do produto trimestral | % do PIB potencial | derived | 100*(log(gdp_real)-log(potential_gdp)) | hp_gap | latent | ADAS,PC,TR,DSGE_S,DSGE_M | 16.0 | 98.4375 | 1996–2026T2 |
-| inflation | Q | Inflação ao consumidor trimestral | % a.a. (variação 4 trimestres) | FRED | CPALTT01{ISO3}Q659N | yoy | endogenous | ADAS,PC,TR,DSGE_S,DSGE_M | 14.0 | 94.53125 | 1996–2026T2 |
+| inflation | Q | Inflação ao consumidor trimestral | % a.a. (variação 4 trimestres) | FRED | CPALTT01{ISO2}Q659N | yoy | endogenous | ADAS,PC,TR,DSGE_S,DSGE_M | 14.0 | 94.53125 | 1996–2026T2 |
 | core_inflation | Q | Núcleo da inflação | % a.a. | BCB | 11427 | yoy | endogenous | PC,DSGE_S | 2.0 | 100.0 | 2001–2026 |
-| unemployment | Q | Taxa de desemprego trimestral | % | FRED | LRHUTTTT{ISO3}Q156S | level | endogenous | PC,DSGE_M | 12.0 | 99.21875 | 1996–2026T2 |
+| unemployment | Q | Taxa de desemprego trimestral | % | FRED | LRHUTTTT{ISO2}Q156S | level | endogenous | PC,DSGE_M | 12.0 | 99.21875 | 1996–2026T2 |
 | policy_rate | Q | Taxa de política monetária trimestral | % a.a. | BCB | 432 | level | exogenous | TR,DSGE_S,DSGE_M | 1.0 | 87.5 | 1996–2026T2 |
-| short_rate | Q | Juro de curto prazo trimestral | % a.a. | FRED | IR3TIB01{ISO3}Q156N | level | endogenous | ISLM,MF,DSGE_S | 13.0 | 99.21875 | Taxa de 3 meses interbancária. |
-| long_rate | Q | Juro de longo prazo trimestral | % a.a. | FRED | IRLTLT01{ISO3}Q156N | level | endogenous | ISLM,DSGE_M | 11.0 | 99.21875 | Título soberano de 10 anos. |
-| exchange_rate_nominal | Q | Taxa de câmbio nominal trimestral | LC por USD | FRED | DEX{ISO3} | log | endogenous | MF,DSGE_M | 12.0 | 100.0 | 1996–2026T2 |
-| reer | Q | Câmbio real efetivo trimestral | índice 2010=100 | FRED | RB{ISO3}BIS | log | endogenous | MF,DSGE_M | 16.0 | 100.0 | 1994–2026T3 |
+| short_rate | Q | Juro de curto prazo trimestral | % a.a. | FRED | IR3TIB01{ISO2}Q156N | level | endogenous | ISLM,MF,DSGE_S | 13.0 | 99.21875 | Taxa de 3 meses interbancária. |
+| long_rate | Q | Juro de longo prazo trimestral | % a.a. | FRED | IRLTLT01{ISO2}Q156N | level | endogenous | ISLM,DSGE_M | 11.0 | 99.21875 | Título soberano de 10 anos. |
+| exchange_rate_nominal | Q | Taxa de câmbio nominal trimestral | LC por USD | FRED | DEX{ISO2} | log | endogenous | MF,DSGE_M | 12.0 | 100.0 | 1996–2026T2 |
+| reer | Q | Câmbio real efetivo trimestral | índice 2010=100 | FRED | RB{ISO2}BIS | log | endogenous | MF,DSGE_M | 16.0 | 100.0 | 1994–2026T3 |
 | inflation_expectations | Q | Expectativas de inflação (survey) | % a.a. 12 meses à frente | BCB_FOCUS | ExpectativasMercadoInflacao12Meses | level | exogenous | PC,TR,DSGE_S | 2.0 | 89.453125 | 2001–2026 |
 | consumption_real | Q | Consumo das famílias real | milhões de BRL, preços de 1995 | IBGE | 6612/93404 | log | endogenous | DSGE_M | 1.0 | 95.3125 | 1996–2026T2 |
 | gov_exp_real | Q | Consumo do governo real | milhões de BRL, preços de 1995 | IBGE | 6612/93405 | log | exogenous | DSGE_M | 1.0 | 95.3125 | 1996–2026T2 |
