@@ -23,7 +23,7 @@ for _p in (RAW, PROCESSED, REPORTS, FIGURES, TABLES, DOCS, RAW / "gmd", RAW / "w
            RAW / "weo", RAW / "pwt", RAW / "fred", RAW / "bcb", RAW / "ibge", RAW / "focus"):
     _p.mkdir(parents=True, exist_ok=True)
 
-VERSION = "1.0.0"
+VERSION = "2.0.0"
 ANNUAL_START = 1960
 ANNUAL_END = 2026          # 2026 = ano em curso; marcado como preliminar
 ANNUAL_ACTUAL_END = 2025   # última observação anual consolidada
@@ -55,7 +55,7 @@ def load_variables() -> pd.DataFrame:
     df = pd.read_csv(CONFIG / "variables.psv", sep="|", dtype=str, keep_default_na=False)
     df.columns = [c.strip() for c in df.columns]
     for col in ("id", "freq", "label", "unit", "source", "code", "transform", "role",
-                "models", "dsge_var", "measurement_equation", "shock", "coverage_note", "notes"):
+                "models", "coverage_note", "notes"):
         if col not in df.columns:
             df[col] = ""
         df[col] = df[col].astype(str).str.strip()

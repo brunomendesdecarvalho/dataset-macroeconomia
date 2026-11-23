@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 from statsmodels.tsa.filters.hp_filter import hpfilter
 
-from . import regimes, settings
+from . import blocks, regimes, settings
 from .http import quarter_end
 
 CFG = settings.VARIABLES.set_index(["id", "freq"])
@@ -15,12 +15,11 @@ COUNTRY_NAME = {**{c["iso3"]: c["name_pt"] for c in settings.COUNTRIES_YML["coun
                 **{a["iso3"]: a["name_pt"] for a in settings.COUNTRIES_YML.get("aggregates", [])},
                 "WLD": "Mundo (agregado)"}
 
-BASE_COLS = ["iso3", "country", "date", "year", "variable", "value", "unit", "freq",
-             "source", "source_code", "source_detail", "source_url", "vintage",
-             "transformation", "transform_applied", "role", "model", "dsge_var",
-             "measurement_equation", "shock", "coverage_note", "notes",
-             "is_forecast", "quality_flag", "seasonal_adjustment", "imputation",
-             "extraction_date", "regime_dummy"]
+BASE_COLS = ["iso3", "country", "date", "year", "period", "variable", "block",
+             "value", "unit", "freq", "source", "source_code", "source_detail",
+             "source_url", "vintage", "transformation", "transform_applied", "role",
+             "model", "coverage_note", "notes", "is_forecast", "quality_flag",
+             "seasonal_adjustment", "imputation", "extraction_date", "regime_dummy"]
 
 
 def _cfg(var: str, freq: str) -> pd.Series | None:
@@ -65,9 +64,6 @@ def _attach(df: pd.DataFrame, freq: str) -> pd.DataFrame:
             g["transformation"] = "level"
             g["role"] = "exogenous"
             g["model"] = ""
-            g["dsge_var"] = ""
-            g["measurement_equation"] = ""
-            g["shock"] = ""
             g["coverage_note"] = ""
             g["notes"] = "Variável sem entrada no dicionário canônico; verificar."
         else:
@@ -75,11 +71,9 @@ def _attach(df: pd.DataFrame, freq: str) -> pd.DataFrame:
             g["transformation"] = c["transform"]
             g["role"] = c["role"]
             g["model"] = c["models"]
-            g["dsge_var"] = c["dsge_var"]
-            g["measurement_equation"] = c["measurement_equation"]
-            g["shock"] = c["shock"]
             g["coverage_note"] = c["coverage_note"]
             g["notes"] = c["notes"]
+        g["block"] = blocks.block_of(var)
         rows.append(g)
     df = pd.concat(rows, ignore_index=True) if rows else df
     df["country"] = df["iso3"].map(COUNTRY_NAME).fillna(df["iso3"])
@@ -99,6 +93,11 @@ def _finalize(df: pd.DataFrame) -> pd.DataFrame:
         if col not in df.columns:
             df[col] = ""
     df["year"] = pd.to_datetime(df["date"], errors="coerce").dt.year
+    df["period"] = np.where(df["freq"] == "A", df["year"].astype("Int64").astype(str),
+                            pd.to_datetime(df["date"]).dt.to_period("Q").astype(str))
+    if "block" not in df.columns:
+        df["block"] = "macro_core"
+    df["block"] = df["block"].fillna("macro_core")
     df = df[BASE_COLS].copy()
     df["value"] = pd.to_numeric(df["value"], errors="coerce")
     df = df.dropna(subset=["value"])
@@ -363,6 +362,7 @@ def build_annual(parsed: dict[str, pd.DataFrame]) -> pd.DataFrame:
         ann = pd.concat([ann, br_inf], ignore_index=True)
 
     ann = _attach(ann, "A")
+    ann = _add_heterodox(ann, parsed)
 
     # Metas de inflação
     tgt_rows = []
@@ -452,7 +452,7 @@ def build_annual(parsed: dict[str, pd.DataFrame]) -> pd.DataFrame:
     kor["variable"] = "capital_output_ratio"
     kor["date"] = pd.to_datetime(dict(year=kor["year"], month=12, day=31))
     kor["source"] = "derived"
-    kor["source_code"] = "rkna/rgdpna"
+    kor["source_code"] = "rnna/rgdpna"
     kor["source_detail"] = "PWT 10.01, ambos em USD 2017"
     kor["is_forecast"] = False
     kor["quality_flag"] = "derived"
@@ -488,6 +488,65 @@ def build_annual(parsed: dict[str, pd.DataFrame]) -> pd.DataFrame:
     ann = pd.concat([ann, wg], ignore_index=True)
 
     return _finalize(ann)
+
+
+def _add_heterodox(ann: pd.DataFrame, parsed: dict[str, pd.DataFrame]) -> pd.DataFrame:
+    """Incorpora os 4 blocos heterodoxos e as derivadas de PWT/GMD."""
+    e = parsed.get("wdi_extra", pd.DataFrame()).copy()
+    if e.empty:
+        return ann
+    e = e[(e.year >= settings.ANNUAL_START) & (e.year <= settings.ANNUAL_END)].copy()
+    e["date"] = pd.to_datetime(dict(year=e["year"], month=12, day=31))
+    e["is_forecast"] = e["year"] > settings.ANNUAL_ACTUAL_END
+    e["quality_flag"] = np.where(e["year"] == 2026, "preliminary", "ok")
+    e = _attach(e, "A")
+
+    def base_frame(var: str) -> pd.DataFrame:
+        return e[e.variable == var][["iso3", "year", "date", "value"]].rename(
+            columns={"value": var})
+
+    # co2_per_gdp = CO2 total (Mt) / PIB nominal USD (milhões) * 1000 -> kg/USD
+    co2 = base_frame("co2_total_mt")
+    gdp = ann[ann.variable == "gdp_nominal_usd"][["iso3", "year", "value"]].rename(
+        columns={"value": "gdp_usd_mm"})
+    m = co2.merge(gdp, on=["iso3", "year"], how="inner")
+    m["value"] = m["co2_total_mt"] * 1000.0 / m["gdp_usd_mm"].replace(0, np.nan)
+    co2_gdp = m[["iso3", "year", "date", "value"]].dropna()
+    co2_gdp["variable"] = "co2_per_gdp"
+    co2_gdp["source"] = "derived"
+    co2_gdp["source_code"] = "co2_total_mt*1000/gdp_nominal_usd"
+    co2_gdp["source_detail"] = "WDI EN.GHG.CO2.MT.CE.AR5 / GMD nGDP/USDfx"
+    co2_gdp["is_forecast"] = False
+    co2_gdp["quality_flag"] = "derived"
+
+    # profit_share = 1 - labor_share; wage_bill_gdp = 100 * labor_share
+    ls = ann[ann.variable == "labor_share"][["iso3", "year", "date", "value"]].rename(
+        columns={"value": "labor_share"})
+    profit = ls.copy(); profit["value"] = 1.0 - profit["labor_share"]
+    profit["variable"] = "profit_share"; profit["source"] = "derived"
+    profit["source_code"] = "1 - labor_share"; profit["source_detail"] = "PWT 10.01 (labsh)"
+    profit["is_forecast"] = False; profit["quality_flag"] = "derived"
+    wage = ls.copy(); wage["value"] = 100.0 * wage["labor_share"]
+    wage["variable"] = "wage_bill_gdp"; wage["source"] = "derived"
+    wage["source_code"] = "100 * labor_share"; wage["source_detail"] = "PWT 10.01 (labsh)"
+    wage["is_forecast"] = False; wage["quality_flag"] = "derived"
+
+    # fuel_ores_exports_pct = fuel + ores/metals (soma estrita)
+    fuel = base_frame("fuel_exports_pct")
+    ores = base_frame("ores_metals_exports_pct")
+    fo = fuel.merge(ores, on=["iso3", "year", "date"], suffixes=("_fuel", "_ores"))
+    fo["value"] = fo["fuel_exports_pct"] + fo["ores_metals_exports_pct"]
+    fo = fo[["iso3", "year", "date", "value"]].dropna()
+    fo["variable"] = "fuel_ores_exports_pct"
+    fo["source"] = "derived"
+    fo["source_code"] = "TX.VAL.FUEL.ZS.UN + TX.VAL.MMTL.ZS.UN"
+    fo["source_detail"] = "WDI; soma dos dois componentes"
+    fo["is_forecast"] = False; fo["quality_flag"] = "derived"
+
+    keep = e[~e.variable.isin(["co2_total_mt", "fuel_exports_pct", "ores_metals_exports_pct"])]
+    derived = pd.concat([co2_gdp, profit, wage, fo], ignore_index=True)
+    derived = _attach(derived, "A")
+    return pd.concat([ann, keep, derived], ignore_index=True)
 
 
 # -----------------------------------------------------------------------------
@@ -750,7 +809,7 @@ def write_outputs(annual: pd.DataFrame, quarterly: pd.DataFrame) -> None:
 
 if __name__ == "__main__":
     parsed = {n: pd.read_parquet(settings.RAW / f"parsed_{n}.parquet")
-              for n in ("gmd", "wdi", "weo", "pwt", "fred", "bcb", "ibge", "focus")}
+              for n in ("gmd", "wdi", "wdi_extra", "weo", "pwt", "fred", "bcb", "ibge", "focus")}
     a = build_annual(parsed)
     q = build_quarterly(parsed)
     a = attach_regimes(a)

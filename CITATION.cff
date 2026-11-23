@@ -1,13 +1,34 @@
 cff-version: 1.2.0
-title: "Dataset macroeconômico cross-country — âncora Brasil (v1.0.0)"
 message: "Se usar este dataset, cite as fontes originais e este repositório."
+title: "MacroData Brasil: dataset macroeconômico cross-country com variáveis heterodoxas e baseline SVAR"
+abstract: >-
+  Dataset macroeconômico cross-country com âncora no Brasil, painel anual
+  1960-2026 e trimestral 1995-2026, 22 países soberanos e grupos fechados,
+  integrando variáveis macroeconômicas ortodoxas e quatro blocos heterodoxos
+  (distribuição e classe, restrição externa, financiarização e crédito,
+  ecologia e estrutura produtiva), com baseline empírico de Taylor, Phillips,
+  SVAR recursivo e projeções locais.
 type: dataset
-version: 1.0.0
+version: 2.0.0
 date-released: 2026-11-23
-license: MIT
+license: CC-BY-4.0
+doi: "[DOI]"
+url: "[URL]"
+repository-code: "[URL do repositório]"
 keywords:
   - macroeconomia
   - cross-country
   - Brasil
-  - DSGE
   - dados
+  - SVAR
+  - projeções locais
+  - variáveis heterodoxas
+  - distribuição de renda
+  - restrição externa
+  - financiarização
+  - ecologia
+authors:
+  - family-names: "[Sobrenome]"
+    given-names: "[Nome]"
+    affiliation: "[Instituição]"
+    orcid: "[ORCID]"

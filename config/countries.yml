@@ -262,7 +262,7 @@ groups:
     members: [BRA, ARG, PER, TUR, RUS]
     justification: >-
       Países com inflação anual > 100% em algum momento pós-1960; justifica
-      amostra DSGE pós-estabilização e dummies de hiperinflação/planos.
+      amostra pós-estabilização e dummies de hiperinflação/planos.
   IT_REGIME:
     name: Regime de metas de inflação (datas em regimes.yml)
     members: [BRA, MEX, CHL, COL, PER, ZAF, TUR, IDN, KOR, GBR, CAN, AUS, DEU, FRA, ITA, EU, USA, JPN, IND, ARG]

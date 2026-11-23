@@ -143,6 +143,84 @@ def fetch_wdi(force: bool = False) -> pd.DataFrame:
     return pd.concat(frames, ignore_index=True).dropna(subset=["value"])
 
 
+
+
+# -----------------------------------------------------------------------------
+# 2b. WDI — blocos heterodoxos (novos indicadores; fast-fail, timeout 20 s)
+# -----------------------------------------------------------------------------
+WDI_HETERODOX: dict[str, str] = {
+    # distribuição e classe
+    "gini_index": "SI.POV.GINI",
+    "income_share_top10": "SI.DST.10TH.10",
+    "income_share_bottom20": "SI.DST.FRST.20",
+    "vulnerable_employment_pct": "SL.EMP.VULN.ZS",
+    # restrição externa e hierarquia monetária
+    "terms_of_trade_index": "TT.PRI.MRCH.XD.WD",
+    "intl_reserves_usd": "FI.RES.TOTL.CD",
+    "intl_reserves_months_imports": "FI.RES.TOTL.MO",
+    "external_debt_gni": "DT.DOD.DECT.GN.ZS",
+    "debt_service_exports": "DT.TDS.DECT.EX.ZS",
+    "fdi_net_inflows_gdp": "BX.KLT.DINV.WD.GD.ZS",
+    # financiarização e crédito
+    "lending_rate": "FR.INR.LEND",
+    "interest_rate_spread": "FR.INR.LNDP",
+    "bank_capital_to_assets": "FB.BNK.CAPA.ZS",
+    "bank_npl_pct": "FB.AST.NPER.ZS",
+    "market_cap_gdp": "CM.MKT.LCAP.GD.ZS",
+    # ecologia e estrutura produtiva
+    "co2_per_capita": "EN.GHG.CO2.PC.CE.AR5",
+    "co2_total_mt": "EN.GHG.CO2.MT.CE.AR5",
+    "renewable_electricity_pct": "EG.ELC.RNEW.ZS",
+    "energy_intensity_gdp": "EG.EGY.PRIM.PP.KD",
+    "manufacturing_gdp": "NV.IND.MANF.ZS",
+    "agriculture_gdp": "NV.AGR.TOTL.ZS",
+    "manufactures_exports_pct": "TX.VAL.MANF.ZS.UN",
+    "fuel_exports_pct": "TX.VAL.FUEL.ZS.UN",
+    "ores_metals_exports_pct": "TX.VAL.MMTL.ZS.UN",
+}
+
+
+def fetch_wdi_extra(force: bool = False) -> pd.DataFrame:
+    """Baixa apenas os indicadores heterodoxos novos, com fast-fail.
+
+    Regras: timeout 20 s, zero retries; 400/403/404 abortam imediatamente a série.
+    Países/anos ausentes simplesmente não geram linha (sem imputação).
+    """
+    fetcher = CachedFetcher(force=force, timeout=20, max_retries=0)
+    frames = []
+    for var, code in WDI_HETERODOX.items():
+        url = (f"https://api.worldbank.org/v2/country/all/indicator/{code}"
+               f"?format=json&per_page=20000&date=1960:2026")
+        rel = f"wdi_extra/{code}.json"
+        try:
+            payload = fetcher.get_json(url, rel)
+        except Exception as exc:  # noqa: BLE001
+            print(f"[WDI-extra] falha {code}: {exc}")
+            continue
+        if not isinstance(payload, list) or len(payload) < 2 or payload[1] is None:
+            print(f"[WDI-extra] sem dados {code}")
+            continue
+        df = pd.DataFrame(payload[1])
+        if df.empty:
+            continue
+        df["iso3"] = df["countryiso3code"].replace("", np.nan)
+        df["iso3"] = df["iso3"].fillna(
+            df["country"].apply(lambda x: x.get("id") if isinstance(x, dict) else None))
+        df["year"] = pd.to_numeric(df["date"], errors="coerce")
+        df["value"] = pd.to_numeric(df["value"], errors="coerce")
+        df = df[df["iso3"].isin(settings.COUNTRIES_ALL) & df["year"].notna()]
+        df["variable"] = var
+        df["source"] = "WDI"
+        df["source_code"] = code
+        df["source_detail"] = f"World Bank WDI {code}"
+        df["freq"] = "A"
+        frames.append(df[["iso3", "year", "variable", "value", "source", "source_code",
+                          "source_detail", "freq"]])
+    if not frames:
+        return pd.DataFrame()
+    return pd.concat(frames, ignore_index=True).dropna(subset=["value"])
+
+
 # -----------------------------------------------------------------------------
 # 3. WEO — FMI DataMapper (pós-1980; projeções sinalizadas)
 # -----------------------------------------------------------------------------
@@ -514,6 +592,7 @@ def fetch_all(force: bool = False) -> dict[str, pd.DataFrame]:
     out = {
         "gmd": fetch_gmd(),
         "wdi": fetch_wdi(force=force),
+        "wdi_extra": fetch_wdi_extra(force=force),
         "weo": fetch_weo(force=force),
         "pwt": fetch_pwt(),
         "fred": fetch_fred(force=force),

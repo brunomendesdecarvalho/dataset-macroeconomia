@@ -8,7 +8,7 @@ Conteúdo:
   * Projeções Locais de Jordà (HAC) para o mesmo choque monetário;
   * Comparação cross-country (BRA, USA, MEX).
 
-NÃO baixa dados e NÃO usa a pasta dsge/. Lê apenas data/processed/.
+NÃO baixa dados. Lê apenas data/processed/.
 """
 from __future__ import annotations
 
@@ -75,7 +75,8 @@ def build_panel(iso: str, policy: str = "policy_rate",
     w["fx_dlog"] = 100 * np.log(w[fx]).diff()
     w["oil_dlog"] = 100 * np.log(w["oil_price"]).diff()
     w["policy"] = w[policy]
-    cols = ["output_gap", "inflation", "core_inflation", "policy", "fx_dlog",
+    w["log_gdp"] = 100 * np.log(w["gdp_real"])
+    cols = ["output_gap", "log_gdp", "inflation", "core_inflation", "policy", "fx_dlog",
             "inflation_expectations", "foreign_policy_rate", "oil_dlog",
             "g_gfc_2008", "g_pandemic_2020", "br_recession_2014", "br_pandemic"]
     out = w[[c for c in cols if c in w.columns]].copy()
@@ -215,11 +216,13 @@ class SVARResult:
     aic: int
     bic: int
     n_boot_ok: int
+    activity_name: str
+    trend: str
 
 
-def _fit_var(endog: pd.DataFrame, exog: pd.DataFrame, p: int):
+def _fit_var(endog: pd.DataFrame, exog: pd.DataFrame, p: int, trend: str = "c"):
     model = VAR(endog, exog=exog)
-    res = model.fit(p, trend="c")
+    res = model.fit(p, trend=trend)
     return res
 
 
@@ -240,7 +243,8 @@ def _scaled_irf(res, shock_idx: int, horizon: int = HORIZON) -> np.ndarray:
 
 
 def _bootstrap(res, endog: pd.DataFrame, exog: pd.DataFrame, p: int,
-               shock_idx: int, n_boot: int, seed: int = SEED) -> np.ndarray:
+               shock_idx: int, n_boot: int, seed: int = SEED,
+               trend: str = "c") -> np.ndarray:
     rng = np.random.default_rng(seed)
     fitted = res.fittedvalues
     resid = res.resid
@@ -251,7 +255,7 @@ def _bootstrap(res, endog: pd.DataFrame, exog: pd.DataFrame, p: int,
         y_b = np.vstack([endog.values[:p], fitted.values + resid.values[idx]])
         endog_b = pd.DataFrame(y_b, index=endog.index, columns=endog.columns)
         try:
-            r = _fit_var(endog_b, exog, p)
+            r = _fit_var(endog_b, exog, p, trend=trend)
             out.append(_scaled_irf(r, shock_idx))
         except Exception:
             continue
@@ -260,24 +264,32 @@ def _bootstrap(res, endog: pd.DataFrame, exog: pd.DataFrame, p: int,
 
 def fit_svar(iso: str = "BRA", policy: str = "policy_rate",
              fx: str = "exchange_rate_nominal", include_foreign: bool = True,
-             inflation_var: str = "inflation",
+             inflation_var: str = "inflation", activity: str = "gap",
+             trend: str | None = None,
              n_boot: int = N_BOOT, seed: int = SEED) -> SVARResult:
     df = build_panel(iso, policy=policy, fx=fx, include_foreign=include_foreign)
-    raw_endog = ["output_gap", inflation_var, "policy", "fx_dlog"]
+    if activity == "gap":
+        activity_col, activity_name = "output_gap", "output_gap"
+    elif activity == "level":
+        activity_col, activity_name = "log_gdp", "activity_level"
+    else:
+        raise ValueError("activity deve ser 'gap' ou 'level'")
+    trend = trend or ("c" if activity == "gap" else "ct")
+    raw_endog = [activity_col, inflation_var, "policy", "fx_dlog"]
     exog_cols = ["oil_dlog", "g_gfc_2008", "g_pandemic_2020"]
     if include_foreign:
         exog_cols = ["foreign_policy_rate"] + exog_cols
     d = _clean(df, raw_endog + exog_cols)
     endog = d[raw_endog].copy()
-    endog.columns = ["output_gap", "inflation", "policy_rate", "fx_dlog"]
+    endog.columns = [activity_name, "inflation", "policy_rate", "fx_dlog"]
     exog = d[exog_cols].copy()
     # remove controles sem variação (ex.: dummy sempre zero em subamostras)
     exog = exog.loc[:, exog.std(ddof=0) > 1e-12]
     p, order = _select_lag(endog, exog)
-    res = _fit_var(endog, exog, p)
+    res = _fit_var(endog, exog, p, trend=trend)
     shock_idx = 2
     irf = _scaled_irf(res, shock_idx)
-    boots = _bootstrap(res, endog, exog, p, shock_idx, n_boot=n_boot, seed=seed)
+    boots = _bootstrap(res, endog, exog, p, shock_idx, n_boot=n_boot, seed=seed, trend=trend)
     if len(boots) == 0:
         boots = np.array([irf])
     lo68 = np.quantile(boots, 0.16, axis=0)
@@ -325,7 +337,7 @@ def fit_svar(iso: str = "BRA", policy: str = "policy_rate",
                       roots_abs=roots, whiteness_p=float(wt),
                       aic=int(order.aic) if order.aic is not None else p,
                       bic=int(order.bic) if order.bic is not None else p,
-                      n_boot_ok=len(boots))
+                      n_boot_ok=len(boots), activity_name=activity_name, trend=trend)
 
 
 # ---------------------------------------------------------------------------
@@ -340,7 +352,7 @@ def local_projections(svar: SVARResult, horizon: int = HORIZON) -> pd.DataFrame:
     # impacto contemporâneo do choque na Selic, para reescalar a LP a +100 pb
     X0 = pd.DataFrame({"const": 1.0, "shock": df["_shock"]}, index=df.index)
     for j in range(1, p + 1):
-        for v in ["output_gap", "inflation", "policy_rate", "fx_dlog"]:
+        for v in svar.endog.columns:
             X0[f"L{j}_{v}"] = df[v].shift(j)
     for c in svar.exog.columns:
         X0[c] = df[c]
@@ -349,12 +361,12 @@ def local_projections(svar: SVARResult, horizon: int = HORIZON) -> pd.DataFrame:
     if not np.isfinite(impact) or abs(impact) < 1e-8:
         impact = 1.0
     rows = []
-    for var in ["output_gap", "inflation", "fx_dlog"]:
+    for var in [svar.activity_name, "inflation", "fx_dlog"]:
         for h in range(horizon + 1):
             y_cum = sum(df[var].shift(-j) for j in range(h + 1)).rename("y_cum")
             X = pd.DataFrame({"const": 1.0, "shock": df["_shock"]}, index=df.index)
             for j in range(1, p + 1):
-                for v in ["output_gap", "inflation", "policy_rate", "fx_dlog"]:
+                for v in svar.endog.columns:
                     X[f"L{j}_{v}"] = df[v].shift(j)
             for c in svar.exog.columns:
                 X[c] = df[c]
@@ -379,7 +391,7 @@ def local_projections(svar: SVARResult, horizon: int = HORIZON) -> pd.DataFrame:
 # ---------------------------------------------------------------------------
 def _irf_table(svar: SVARResult, label: str = "BRA") -> pd.DataFrame:
     rows = []
-    names = ["output_gap", "inflation", "policy_rate", "fx_dlog"]
+    names = [svar.activity_name, "inflation", "policy_rate", "fx_dlog"]
     for j, nm in enumerate(names):
         for h in range(svar.irf.shape[0]):
             rows.append({"pais": label, "variable": nm, "horizon": h,
@@ -394,7 +406,7 @@ def _irf_table(svar: SVARResult, label: str = "BRA") -> pd.DataFrame:
 
 def _fevd_table(svar: SVARResult, label: str = "BRA") -> pd.DataFrame:
     rows = []
-    names = ["output_gap", "inflation", "policy_rate", "fx_dlog"]
+    names = [svar.activity_name, "inflation", "policy_rate", "fx_dlog"]
     shocks = ["output_gap", "inflation", "policy_rate", "fx_dlog"]
     for i, nm in enumerate(names):
         for h in range(svar.fevd.shape[1]):
@@ -445,6 +457,32 @@ def _plot_svar_lp(svar: SVARResult, lp: pd.DataFrame) -> None:
     plt.close(fig)
 
 
+def _plot_hp_level(svar_gap: SVARResult, svar_level: SVARResult) -> None:
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    fig, axes = plt.subplots(1, 2, figsize=(9, 3.3))
+    for ax, sv, title, ylab in zip(
+        axes, [svar_gap, svar_level],
+        ["Atividade: hiato HP (p.p.)", "Atividade: 100·log(PIB) nível (%)"],
+        ["p.p.", "%"],
+    ):
+        h = np.arange(sv.irf.shape[0])
+        cum = np.cumsum(sv.irf[:, 0, 2])
+        ax.fill_between(h, sv.cum_lo90[:, 0, 2], sv.cum_hi90[:, 0, 2],
+                        color="#1f4e79", alpha=0.15, label="IC 90%")
+        ax.fill_between(h, sv.cum_lo68[:, 0, 2], sv.cum_hi68[:, 0, 2],
+                        color="#1f4e79", alpha=0.20, label="IC 68%")
+        ax.plot(h, cum, color="#1f4e79", lw=1.6)
+        ax.axhline(0, color="k", lw=0.6)
+        ax.set_title(title); ax.set_xlabel("trimestres"); ax.set_ylabel(ylab)
+    axes[0].legend(fontsize=6)
+    fig.suptitle("Robustez ao filtro HP: SVAR com hiato vs. nível com tendência linear", y=1.03)
+    fig.tight_layout()
+    fig.savefig(FIG / "fig_svar_hp_vs_level.png", bbox_inches="tight")
+    plt.close(fig)
+
+
 def _plot_crosscountry(cc: pd.DataFrame) -> None:
     if cc is None or cc.empty:
         return
@@ -481,7 +519,7 @@ def _markdown_table(df: pd.DataFrame, cols: list[str], floatfmt: str = "{:.3f}")
 def write_report(taylor: dict, taylor_exp: dict, phillips: dict, phillips_core: dict,
                  svar: SVARResult, lp: pd.DataFrame, cc: pd.DataFrame,
                  diag: pd.DataFrame, fevd: pd.DataFrame,
-                 taylor_post_it: dict) -> None:
+                 taylor_post_it: dict, svar_level: SVARResult) -> None:
     t = taylor["table"]; te = taylor_exp["table"]
     p = phillips["table"]; pc = phillips_core["table"]
     lines = [
@@ -543,6 +581,12 @@ def write_report(taylor: dict, taylor_exp: dict, phillips: dict, phillips_core: 
         "controles; o *price puzzle* diminui (pico +0,24 p.p. em h=3, contra +0,38 p.p. "
         "em h=2 da inflação cheia), mas não desaparece.",
         "",
+        f"**Robustez HP vs. nível:** no SVAR com `100·log(gdp_real)` e tendência linear, "
+        f"o pico acumulado da atividade é {float(np.min(np.cumsum(svar_level.irf[:,0,2]))):.3f}% "
+        f"(vs. {float(np.min(np.cumsum(svar.irf[:,0,2]))):.3f} p.p. no hiato HP); o VAR é "
+        f"{'estável' if svar_level.stable else 'instável'} e o módulo inverso máximo é "
+        f"{np.max(1/svar_level.roots_abs):.3f}. Ver `fig_svar_hp_vs_level.png`.",
+        "",
         "**Leitura:** o VAR é estável (raízes fora do círculo unitário; módulo inverso < 1). "
         f"O teste de brancura rejeita ausência de autocorrelação (p={svar.whiteness_p:.4f}), "
         "o que é comum em VARs com 4 variáveis e amostra curta; a inferência usa bootstrap.",
@@ -558,6 +602,8 @@ def write_report(taylor: dict, taylor_exp: dict, phillips: dict, phillips_core: 
         "## 4. IRFs: SVAR vs. Projeções Locais",
         "",
         "![SVAR vs LP](../reports/figures/fig_svar_lp_brazil.png)",
+        "",
+        "![HP vs nível](../reports/figures/fig_svar_hp_vs_level.png)",
         "",
         "IRF do SVAR acumulada e LP acumulada para o mesmo choque identificado "
         "(+100 pb na Selic no impacto). Bandas: 68% e 90% (bootstrap de resíduos no SVAR, "
@@ -580,22 +626,19 @@ def write_report(taylor: dict, taylor_exp: dict, phillips: dict, phillips_core: 
         "das séries de inflação no painel; o Brasil vai até 2025T4. A comparação de picos, "
         "portanto, usa janelas ligeiramente distintas.",
         "",
-        "## 6. Por que SVAR/LP é mais crível que o DSGE auditado",
+        "## 6. Leitura crítica: o que o baseline entrega e o que não entrega",
         "",
-        "O DSGE pequeno de `docs/04_audit_report.md` impõe uma estrutura NK completa, "
-        "três choques para três observáveis e um núcleo calibrado; a identificação é fraca, "
-        "a FEVD atribui 74% da variância do hiato ao choque monetário e o modelo subestima "
-        "a volatilidade da Selic em ~80%. O SVAR/LP impõe muito menos restrições: estima "
-        "a dinâmica a partir dos dados, permite defasagens e controles externos, e a FEVD "
+        "O baseline evita impor uma estrutura NK completa e três choques para três observáveis. "
+        "Estima a dinâmica a partir dos dados, permite defasagens e controles externos, e a FEVD "
         "do choque monetário é **15% do hiato** e **7% da inflação** — ordens de grandeza "
-        "muito mais plausíveis. As projeções locais confirmam a resposta negativa da "
-        "atividade em horizontes médios (h≥4), mas com bandas muito mais largas e sem "
-        "confirmar a magnitude do SVAR; a comparação SVAR vs. LP é um teste de robustez "
-        "da propagação. **Ressalva:** o SVAR brasileiro exibe *price puzzle* "
-        "(a inflação sobe no curto prazo após o aperto), e nos EUA a resposta da atividade "
-        "é positiva no curto prazo; a identificação recursiva não resolve todos os problemas. "
-        "A vantagem sobre o DSGE é de transparência, menor restrição e decomposição, não de "
-        "sinais universalmente corretos.",
+        "plausíveis. As projeções locais confirmam a resposta negativa da atividade em horizontes "
+        "médios (h≥4), mas com bandas muito mais largas e sem confirmar a magnitude do SVAR; a "
+        "comparação SVAR vs. LP é um teste de robustez da propagação, não uma validação "
+        "independente (o choque da LP vem do próprio SVAR). **Ressalvas:** o SVAR brasileiro exibe "
+        "*price puzzle* (a inflação sobe no curto prazo após o aperto), o núcleo reduz mas não "
+        "elimina o problema, e nos EUA a resposta da atividade é positiva no curto prazo. A "
+        "identificação recursiva não resolve todos os problemas; a vantagem é de transparência, "
+        "menor restrição e decomposição, não de sinais universalmente corretos.",
         "",
         "## 7. Reprodutibilidade",
         "",
@@ -616,14 +659,19 @@ def run(n_boot: int = N_BOOT, save: bool = True) -> dict:
     svar_core = fit_svar("BRA", policy="policy_rate", fx="exchange_rate_nominal",
                          include_foreign=True, inflation_var="core_inflation",
                          n_boot=max(50, n_boot // 2))
+    svar_level = fit_svar("BRA", policy="policy_rate", fx="exchange_rate_nominal",
+                          include_foreign=True, activity="level", trend="ct",
+                          n_boot=max(50, n_boot // 2))
     lp = local_projections(svar)
     irf = _irf_table(svar, "BRA")
     fevd = _fevd_table(svar, "BRA")
     diag = _diagnostics(svar, "BRA")
     diag_core = _diagnostics(svar_core, "BRA_core")
-    diag = pd.concat([diag, diag_core], ignore_index=True)
+    diag_level = _diagnostics(svar_level, "BRA_level")
+    diag = pd.concat([diag, diag_core, diag_level], ignore_index=True)
     irf_core = _irf_table(svar_core, "BRA_core")
-    irf = pd.concat([irf, irf_core], ignore_index=True)
+    irf_level = _irf_table(svar_level, "BRA_level")
+    irf = pd.concat([irf, irf_core, irf_level], ignore_index=True)
 
     # cross-country
     cc_rows, cc_irfs = [], []
@@ -664,6 +712,10 @@ def run(n_boot: int = N_BOOT, save: bool = True) -> dict:
         irf.to_csv(TAB / "empirical_svar_irf_brazil.csv", index=False, encoding="utf-8-sig")
         _fevd_table(svar_core, "BRA_core").to_csv(
             TAB / "empirical_svar_fevd_core_brazil.csv", index=False, encoding="utf-8-sig")
+        irf_level.to_csv(TAB / "empirical_svar_irf_brazil_level.csv", index=False, encoding="utf-8-sig")
+        _fevd_table(svar_level, "BRA_level").to_csv(
+            TAB / "empirical_svar_fevd_level_brazil.csv", index=False, encoding="utf-8-sig")
+        _plot_hp_level(svar, svar_level)
         fevd.to_csv(TAB / "empirical_svar_fevd_brazil.csv", index=False, encoding="utf-8-sig")
         lp.to_csv(TAB / "empirical_lp_brazil.csv", index=False, encoding="utf-8-sig")
         cc.to_csv(TAB / "empirical_svar_crosscountry.csv", index=False, encoding="utf-8-sig")
@@ -671,7 +723,7 @@ def run(n_boot: int = N_BOOT, save: bool = True) -> dict:
         _plot_svar_lp(svar, lp)
         _plot_crosscountry(cc)
         write_report(taylor, taylor_exp, phillips, phillips_core, svar, lp, cc, diag, fevd,
-                     taylor_post_it)
+                     taylor_post_it, svar_level)
         meta = {"sample": [str(svar.endog.index.min().date()), str(svar.endog.index.max().date())],
                 "n": len(svar.endog), "lags": svar.p, "stable": svar.stable,
                 "whiteness_p": svar.whiteness_p, "n_boot": svar.n_boot_ok,

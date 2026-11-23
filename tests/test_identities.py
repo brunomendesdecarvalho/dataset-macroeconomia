@@ -15,9 +15,3 @@ def test_components_identity_median():
     p = a.pivot_table(index=["iso3", "year"], columns="variable", values="value", aggfunc="last")
     resid = 100 - (p.consumption_gdp + p.investment_gdp + p.net_exports_gdp)
     assert abs(np.nanmedian(resid)) < 2.0
-
-
-def test_dsge_measurement_table():
-    m = pd.read_csv(settings.CONFIG / "dsge_measurement.psv", sep="|")
-    assert {"observable", "model_variable", "measurement_equation", "shock"}.issubset(m.columns)
-    assert len(m) >= 10

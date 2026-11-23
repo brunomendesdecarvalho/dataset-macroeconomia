@@ -75,9 +75,9 @@ QUARTERLY_CORE,ITA,Itália,"Países com PIB trimestral encadeado e deflator/CPI 
 QUARTERLY_CORE,KOR,Coreia do Sul,"Países com PIB trimestral encadeado e deflator/CPI trimestral estáveis em FRED/OCDE-MEI, IBGE e BCB. O núcleo mínimo solicitado (BRA, USA, DEU, GBR, JPN, CAN, MEX) é sempre preservado; os demais entram se cumprirem o critério de >= 60 trimestres."
 QUARTERLY_CORE,ZAF,África do Sul,"Países com PIB trimestral encadeado e deflator/CPI trimestral estáveis em FRED/OCDE-MEI, IBGE e BCB. O núcleo mínimo solicitado (BRA, USA, DEU, GBR, JPN, CAN, MEX) é sempre preservado; os demais entram se cumprirem o critério de >= 60 trimestres."
 QUARTERLY_CORE,TUR,Turquia,"Países com PIB trimestral encadeado e deflator/CPI trimestral estáveis em FRED/OCDE-MEI, IBGE e BCB. O núcleo mínimo solicitado (BRA, USA, DEU, GBR, JPN, CAN, MEX) é sempre preservado; os demais entram se cumprirem o critério de >= 60 trimestres."
-QUARTERLY_CORE,IND,Índia,"Países com PIB trimestral encadeado e deflator/CPI trimestral estáveis em FRED/OCDE-MEI, IBGE e BCB. O núcleo mínimo solicitado (BRA, USA, DEU, GBR, JPN, CAN, MEX) é sempre preservado; os demais entram se cumprirem o critério de >= 60 trimestres."
 QUARTERLY_CORE,IDN,Indonésia,"Países com PIB trimestral encadeado e deflator/CPI trimestral estáveis em FRED/OCDE-MEI, IBGE e BCB. O núcleo mínimo solicitado (BRA, USA, DEU, GBR, JPN, CAN, MEX) é sempre preservado; os demais entram se cumprirem o critério de >= 60 trimestres."
-QUARTERLY_CORE,CHN,China,"Países com PIB trimestral encadeado e deflator/CPI trimestral estáveis em FRED/OCDE-MEI, IBGE e BCB. O núcleo mínimo solicitado (BRA, USA, DEU, GBR, JPN, CAN, MEX) é sempre preservado; os demais entram se cumprirem o critério de >= 60 trimestres."
+QUARTERLY_CORE,ARG,Argentina,"Países com PIB trimestral encadeado e deflator/CPI trimestral estáveis em FRED/OCDE-MEI, IBGE e BCB. O núcleo mínimo solicitado (BRA, USA, DEU, GBR, JPN, CAN, MEX) é sempre preservado; os demais entram se cumprirem o critério de >= 60 trimestres."
+QUARTERLY_CORE,SAU,Arábia Saudita,"Países com PIB trimestral encadeado e deflator/CPI trimestral estáveis em FRED/OCDE-MEI, IBGE e BCB. O núcleo mínimo solicitado (BRA, USA, DEU, GBR, JPN, CAN, MEX) é sempre preservado; os demais entram se cumprirem o critério de >= 60 trimestres."
 COMMODITY_EXPORTERS,BRA,Brasil,Para dummies de choque de commodities e termos de troca.
 COMMODITY_EXPORTERS,ARG,Argentina,Para dummies de choque de commodities e termos de troca.
 COMMODITY_EXPORTERS,CHL,Chile,Para dummies de choque de commodities e termos de troca.
@@ -88,11 +88,11 @@ COMMODITY_EXPORTERS,SAU,Arábia Saudita,Para dummies de choque de commodities e 
 COMMODITY_EXPORTERS,ZAF,África do Sul,Para dummies de choque de commodities e termos de troca.
 COMMODITY_EXPORTERS,IDN,Indonésia,Para dummies de choque de commodities e termos de troca.
 COMMODITY_EXPORTERS,AUS,Austrália,Para dummies de choque de commodities e termos de troca.
-HIGH_INFLATION_HISTORY,BRA,Brasil,Países com inflação anual > 100% em algum momento pós-1960; justifica amostra DSGE pós-estabilização e dummies de hiperinflação/planos.
-HIGH_INFLATION_HISTORY,ARG,Argentina,Países com inflação anual > 100% em algum momento pós-1960; justifica amostra DSGE pós-estabilização e dummies de hiperinflação/planos.
-HIGH_INFLATION_HISTORY,PER,Peru,Países com inflação anual > 100% em algum momento pós-1960; justifica amostra DSGE pós-estabilização e dummies de hiperinflação/planos.
-HIGH_INFLATION_HISTORY,TUR,Turquia,Países com inflação anual > 100% em algum momento pós-1960; justifica amostra DSGE pós-estabilização e dummies de hiperinflação/planos.
-HIGH_INFLATION_HISTORY,RUS,Rússia,Países com inflação anual > 100% em algum momento pós-1960; justifica amostra DSGE pós-estabilização e dummies de hiperinflação/planos.
+HIGH_INFLATION_HISTORY,BRA,Brasil,Países com inflação anual > 100% em algum momento pós-1960; justifica amostra pós-estabilização e dummies de hiperinflação/planos.
+HIGH_INFLATION_HISTORY,ARG,Argentina,Países com inflação anual > 100% em algum momento pós-1960; justifica amostra pós-estabilização e dummies de hiperinflação/planos.
+HIGH_INFLATION_HISTORY,PER,Peru,Países com inflação anual > 100% em algum momento pós-1960; justifica amostra pós-estabilização e dummies de hiperinflação/planos.
+HIGH_INFLATION_HISTORY,TUR,Turquia,Países com inflação anual > 100% em algum momento pós-1960; justifica amostra pós-estabilização e dummies de hiperinflação/planos.
+HIGH_INFLATION_HISTORY,RUS,Rússia,Países com inflação anual > 100% em algum momento pós-1960; justifica amostra pós-estabilização e dummies de hiperinflação/planos.
 IT_REGIME,BRA,Brasil,Regime explícito ou quasi-explícito de meta; usado para dummies monetárias e para definir a amostra de estimação. ARG entra apenas 2016–2018.
 IT_REGIME,MEX,México,Regime explícito ou quasi-explícito de meta; usado para dummies monetárias e para definir a amostra de estimação. ARG entra apenas 2016–2018.
 IT_REGIME,CHL,Chile,Regime explícito ou quasi-explícito de meta; usado para dummies monetárias e para definir a amostra de estimação. ARG entra apenas 2016–2018.

@@ -1,136 +1,118 @@
-# Dataset macroeconômico cross-country — âncora Brasil
+# MacroData Brasil — dataset macroeconômico cross-country com variáveis heterodoxas e baseline SVAR
 
-Dataset anual (1960–2026) e trimestral (1995T1–2026T4) para **22 países + agregado UE**, com o Brasil como âncora, desenhado para modelos reduzidos (IS-LM, Mundell-Fleming, AD-AS, Curva de Phillips, Regra de Taylor, Solow) e para um DSGE pequeno (estimado) e médio (calibrado).
+**Versão 2.0.0** · **Início da execução:** 2026-11-23T18:13:37Z (15:13:37 −03) · **Duração total:** `03h32min17s`
 
-**Versão:** 1.0.0 · **Extração:** 2026-11-23 · **Licença dos dados:** depende da fonte (GMD/WDI/PWT CC BY 4.0; FRED/BCB/IBGE/OCDE/FMI conforme termos originais). O código é MIT.
+## Resumo
 
----
+Dataset macroeconômico cross-country com o **Brasil como âncora**, cobrindo **22 países soberanos** (mais o agregado `EU` e o agregado mundial `WLD`), em duas frequências: **anual 1960–2026** e **trimestral 1995T1–2026T4**. O núcleo ortodoxo é combinado com **quatro blocos heterodoxos** — distribuição e classe, restrição externa e hierarquia monetária, financiarização e crédito, ecologia e estrutura produtiva — e com um **baseline empírico reproduzível** (Regra de Taylor, Curva de Phillips, SVAR recursivo com robustez ao filtro HP, Projeções Locais de Jordà e comparação Brasil–EUA–México). O modelo estrutural foi removido do pipeline ativo.
 
-## O que está pronto
+O dataset é _research-ready_: inclui codebook, manifesto de proveniência com SHA-256, matriz de cobertura, 101 dummies de regime, relatório de auditoria, testes automatizados e uma planilha Excel única com abas limpas e cabeçalho congelado.
 
-| Produto | Onde |
+## Escopo e grupos
+
+- **Países:** ARG, AUS, BRA, CAN, CHL, CHN, COL, DEU, FRA, GBR, IDN, IND, ITA, JPN, KOR, MEX, PER, RUS, SAU, TUR, USA, ZAF.
+- **Agregados:** `EU` (União Europeia; nunca somada aos membros) e `WLD` (PIB mundial).
+- **Grupos fechados:** BRICS, G20 (19 + UE), G7, TOP10_NOMINAL (PIB nominal USD, WEO 2025), LATAM6, EMERG_COMP, ADVANCED, QUARTERLY_CORE (16), COMMODITY_EXPORTERS, HIGH_INFLATION_HISTORY, IT_REGIME.
+- **Trimestral:** 16 países (BRA, USA, DEU, GBR, JPN, CAN, MEX, AUS, FRA, ITA, KOR, ZAF, TUR, IDN, ARG, SAU). China, Índia, Chile, Colômbia, Peru e Rússia ficam no anual.
+
+## Estrutura dos arquivos entregues
+
+| Arquivo | Conteúdo |
 |---|---|
-| Dataset longo (121.175 linhas) | `data/processed/macro_long.parquet` / `.csv` |
-| Painel anual (101.818 linhas, 89 variáveis) | `data/processed/macro_annual_long.parquet` |
-| Painel trimestral (19.357 linhas, 28 variáveis) | `data/processed/macro_quarterly_long.parquet` |
-| Wide por país | `data/processed/wide/annual/`, `wide/quarterly/` |
-| Codebook | `docs/01_codebook.md` |
-| DSGE observável → modelo, latentes e choques | `docs/02_dsge_observables.md` |
-| 101 dummies de regime + matriz 0/1 | `docs/03_regime_dummies.md`, `data/processed/regime_matrix_*.csv` |
-| Auditoria e validação | `docs/04_audit_report.md` |
-| Grupos de países | `docs/05_country_groups.md` |
-| Metodologia | `docs/06_metodologia.md` |
-| Proposta inicial (i–v) | `docs/00_proposta.md` |
-| Cobertura país × variável | `data/processed/coverage_matrix_annual.csv`, `coverage.csv` |
-| DSGE pequeno (posterior, IRF, FEVD, identificação) | `data/processed/dsge_small_*` |
-| DSGE médio (calibração, momentos, sensibilidade) | `data/processed/dsge_medium_*` |
-| Módulo empírico (Taylor, Phillips, SVAR, LP) | `docs/07_empirical_svar.md`, `src/macrodata/empirical.py` |
+| [data/exports/macro_dataset_consolidado.xlsx](data/exports/macro_dataset_consolidado.xlsx) | **Planilha única**: `Anual_Wide`, `Trimestral_Wide`, `Regimes_Anual`, `Codebook_Fontes`; cabeçalho congelado e autofiltro. |
+| [data/exports/macro_anual_wide.csv](data/exports/macro_anual_wide.csv) | Wide anual: uma linha por `(iso3, country, year, date)`, todas as variáveis. |
+| [data/exports/macro_trimestral_wide.csv](data/exports/macro_trimestral_wide.csv) | Wide trimestral: uma linha por `(iso3, country, period, date)`. |
+| [data/exports/macro_todos_dados_long.csv](data/exports/macro_todos_dados_long.csv) | Long único: `freq, iso3, country, date, period, variable, block, value, unit, source, source_code, quality_flag, is_forecast, regime_dummy`. |
+| [data/processed/macro_long.parquet](data/processed/macro_long.parquet) | Dataset interno completo (anual + trimestral). |
+| [docs/01_codebook.md](docs/01_codebook.md) | Codebook, dicionário de campos, blocos, fontes e lacunas. |
+| [docs/04_audit_report.md](docs/04_audit_report.md) | Auditoria: cobertura, identidades, divergências, estacionariedade, quebras e riscos. |
+| [docs/06_metodologia.md](docs/06_metodologia.md) | Metodologia, harmonização, tratamento e exportação. |
+| [docs/07_empirical_svar.md](docs/07_empirical_svar.md) | Taylor, Phillips, SVAR, Projeções Locais e cross-country. |
+| [reports/figures/](reports/figures/) | `fig_svar_lp_brazil.png`, `fig_svar_crosscountry.png`, `fig_svar_hp_vs_level.png` e demais figuras. |
 
-### Números-chave
+## Resultados e auditoria
 
-- **22 países** + **EU** (agregado, excluído de somas) + **WLD** (PIB mundial).
-- **89 variáveis anuais**, **28 trimestrais**, **101 dummies** de regime (30 para o Brasil).
-- Cobertura anual mediana **97%**; erro médio cross-source de **0,23 p.p.** no crescimento e **3,42 p.p.** na inflação.
-- Identidade nominal = real × deflator com resíduo máximo **6×10⁻⁶%**.
-- DSGE pequeno: 106 obs (Brasil, 1999T3–2025T4) e 124 (EUA); **identificação fraca** — ver auditoria.
+| Dimensão | Número final |
+|---|---|
+| Linhas anuais / trimestrais / totais | **123.387 / 19.357 / 142.744** |
+| Variáveis anuais / trimestrais | **114 / 28** |
+| Cobertura mediana — `macro_core` | **97,0%** (média 85,0%) |
+| Cobertura mediana — distribuição | **52,2%** (média 59,8%) |
+| Cobertura mediana — restrição externa | **82,1%** (média 70,7%) |
+| Cobertura mediana — financiarização | **37,3%** (média 42,6%) |
+| Cobertura mediana — ecologia/estrutura | **82,1%** (média 70,9%) |
+| Dummies de regime | **101** (30 para o Brasil; 1.474 país-ano × 101 e 2.048 país-trimestre × 97) |
+| Identidade nominal = real × deflator | resíduo máximo **6×10⁻⁶%** |
+| Identidade Y = C + I + NX | mediana **0,0002% do PIB** |
+| Cross-source — crescimento | erro médio **0,23 p.p.**; 95% dentro de 1 p.p. |
+| Cross-source — inflação | erro médio **3,42 p.p.**; 96% dentro de 2 p.p. |
+| SVAR Brasil | 108 obs; **2 lags** (BIC), estável; brancura rejeitada (p=0,002) |
+| FEVD do choque monetário (12T) | **15,0% do hiato**, **7,4% da inflação** |
+| IRF +100 pb | hiato **−0,32 p.p.** (h=5); inflação **+0,38 p.p.** (h=2); câmbio **−1,26 p.p.** (h=1) |
+| Robustez HP vs. nível | pico acumulado **−2,68 p.p.** (hiato) vs. **−6,17%** (log-nível com tendência) |
+| Taylor | φπ de longo prazo **1,576** (s.e. 0,345; p unilateral 0,047); pós-metas 2,588 (s.e. 1,152; p=0,084) |
 
----
+**Limitações explícitas:** zero imputação (lacunas = ausência de linha); perímetros fiscais distintos (dívida bruta vs. líquida; primário governo geral vs. central); 2026 é preliminar e `is_forecast=True`; vintage limitado (SGS não guarda versões; WDI/WEO revisam); a robustez HP vs. log-nível não elimina o *price puzzle* brasileiro; o SVAR recursivo tem identificação por Cholesky e não resolve todos os problemas; a UE é agregada e não entra em somas.
 
-## Quickstart
+## Transparência metodológica, fluxo assistido por IA e tempos
 
-Requisitos: Python 3.11+ (testado em 3.14), ~1 GB de disco, rede para a primeira extração.
+**Fluxo de construção e validação:**
+
+- **Ideia inicial:** Deepseek Flash 4.1
+- **Revisão dos prompts:** Gemini Neon
+- **Refinamento com base na literatura científica:** LeapSpace
+- **Aplicação do refinamento final:** Gemini Neon
+- **Agente de execução e engenharia de dados:** Deepseek Harness utilizando `deepseek-flash`
+
+| Etapa | Duração |
+|---|---|
+| Etapa 1 — Construção inicial crua (coleta, harmonização, auditoria e protótipo DSGE) | `2h28min38s` |
+| Etapa 2 — Macroeconometria empírica (SVAR, Projeções Locais, Taylor e Phillips) | `10min36s` |
+| Etapa 3 — Refinamento pela literatura via LeapSpace (remoção do DSGE, 4 blocos heterodoxos, exportação consolidada e documentação) | `00h53min03s` |
+| **Total** | **`03h32min17s`** |
+
+A Etapa 3 foi medida a partir do timestamp `2026-11-23T18:13:37Z`; o cálculo usa o relógio do sistema e está registrado em `data/processed/refactor_timing.json`.
+
+## Reprodutibilidade
 
 ```bash
 python3 -m venv --system-site-packages .venv
 .venv/bin/pip install -r requirements.txt
 
-# pipeline completo
-make all
-
-# ou etapas
-make fetch      # baixa/cacheia GMD, WDI, WEO, PWT, FRED, BCB, IBGE, Focus
-make build      # harmoniza e grava o dataset
-make validate   # cross-source, identidades, ADF/KPSS, Bai-Perron, Chow
-make dsge       # estima NK pequeno (BRA/EUA) + simula SW-lite
-make empirical  # Taylor, Phillips, SVAR recursivo e Projeções Locais (Brasil/EUA/MEX)
-make reports    # figuras, tabelas e docs
+make all        # fetch -> build -> validate -> empirical -> export -> reports -> tests
+make empirical  # apenas Taylor, Phillips, SVAR (gap/núcleo/nível), LP e cross-country
+make export     # apenas Excel + CSVs consolidados
 make test       # pytest
 ```
 
-Tempo aproximado: fetch 3–8 min (rede), build 1–2 min, validação 2–3 min, DSGE 4–6 min, relatórios <1 min.
+- O cache em `data/raw/` é reutilizado; os novos indicadores WDI usam timeout de 20 s, **zero retries** e fast-fail em 400/403/404.
+- `data/processed/manifest.json` registra URL, timestamp, tamanho e **SHA-256** de cada download.
+- `data/processed/refactor_timing.json` registra o início e a duração da Etapa 3.
+- Versões fixadas em `requirements.txt`.
 
-### Uso mínimo
+## Como citar
 
-```python
-import pandas as pd
-df = pd.read_parquet("data/processed/macro_long.parquet")
-bra = df[(df.iso3 == "BRA") & (df.variable == "inflation") & (df.freq == "A")]
-print(bra[["date", "value", "unit", "source"]].tail())
+### BibTeX
 
-wide = pd.read_csv("data/processed/wide/annual/BRA.csv", index_col=0, parse_dates=True)
-print(wide[["gdp_real", "inflation", "policy_rate", "gov_debt_gdp"]].tail())
+```bibtex
+@dataset{macroeconomia_brasil_2026,
+  author       = {[Sobrenome, Nome]},
+  title        = {MacroData Brasil: dataset macroeconômico cross-country com variáveis heterodoxas e baseline SVAR},
+  year         = {[Ano]},
+  publisher    = {Zenodo},
+  version      = {2.0.0},
+  doi          = {[DOI]},
+  url          = {[URL]},
+  license      = {CC-BY-4.0}
+}
 ```
 
----
+### APA
 
-## Estrutura
+[Sobrenome, Nome]. ([Ano]). *MacroData Brasil: dataset macroeconômico cross-country com variáveis heterodoxas e baseline SVAR* (Versão 2.0.0) [Data set]. Zenodo. https://doi.org/[DOI]
 
-```
-config/                 países, grupos, dicionário, fontes, regimes, metas
-src/macrodata/          pipeline (fetch → build → validate → dsge → report)
-scripts/                orquestração e geração de docs
-data/raw/               cache bruto + manifesto (não versionado)
-data/processed/         dataset final, matrizes, diagnósticos, wide
-docs/                   proposta, codebook, DSGE, regimes, auditoria, metodologia
-reports/                figuras e tabelas
-tests/                  solver, schema, identidades, tabela DSGE
-```
+## Licenças
 
----
-
-## Fontes
-
-- **GMD** (Global Macro Database 2026_09) — espinha dorsal anual.
-- **WDI** (Banco Mundial) — complemento/validação.
-- **WEO** (FMI, out/2025) — fiscal pós-1980, PPP, validação.
-- **PWT 10.01** — capital, PTF, emprego, horas (até 2019).
-- **FRED / OECD-MEI / BIS** — subamostra trimestral, commodities, VIX.
-- **BCB SGS / IBGE SIDRA / Focus** — Brasil: IPCA, Selic, PIB trimestral, componentes, expectativas.
-- **Michigan (MICH)** — expectativas dos EUA.
-
-Cada linha do dataset tem `source`, `source_code`, `source_url`, `vintage` e `extraction_date`. O manifesto `data/processed/manifest.json` registra URL, timestamp, tamanho e SHA-256 de cada download.
-
----
-
-## Decisões e ressalvas importantes
-
-1. **10 maiores economias:** PIB nominal USD (WEO 2025), não PPP.
-2. **UE é agregado:** nunca entra em somas/médias de países.
-3. **Dívida:** GMD/WEO governo geral; WDI governo central é apenas validação — divergências de até 47 p.p. são de perímetro.
-4. **Primário:** WEO governo geral vs BCB governo central; ambos reportados.
-5. **Trimestral:** 16 países com PIB estável; China, Índia, Chile, Colômbia, Peru e Rússia ficam no anual.
-6. **DSGE pequeno:** núcleo calibrado (σ=1; κ=0,08; φπ=1,5; ρ=0,8); hábitos/indexação/choques estimados. A estimação livre do núcleo converge para a fronteira — **não usar para inferência estrutural**.
-7. **DSGE médio:** calibrado, não estimado; serve para cenários/IRFs qualitativos.
-8. **Sem imputação:** lacunas são preservadas e sinalizadas.
-
-Leia `docs/04_audit_report.md` antes de usar o DSGE para política ou publicação.
-
----
-
-## Reprodutibilidade
-
-- `requirements.txt` com versões fixas; `pyproject.toml` para instalação.
-- `manifest.json` com data/hora e hash de cada download.
-- `MACRO_EXTRACTION_TS` permite congelar o timestamp.
-- `make all` refaz do zero; cache em `data/raw/` permite modo offline.
-- Testes: `make test` (solver QZ, schema, datas, identidades, tabela DSGE).
-
----
-
-## Citação
-
-Se usar o dataset, cite as fontes originais (GMD, WDI, WEO, PWT, FRED, BCB, IBGE) e este repositório:
-
-```
-Dataset macroeconômico cross-country (v1.0.0), âncora Brasil, 2026.
-```
+- **Dados:** CC-BY-4.0, preservando as licenças das fontes originais (GMD/WDI/PWT CC BY 4.0; FRED/OCDE/BIS/FMI/BCB/IBGE conforme termos).
+- **Código:** MIT.
+- **Citação:** `CITATION.cff` na raiz, compatível com GitHub/Zenodo.

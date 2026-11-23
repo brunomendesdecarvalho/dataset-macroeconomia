@@ -1,6 +1,6 @@
 # Grupos de países — listas fechadas e justificativa
 
-A lista de países é **fechada**: 22 países + agregado UE. Grupos se sobrepõem de propósito; a UE é agregado e é excluída de somas/médias para evitar dupla contagem.
+22 países + agregado UE. Grupos se sobrepõem; a UE é agregada e excluída de somas.
 
 | grupo | nome | membros | n | justificativa |
 |---|---|---|---|---|
@@ -13,16 +13,11 @@ A lista de países é **fechada**: 22 países + agregado UE. Grupos se sobrepõe
 | ADVANCED | Economias avançadas | USA, DEU, GBR, JPN, CAN, FRA, ITA, AUS, KOR | 9 | Referência de fronteira tecnológica e de política monetária. |
 | QUARTERLY_CORE | Núcleo trimestral | BRA, USA, DEU, GBR, JPN, CAN, MEX, AUS, FRA, ITA, KOR, ZAF, TUR, IDN, ARG, SAU | 16 | Países com PIB trimestral encadeado e deflator/CPI trimestral estáveis em FRED/OCDE-MEI, IBGE e BCB. O núcleo mínimo solicitado (BRA, USA, DEU, GBR, JPN, CAN, MEX) é sempre preservado; os demais entram se cumprirem o critério de >= 60 trimestres. |
 | COMMODITY_EXPORTERS | Exportadores de commodities | BRA, ARG, CHL, COL, PER, RUS, SAU, ZAF, IDN, AUS | 10 | Para dummies de choque de commodities e termos de troca. |
-| HIGH_INFLATION_HISTORY | Histórico de alta inflação | BRA, ARG, PER, TUR, RUS | 5 | Países com inflação anual > 100% em algum momento pós-1960; justifica amostra DSGE pós-estabilização e dummies de hiperinflação/planos. |
+| HIGH_INFLATION_HISTORY | Histórico de alta inflação | BRA, ARG, PER, TUR, RUS | 5 | Países com inflação anual > 100% em algum momento pós-1960; justifica amostra pós-estabilização e dummies de hiperinflação/planos. |
 | IT_REGIME | Regime de metas de inflação (datas em regimes.yml) | BRA, MEX, CHL, COL, PER, ZAF, TUR, IDN, KOR, GBR, CAN, AUS, DEU, FRA, ITA, EU, USA, JPN, IND, ARG | 20 | Regime explícito ou quasi-explícito de meta; usado para dummies monetárias e para definir a amostra de estimação. ARG entra apenas 2016–2018. |
 
-## Uso nos modelos
+## Uso
 
-- **Painel anual**: todos os 22 países; a UE entra apenas onde há série (WEO), sem uso em somas.
-- **Painel trimestral**: 16 países com PIB trimestral estável (BRA, USA, DEU, GBR, JPN, CAN, MEX, AUS, FRA, ITA, KOR, ZAF, TUR, IDN, ARG, SAU); CHN, IND, CHL, COL, PER e RUS ficam no anual.
-- **DSGE**: Brasil (âncora) e EUA (validação); demais países entram nos modelos reduzidos e na comparação de momentos.
-
-## Checagem de dupla contagem
-
-- `EU` tem `iso3=EU`, `role=exogenous` e é marcada como agregado em `config/countries.yml`.
-- Nenhuma soma cross-country inclui `EU` ou `WLD`; `WLD` só aparece em `world_gdp_real`/`world_gdp_growth`.
+- **Anual**: 22 países; UE apenas onde há série, sem somas.
+- **Trimestral**: 16 países com PIB estável (BRA, USA, DEU, GBR, JPN, CAN, MEX, AUS, FRA, ITA, KOR, ZAF, TUR, IDN, ARG, SAU); CHN, IND, CHL, COL, PER e RUS ficam no anual.
+- **SVAR**: Brasil, EUA e México.

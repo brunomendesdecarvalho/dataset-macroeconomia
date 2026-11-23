@@ -23,14 +23,13 @@
 | `outliers.csv` | Outliers por série-país |
 | `source_decisions.csv` | Decisões de fonte/tolerância |
 | `cross_country_moments.csv` | Médias, desvios-padrão e autocorrelações por país (1995–2025) |
-| `dsge_small_*` | Posterior, IRF, FEVD, identificação, momentos, decomposição histórica (BRA/EUA) |
-| `dsge_medium_*` | Calibração, momentos, IRF, FEVD, sensibilidade |
 | `empirical_taylor_*` | Regra de Taylor (HAC), com expectativas e robustez pós-metas |
 | `empirical_phillips_*` | Curva de Phillips (cheia e núcleo) |
 | `empirical_svar_*` | Diagnósticos, IRFs, FEVD e comparação cross-country |
 | `empirical_lp_brazil.csv` | Projeções Locais de Jordà (h=0..12, HAC) |
 | `empirical_meta.json` | Metadados da rodada empírica |
 | `manifest.json` | Proveniência de cada download |
+| `refactor_timing.json` | Início e duração da Etapa 3 |
 | `dataset_summary.json` | Contagens e período |
 
 **Convenção:** `value` é sempre o valor bruto/construído na unidade de `unit`; a transformação recomendada está em `transformation`. Não há imputação.

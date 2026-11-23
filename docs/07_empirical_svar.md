@@ -68,8 +68,11 @@ Ordem de Cholesky: **hiato → inflação → Selic → câmbio (100·Δlog)**. 
 |---|---|---|---|---|---|---|---|---|
 | BRA | 108 | 4 | 2 | 2 | True | 0.808 | 0.002 | 400 |
 | BRA_core | 108 | 2 | 2 | 2 | True | 0.802 | 0.013 | 200 |
+| BRA_level | 108 | 4 | 2 | 2 | True | 0.985 | 0.000 | 200 |
 
 Robustez com `core_inflation` no lugar da inflação cheia: mesma ordem, mesmos controles; o *price puzzle* diminui (pico +0,24 p.p. em h=3, contra +0,38 p.p. em h=2 da inflação cheia), mas não desaparece.
+
+**Robustez HP vs. nível:** no SVAR com `100·log(gdp_real)` e tendência linear, o pico acumulado da atividade é -6.165% (vs. -2.680 p.p. no hiato HP); o VAR é estável e o módulo inverso máximo é 0.985. Ver `fig_svar_hp_vs_level.png`.
 
 **Leitura:** o VAR é estável (raízes fora do círculo unitário; módulo inverso < 1). O teste de brancura rejeita ausência de autocorrelação (p=0.0022), o que é comum em VARs com 4 variáveis e amostra curta; a inferência usa bootstrap.
 
@@ -85,6 +88,8 @@ Robustez com `core_inflation` no lugar da inflação cheia: mesma ordem, mesmos 
 ## 4. IRFs: SVAR vs. Projeções Locais
 
 ![SVAR vs LP](../reports/figures/fig_svar_lp_brazil.png)
+
+![HP vs nível](../reports/figures/fig_svar_hp_vs_level.png)
 
 IRF do SVAR acumulada e LP acumulada para o mesmo choque identificado (+100 pb na Selic no impacto). Bandas: 68% e 90% (bootstrap de resíduos no SVAR, condicional aos coeficientes estimados; HAC no LP). A tabela `empirical_svar_irf_brazil.csv` traz a resposta período a período (`irf`) e a acumulada (`cum`) separadamente.
 
@@ -105,9 +110,9 @@ Mesmo SVAR, com `short_rate` no lugar de `policy_rate` e `reer` no lugar do câm
 
 A amostra efetiva termina em 2025T1 nos EUA e 2024T2 no México, por disponibilidade das séries de inflação no painel; o Brasil vai até 2025T4. A comparação de picos, portanto, usa janelas ligeiramente distintas.
 
-## 6. Por que SVAR/LP é mais crível que o DSGE auditado
+## 6. Leitura crítica: o que o baseline entrega e o que não entrega
 
-O DSGE pequeno de `docs/04_audit_report.md` impõe uma estrutura NK completa, três choques para três observáveis e um núcleo calibrado; a identificação é fraca, a FEVD atribui 74% da variância do hiato ao choque monetário e o modelo subestima a volatilidade da Selic em ~80%. O SVAR/LP impõe muito menos restrições: estima a dinâmica a partir dos dados, permite defasagens e controles externos, e a FEVD do choque monetário é **15% do hiato** e **7% da inflação** — ordens de grandeza muito mais plausíveis. As projeções locais confirmam a resposta negativa da atividade em horizontes médios (h≥4), mas com bandas muito mais largas e sem confirmar a magnitude do SVAR; a comparação SVAR vs. LP é um teste de robustez da propagação. **Ressalva:** o SVAR brasileiro exibe *price puzzle* (a inflação sobe no curto prazo após o aperto), e nos EUA a resposta da atividade é positiva no curto prazo; a identificação recursiva não resolve todos os problemas. A vantagem sobre o DSGE é de transparência, menor restrição e decomposição, não de sinais universalmente corretos.
+O baseline evita impor uma estrutura NK completa e três choques para três observáveis. Estima a dinâmica a partir dos dados, permite defasagens e controles externos, e a FEVD do choque monetário é **15% do hiato** e **7% da inflação** — ordens de grandeza plausíveis. As projeções locais confirmam a resposta negativa da atividade em horizontes médios (h≥4), mas com bandas muito mais largas e sem confirmar a magnitude do SVAR; a comparação SVAR vs. LP é um teste de robustez da propagação, não uma validação independente (o choque da LP vem do próprio SVAR). **Ressalvas:** o SVAR brasileiro exibe *price puzzle* (a inflação sobe no curto prazo após o aperto), o núcleo reduz mas não elimina o problema, e nos EUA a resposta da atividade é positiva no curto prazo. A identificação recursiva não resolve todos os problemas; a vantagem é de transparência, menor restrição e decomposição, não de sinais universalmente corretos.
 
 ## 7. Reprodutibilidade
 

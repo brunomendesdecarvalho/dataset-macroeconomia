@@ -1,7 +1,7 @@
-# Relatório de auditoria e validação cross-country
+# Relatório de auditoria e validação — v2.0.0
 
-**Dataset:** v1.0.0 · **Extração:** 2026-11-23 · **Âncora:** Brasil
-**Escopo:** 22 países + UE (agregado) + WLD (PIB mundial) · anual 1960–2026 · trimestral 1995T1–2026T4
+**Dataset:** macroeconômico cross-country, âncora Brasil · **Extração:** 2026-11-23
+**Escopo:** 22 países + `EU` (agregado) + `WLD` (PIB mundial) · anual 1960–2026 · trimestral 1995T1–2026T4
 
 ---
 
@@ -9,33 +9,44 @@
 
 | Dimensão | Resultado | Leitura |
 |---|---|---|
-| Cobertura anual | **101.818** linhas, 89 variáveis, 24 entidades; cobertura mediana **97%**, média **85%** | Boa para o núcleo; lacunas concentradas em inflação pré-1980, desemprego pré-1984, capital/PTF pós-2019 e periferias. |
-| Cobertura trimestral | **19.357** linhas, 28 variáveis, 16 países + WLD; Brasil com 28 variáveis | Núcleo solicitado coberto; China/Índia/Chile/Colômbia/Peru/Rússia apenas anuais. |
-| Cross-source | Crescimento: erro médio **0,23 p.p.** (95% dentro de 1 p.p.); inflação: **3,42 p.p.** (96% dentro de 2 p.p.); dívida: **5,84 p.p.** (74%) | Divergências de dívida são de **perímetro** (governo geral vs central), não de medida. |
-| Identidade nominal = real × deflator | Resíduo máximo **6×10⁻⁶%** | Fecha por construção após manter o deflator na base do PIB real. |
-| Identidade Y = C + I + NX | Mediana **0,0002% do PIB**; 42% dos casos com \|resíduo\| > 1 p.p. | Confirma que `cons` do GMD é consumo **total** (famílias + governo); resíduos grandes são discrepâncias estatísticas país-ano. |
-| Estacionariedade | 125 séries I(1), 49 I(0), 42 inconclusivas | Hiato é I(0) em 22/22; PIB real, REER, desemprego e dívida são majoritariamente I(1). |
-| Quebras | 44 séries, 41 com ao menos 1 quebra; 18 com 2 quebras | Datas recorrentes 1967/1974/1982/1992/2008 batem com choques globais e regimes. |
-| Dummies de regime | **101** dummies; 30 para o Brasil; 1.474 país-ano e 2.048 país-trimestre | Cobertura documentada, com fonte e papel no DSGE. |
-| DSGE pequeno | 106 obs (BRA) / 124 (EUA); aceitação 0,33–0,34 | **Identificação fraca**: o choque monetário absorve 74% da variância do hiato; não usar para inferência causal. |
-| DSGE médio | 12 variáveis, 9 choques, calibrado | Momentos não aderem (ex.: sd(i) 1,0 vs 4,9); usar para cenários/IRFs qualitativos, não para teste formal. |
+| Cobertura anual | **123.387** linhas, **114** variáveis, 24 entidades | 89 variáveis *macro_core* + 25 heterodoxas em 4 blocos |
+| Cobertura trimestral | **19.357** linhas, **28** variáveis, 16 países + WLD | Núcleo original preservado |
+| Blocos heterodoxos | 5.170 obs (distribuição), 5.212 (externa), 2.823 (financeiro), 8.364 (ecologia/estrutura) | Cobertura mediana de 37% a 82%; sem imputação |
+| Cross-source | Crescimento: 0,23 p.p.; inflação: 3,42 p.p.; dívida: 5,84 p.p. | Divergências de dívida são de perímetro |
+| Identidade nominal = real × deflator | resíduo máximo **6×10⁻⁶%** | Fecha por construção |
+| Identidade Y = C + I + NX | mediana **0,0002% do PIB** | Confirma que `cons` do GMD é consumo total |
+| Estacionariedade | 125 I(1), 49 I(0), 42 inconclusivas | Hiato I(0) em 22/22 |
+| Quebras | 41/44 séries com ao menos 1 quebra | Datas globais 1967/1974/1982/1992/2008 |
+| Dummies de regime | **101** dummies (30 Brasil) | Matriz 1.474 × 101 e 2.048 × 97 |
+| SVAR Brasil | 108 obs, 2 lags (BIC), estável | FEVD monetária: 15% do hiato, 7,4% da inflação |
+| SVAR nível (robustez HP) | 108 obs, 2 lags, estável | Pico acumulado da atividade −6,17% vs −2,68 p.p. no hiato |
 
-**Mensagem central:** o dataset é auditável e internamente consistente; o DSGE entrega a arquitetura, as equações de medida e os diagnósticos, mas **não** entrega estimativas estruturais críveis para o Brasil com esta amostra e este grau de agregação. O relatório explicita o porquê em vez de esconder o problema.
+**Mensagem central:** o dataset agora combina a espinha dorsal macroeconômica com quatro blocos heterodoxos e um baseline empírico transparente (Taylor, Phillips, SVAR recursivo e Projeções Locais). Não há modelo estrutural no pipeline ativo. A identificação do SVAR é recursiva e tem limites explícitos (price puzzle no Brasil; output puzzle nos EUA), documentados abaixo.
 
 ---
 
-## 2. Cobertura
+## 2. Cobertura e blocos
 
 ### 2.1 Visão por frequência
 
 | Frequência | Linhas | Entidades | Variáveis | Início | Fim | Observações |
 |---|---:|---:|---:|---|---|---|
-| Anual | 101.818 | 24 | 89 | 1960-12-31 | 2026-12-31 | 635 linhas marcadas como projeção/preliminar |
+| Anual | 123.387 | 24 | 114 | 1960-12-31 | 2026-12-31 | 635 linhas `is_forecast`/preliminares |
 | Trimestral | 19.357 | 17 | 28 | 1995-03-31 | 2026-12-31 | 16 países + WLD |
 
-![Cobertura anual](../reports/figures/fig_coverage_annual.png)
+### 2.2 Cobertura dos blocos heterodoxos
 
-### 2.2 Cobertura de variáveis críticas (Brasil)
+| Bloco | Variáveis | Obs. | Cobertura média | Cobertura mediana |
+|---|---:|---:|---:|---:|
+| Distribuição e classe | 6 | 5.170 | 59,8% | 52,2% |
+| Restrição externa | 6 | 5.212 | 70,7% | 82,1% |
+| Financiarização e crédito | 5 | 2.823 | 42,6% | 37,3% |
+| Ecologia e estrutura produtiva | 8 | 8.364 | 70,9% | 82,1% |
+| **Macro core** | 89 | 101.818 | 85,0% | 97,0% |
+
+**Lacunas:** Gini/top10/bottom20 têm cobertura esparsa e começam nos anos 1990; termos de troca só a partir de ~2005; capital bancário/NPL ~2000+; CO2/energia ~1970+. Não houve imputação: ausência de linha = ausência de dado.
+
+### 2.3 Cobertura Brasil (variáveis críticas)
 
 | Variável | Início | Fim | n | Cobertura 1960–2026 |
 |---|---|---|---:|---:|
@@ -47,28 +58,9 @@
 | `inflation` | 1981 | 2025 | 45 | 67% |
 | `unemployment` | 1984 | 2026 | 43 | 64% |
 
-**Lacunas explícitas:** IPCA começa em 1980 (a série anual de 12 meses começa em 1981); PNAD Contínua trimestral começa em 2012; crédito/spread trimestral não têm série harmonizada; salário real trimestral não é usado; capital/PTF param em 2019 (PWT).
-
-### 2.3 Cobertura por país — variáveis-chave
-
-| País | PIB real | Inflação | Juros | Dívida | Crédito | Capital |
-|---|---:|---:|---:|---:|---:|---:|
-| BRA | 100 | 67 | 99 | 100 | 96 | 90 |
-| USA | 100 | 100 | 99 | 100 | 100 | 90 |
-| DEU | 100 | 100 | 99 | 100 | 100 | 90 |
-| ARG | 100 | 100 | 51 | 100 | 100 | 90 |
-| CHN | 100 | 100 | 54 | 67 | 100 | 90 |
-| IND | 100 | 100 | 99 | 100 | 100 | 90 |
-| RUS | 100 | 85 | 51 | 55 | 100 | 45 |
-| ZAF | 100 | 100 | 99 | 100 | 100 | 90 |
-
-*(% de anos com observação; ver `coverage_matrix_annual.csv` para 89 × 24.)*
-
 ---
 
 ## 3. Checagem cruzada entre fontes
-
-### 3.1 Resumo por conceito
 
 | Conceito | Países | Erro médio absoluto | % dentro da tolerância | Tolerância | Fontes |
 |---|---:|---:|---:|---:|---|
@@ -77,231 +69,110 @@
 | Desemprego | 22 | 0,48 p.p. | 86% | 1 p.p. | GMD, WEO, WDI |
 | Dívida bruta | 22 | 5,84 p.p. | 74% | 5 p.p. | GMD, WEO, WDI (central) |
 | PIB nominal USD | 22 | 2,0% | 89% | 5% | GMD, WEO, WDI |
-| Resultado primário (BRA) | 1 | 5,41 p.p. | 35% | 2 p.p. | WEO (governo geral) vs BCB (central) |
+| Resultado primário (BRA) | 1 | 5,41 p.p. | 35% | 2 p.p. | WEO (geral) vs BCB (central) |
 
-### 3.2 Maiores divergências e decisão
-
-| Conceito | País | Erro médio | Máx. | Diagnóstico | Decisão |
-|---|---|---:|---:|---|---|
-| Dívida | JPN | 20,2 p.p. | 47,5 | WDI é dívida do **governo central**; GMD/WEO é governo geral | Manter GMD; WDI não é verdade |
-| Dívida | CAN | 17,7 p.p. | 47,9 | Idem (perímetro) | Manter GMD |
-| Dívida | AUS | 6,4 p.p. | 14,4 | Idem | Manter GMD |
-| Primário | BRA | 5,4 p.p. | 15,1 | WEO = governo geral; BCB 5793 = governo central | Reportar ambos; não substituir |
-| Desemprego | IND | 2,3 p.p. | 5,6 | Definições nacionais vs OIT | Manter GMD; sinalizar |
-| Desemprego | PER | 2,2 p.p. | 5,9 | Idem | Manter GMD |
-| Inflação | ARG | > 10 p.p. | 3.000+ | Hyperinflação e quebras INDEC | BCB/IPCA só para BRA; ARG com dummy de regime |
-| Dívida | COL | 11,7 p.p. | 36,0 | Perímetro | Manter GMD |
-
-**Decisões registradas:** `data/processed/source_decisions.csv`. Nenhuma série foi substituída sem regra explícita; a fonte primária de cada conceito está no codebook.
-
-### 3.3 Momentos cross-country (1995–2025)
-
-Medianas entre países (amostra completa em `cross_country_moments.csv`):
-
-| Variável | Média | Desvio-padrão | Autocorrelação (1) |
-|---|---:|---:|---:|
-| Crescimento do PIB | 2,46% | 3,02 p.p. | 0,00 |
-| Inflação | 3,35% | 2,49 p.p. | 0,51 |
-| Juro de política | 5,11% | 2,38 p.p. | 0,79 |
-| Dívida bruta | 44,95% do PIB | 15,07 p.p. | 0,94 |
-| Desemprego | 6,84% | 1,56 p.p. | 0,84 |
-
-**Brasil (1995–2025):** crescimento 2,26% (sd 2,57), inflação 6,68% (sd 3,80), juro 14,94% (sd 8,78), dívida 69,13% (sd 15,21), desemprego 9,62% (sd 2,01). O Brasil é um **outlier de juro e dívida** no grupo; a Argentina é outlier de inflação (sd 46,4 p.p.) e a Rússia de juro (sd 29,2 p.p.). Isso reforça a necessidade de dummies de regime e de amostras separadas.
-
-### 3.4 Divergências que NÃO são erro
-
-- **Dívida bruta vs líquida:** `gov_debt_gdp` (GMD, bruta) e `net_debt_gdp` (WEO, líquida) são conceitos distintos; não devem coincidir.
-- **Resultado primário governo geral vs central:** WEO `pb` e BCB 5793 medem perímetros diferentes.
-- **PIB nominal USD:** diferenças cambiais (câmbio médio do GMD vs WEO) explicam a maior parte.
-- **UE + membros:** a UE é agregado e não entra em somas; qualquer soma que a incluísse seria dupla contagem.
+**Divergências de perímetro, não de medida:** dívida JPN/CAN/AUS (WDI é governo central), primário BRA (WEO geral vs BCB central). Nenhuma série foi substituída sem regra; ver `source_decisions.csv` e `cross_source_divergences.csv`.
 
 ---
 
-## 4. Identidades contábeis e macroeconômicas
+## 4. Identidades
 
-| Identidade | n | Média | Mediana | p90 \|resíduo\| | Máx. \|resíduo\| | >1 p.p. | >5 p.p. |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| Y = C + I + NX (C total) | 1.397 | -0,11 | **0,0002** | 5,81 | 72,12 | 41,9% | 12,2% |
-| Y = C + I + G + NX (C famílias) | 1.349 | -15,24 | -15,40 | 22,80 | 81,45 | 99,1% | 94,8% |
-| Nominal = Real × Deflator | 1.474 | -1,2×10⁻⁸ | 2,6×10⁻⁸ | 4×10⁻⁶ | 6×10⁻⁶ | 0% | 0% |
-| Fisher (1+i) = (1+r)(1+π) | 1.179 | 0,23 | -0,03 | 1,09 | 45,5 | 10,5% | 2,5% |
-| Dinâmica da dívida (SFA) | 862 | 1,63 | **1,18** | 6,47 | 47,1 | 72,4% | 15,2% |
+| Identidade | n | Média | Mediana | p90 \|res.\| | Máx. \|res.\| | >1 p.p. |
+|---|---:|---:|---:|---:|---:|---:|
+| Y = C + I + NX (C total) | 1.397 | -0,11 | **0,0002** | 5,81 | 72,12 | 41,9% |
+| Y = C + I + G + NX (C famílias) | 1.349 | -15,24 | -15,40 | 22,80 | 81,45 | 99,1% |
+| Nominal = Real × Deflator | 1.474 | -1,2×10⁻⁸ | 2,6×10⁻⁸ | 4×10⁻⁶ | 6×10⁻⁶ | 0% |
+| Fisher | 1.179 | 0,23 | -0,03 | 1,09 | 45,5 | 10,5% |
+| Dinâmica da dívida (SFA) | 862 | 1,63 | 1,18 | 6,47 | 47,1 | 72,4% |
 
-**Interpretação:**
-
-1. **Y = C + I + NX fecha na mediana** e a segunda identidade fica em −15,4% do PIB — exatamente a participação típica do consumo do governo. Logo, `cons` do GMD é consumo **total** e `govexp` é despesa total (inclui transferências), não consumo do governo. O dataset marca isso no codebook.
-2. **Nominal = Real × Deflator** é exato porque o deflator foi mantido na base do PIB real; `gdp_deflator_2010` é apenas uma versão comparável.
-3. **Fisher** tem resíduo grande só em hiperinflações; a aproximação linear `i−π` diverge do produto (1+i)/(1+π). O relatório trunca \|π\|>100% para o resumo.
-4. **SFA** (stock-flow adjustment) mediano de 1,18% do PIB é alto, mas inclui reconhecimento de dívidas, diferenças de perímetro e revisões de PIB. Os maiores resíduos estão em 1982–1994 (crises de dívida) e 2008–2016 (revisões). **Não** é erro de identidade; é a parte não explicada pela dinâmica r−g.
+A segunda identidade fica em −15,4% do PIB (consumo do governo), confirmando que `cons` é consumo total. O SFA mediano de 1,18% do PIB inclui reconhecimento de dívidas, revisões e diferenças de perímetro; **não** é erro da identidade.
 
 ---
 
-## 5. Estacionariedade (ADF/KPSS)
+## 5. Estacionariedade e quebras
 
-| Variável | I(0) | I(1) | Inconclusivo | Leitura |
-|---|---:|---:|---:|---|
-| `output_gap` | **22** | 0 | 0 | Construído para ser I(0); confirma. |
-| `gdp_real` (log) | 0 | 8 | 14 | Esperado I(1); amostras curtas/países com quebras geram inconclusão. |
-| `investment_real` (log) | 0 | 16 | 4 | I(1) na maioria. |
-| `reer` (log) | 1 | 18 | 3 | I(1); usar em diferença. |
-| `unemployment` | 3 | 18 | 0 | I(1) na maioria. |
-| `gov_debt_gdp` | 2 | 14 | 6 | I(1); cuidado com quebras. |
-| `inflation` | 7 | 14 | 1 | I(1) em países com alta inflação; I(0) onde há meta crível. |
-| `policy_rate` | 3 | 15 | 4 | I(1) nominal; usar juro real ou diferencial. |
-| `real_rate_ex_post` | 9 | 8 | 5 | Misto; dependente do regime. |
-| `exchange_rate_nominal` (log) | 2 | 14 | 5 | I(1). |
-
-**Implicação para modelagem:** modelos reduzidos devem usar diferenças/hiatos; o DSGE usa hiato, inflação qoq e juros em desvios, não níveis. A tabela completa (216 testes) está em `stationarity.csv`.
+- **ADF/KPSS:** 125 séries I(1), 49 I(0), 42 inconclusivas. `output_gap` é I(0) em 22/22; PIB real, REER, desemprego e dívida são majoritariamente I(1). Modelos reduzidos usam diferenças/hiatos; o SVAR usa hiato e, como robustez, log-nível com tendência.
+- **Bai-Perron:** 41 de 44 séries com quebra; 18 com 2 quebras; datas recorrentes 1967, 1974, 1982, 1992, 2008.
+- **Chow:** 23,7% de rejeição; rejeições fazem sentido (BRA 1994, MEX 1994/2001, GBR 1992/2016, COL 1999, PER 1990/2002, USA 2008).
+- **Mapa quebra ↔ dummy:** 103 pares em `breaks_regime_map.csv`; a maioria das quebras tem dummy próxima.
 
 ---
 
-## 6. Quebras estruturais
+## 6. Outliers e missing
 
-### 6.1 Bai-Perron (mudança de média, 1961–2025)
-
-- 44 séries testadas (PIB e inflação por país), 41 com ≥ 1 quebra; 18 com 2 quebras; 8 com 4 quebras; 2 com 5.
-- Datas recorrentes: **1967, 1974, 1982, 1992, 2008** — coerentes com Bretton Woods/petróleo, Volcker, crise da dívida, ERM/GFC.
-- Exemplos: BRA PIB 1968/1981; USA inflação 1967/1974/1982/1992; ALE inflação 1971/1983/1995/2019; TUR inflação 1971/1978/1988/2003/2019.
-
-### 6.2 Chow nos eventos de regime
-
-- 38 testes; **23,7%** rejeitam a estabilidade a 5%.
-- Rejeições fazem sentido: BRA inflação 1994 (Plano Real, F=11,0; p<0,001); MEX PIB 1994 (tequila) e 2001 (IT); GBR inflação 1992 (ERM/IT) e PIB 2016 (Brexit); COL inflação 1999 (IT); PER inflação 1990 (Fujishock); USA PIB 2008 (GFC).
-- A taxa de rejeição é baixa porque o teste usa AR(1) com interações e as quebras são de **variância/regime**, não só de média; além disso, muitas dummies são step (poder baixo).
-
-### 6.3 Mapa quebra ↔ dummy
-
-`breaks_regime_map.csv` lista, para cada quebra, as dummies ativas em ±1 ano. 103 pares; a maioria das quebras tem ao menos uma dummy próxima (ex.: 1974 ↔ `g_oil_1973`; 1982 ↔ `g_latam_debt_1982`/`g_volcker_1979`; 2008 ↔ `g_gfc_2008`; 1994 ↔ `br_real_plan`).
+- **Sem NaN no dataset final:** lacunas são ausência de linha. Cobertura mediana de 97% no macro core; 37%–82% nos blocos heterodoxos.
+- **Outliers:** 102 sinalizações (|z|>4 para crescimento/inflação; |z|>5 para demais). A maioria são dummies binárias de crise e hiperinflações; os casos não binários mais relevantes são inflação ARG/SAU, câmbio ARG e juro PER.
+- **Zero imputação:** nenhuma série foi interpolada no dataset final. Interpolação linear só é usada internamente no filtro HP de lacunas internas.
 
 ---
 
-## 7. Outliers e missing
+## 7. Consistência anual ↔ trimestral
 
-- **Missing:** 0 valores nulos no dataset final (lacunas são ausência de linha, não NaN). A cobertura é reportada por país-variável; mediana 97%.
-- **Outliers:** 102 sinalizações com \|z\|>4 (crescimento/inflação) ou \|z\|>5 (demais). A maioria são **dummies binárias de crise** (z alto por construção) e episódios de hiperinflação/default. Excluindo dummies, os casos mais relevantes são inflação ARG/SAU, câmbio ARG e juro PER.
-- **Padrão:** não há imputação; nenhuma série foi interpolada no dataset final. Interpolação linear é usada **apenas internamente** no filtro HP (lacunas internas), documentada no codebook.
+- Soma dos 4 trimestres do PIB nominal (IBGE) vs anual (GMD), Brasil: 0,0% em 2019–2022; +0,8% em 2023; +1,4% em 2024; +3,6% em 2025 (revisões IBGE vs GMD).
+- Crescimento anual vs média dos SAAR trimestrais: mediana 0,004 p.p.; caudas em 2020–21 e 2026 incompleto.
+- Níveis de PIB real têm bases distintas; comparamos crescimento, não nível. `complete_year` marca anos incompletos.
 
 ---
 
-## 8. Consistência anual ↔ trimestral
+## 8. Baseline empírico (1999T1–2025T4)
 
-| Verificação | Resultado |
+### 8.1 Regra de Taylor e Curva de Phillips
+
+| Modelo | Resultado principal |
 |---|---|
-| Soma dos 4 trimestres do PIB nominal (IBGE) vs PIB anual (GMD), Brasil | 0,0% em 2019–2022; +0,8% em 2023; +1,4% em 2024; +3,6% em 2025 (revisões IBGE vs GMD) |
-| Crescimento anual vs média dos SAAR trimestrais | Mediana 0,004 p.p.; média 0,07 p.p.; caudas em 2020–21 (pandemia) e países com ano incompleto (2026) |
-| PIB real trimestral | FRED/OECD-MEI SA; anual GMD; níveis têm bases distintas, por isso comparamos **crescimento**, não nível |
-| 2026 | Ano incompleto; somas trimestrais não devem ser comparadas ao anual. A flag `complete_year` em `quarterly_annual.csv` marca isso |
+| Taylor (inflação) | φπ de longo prazo **1,576** (s.e. 0,345; p unilateral 0,047); φx 0,183 (n.s.) |
+| Taylor pós-metas (1999T3+) | φπ **2,588** (s.e. 1,152; p=0,084) — sensível à janela |
+| Taylor (expectativas Focus) | φπ 6,60 (s.e. 8,03) — impreciso |
+| Phillips (cheia) | expectativas 0,855***; hiato −0,017 (n.s.); petróleo 0,025** |
+| Phillips (núcleo) | hiato +0,054* (p=0,060); expectativas 0,484*** |
 
-**Decisão:** para o Brasil, o trimestral usa IBGE (PIB e componentes) e FRED (PIB SA); o anual usa GMD. A diferença de 3,6% em 2025 é revisão, não erro de agregação; está sinalizada.
+### 8.2 SVAR recursivo — Brasil
 
----
+Ordem: **hiato → inflação → Selic → 100·Δlog(câmbio)**. Controles: `foreign_policy_rate`, `100·Δlog(oil)`, `g_gfc_2008`, `g_pandemic_2020`.
+Lags: AIC 4, **BIC 2 (usado)**; n=108; estável (módulo inverso 0,808); brancura rejeitada (p=0,002).
 
-## 9. DSGE pequeno — diagnóstico
-
-### 9.1 Amostra e calibração
-
-- Brasil: 1999T3–2025T4, **106 obs**; EUA: 1995T1–2025T4, **124 obs**.
-- Núcleo calibrado: σ=1,0; κ=0,08; φπ=1,50; φx=0,125; ρ=0,80; β=0,9925.
-- Estimados: hábitos (a), indexação (b), AR(1) dos choques, desvios-padrão e erro de medida do hiato.
-- Erros de medida: 0,10 p.p. em π e i; hiato estimado.
-
-### 9.2 Posterior (Brasil)
-
-| Parâmetro | Prior (média) | Posterior | IC 90% | ESS |
-|---|---:|---:|---|---:|
-| a (hábitos) | 0,50 | **0,068** | 0,028–0,125 | 334 |
-| b (indexação) | 0,50 | **0,059** | 0,025–0,108 | 343 |
-| ρ_x | 0,50 | 0,048 | 0,018–0,086 | 242 |
-| ρ_π | 0,50 | 0,052 | 0,022–0,091 | 463 |
-| ρ_i | 0,50 | 0,449 | 0,221–0,694 | 329 |
-| σ_x | 0,008 | 0,008 | 0,001–0,021 | 292 |
-| σ_π | 0,004 | 0,004 | 0,000–0,010 | 450 |
-| σ_i | 0,002 | 0,002 | 0,000–0,006 | 323 |
-| me_x | 0,004 | 0,004 | 0,001–0,010 | 159 |
-
-Aceitação 0,33; ESS entre 159 e 463 (amostra efetiva razoável). **Hábitos e indexação colapsam para ~0,06**, contra 0,5 no prior: a persistência observada é capturada pelo juro (ρ_i) e pela regra de Taylor, não por hábitos/indexação. Isso é um resultado, não um erro de cadeia.
-
-### 9.3 Momentos: dados vs modelo
-
-| Momento | Dados | Modelo | Avaliação |
-|---|---:|---:|---|
-| sd(hiato) | 1,83 | 1,83 | ok |
-| ac1(hiato) | 0,63 | 0,57 | ok |
-| sd(π) | 3,60 | 2,07 | subestima 43% |
-| ac1(π) | 0,46 | 0,37 | ok |
-| sd(i) | 4,95 | 1,01 | **subestima 80%** |
-| ac1(i) | 0,97 | 0,76 | subestima persistência |
-| corr(hiato, π) | 0,13 | 0,57 | sinal ok, magnitude alta |
-| corr(hiato, i) | -0,09 | **-0,79** | sinal/magnitude errados |
-| corr(π, i) | 0,26 | -0,40 | **sinal errado** |
-
-### 9.4 Decomposição de variância
-
-| Choque | Hiato | Inflação | Juros |
+| Choque monetário (+100 pb) | Pico | Horizonte | Acumulado 12T |
 |---|---:|---:|---:|
-| Demanda | 19,3% | 1,3% | 3,8% |
-| Markup | 7,4% | 43,0% | 23,5% |
-| Monetário | **73,6%** | **55,6%** | **73,6%** |
+| Hiato | −0,321 p.p. | 5 | −2,680 p.p. |
+| Inflação | +0,380 p.p. | 2 | +2,547 p.p. |
+| Câmbio | −1,263 p.p. | 1 | −2,831 p.p. |
 
-A política monetária absorve a maior parte da variância — resultado **não crível** e típico de identificação fraca com três choques e três observáveis. O modelo não deve ser usado para FEVD estrutural.
+**FEVD (12T):** monetário explica **15,0% do hiato**, **7,4% da inflação**, 46,3% da Selic e 4,9% do câmbio.
 
-### 9.5 Identificação
+**Robustez:** núcleo da inflação reduz o *price puzzle* (pico +0,24 p.p. em h=3), mas não o elimina. Nível `100·log(PIB)` com tendência linear mantém atividade negativa (pico acumulado −6,17%) e VAR estável (raiz inversa 0,985); ver `fig_svar_hp_vs_level.png`.
 
-- SVD do jacobiano de momentos: valores singulares 12,41; 6,93; 5,10; 3,26; 1,20; 0,49; 0,17; 0,085; **0,000**. A última direção é nula → combinação de parâmetros não identificada.
-- Importância dos parâmetros: `me_x` e `sd_x` dominam; `a`, `b`, `ρ_x`, `ρ_π` têm importância relativa menor.
-- **Riscos:** hiato HP (erro de medida), três choques/três observáveis, quebras de regime da Selic, expectativas Focus de 12m, amostra curta.
+### 8.3 Projeções Locais e cross-country
 
-### 9.6 IRFs
-
-![IRFs do DSGE pequeno](../reports/figures/fig_dsge_irf_small.png)
-
-Os IRFs têm sinais plausíveis: um choque de demanda eleva hiato e inflação; um choque de markup eleva inflação e reduz hiato; um choque monetário contracionista eleva a Selic e reduz hiato e inflação. As magnitudes, porém, são grandes e a FEVD/correlações cruzadas seguem implausíveis — o problema é de identificação e especificação, não de sinal.
+As LP (HAC) mostram atividade negativa a partir de h=4, mas com bandas muito mais largas e magnitudes menores que o SVAR; para inflação, o *price puzzle* também aparece. No cross-country, o México reproduz o sinal teórico (atividade −0,31; inflação −0,03); os EUA exibem *output puzzle* (+0,08) e inflação −0,23; o Brasil exibe *price puzzle*.
 
 ---
 
-## 10. DSGE médio — diagnóstico
-
-- 12 variáveis, 9 choques, calibrado (não estimado); solução QZ com raiz máxima 0,976 (estável).
-- Choques `sd_ed`, `sd_epi`, `sd_ei` calibrados para casar volatilidades; custo relativo 0,56 (não fecha).
-- Momentos: sd(x) 2,43 vs 1,83; sd(π) 1,96 vs 3,60; **sd(i) 1,02 vs 4,95**; sd(inv) 0,94 vs 5,85; sd(g) 0,47 vs 2,48.
-- Sensibilidade ±20%: `bp` e `bw` são os parâmetros que mais afetam sd(x); `rho` afeta sd(i) (0,27 a 1,50).
-- **Conclusão:** o modelo médio é uma ferramenta de cenário/IRF, não um modelo validado para os momentos brasileiros. A baixa volatilidade do investimento e do gasto reflete a ausência de choques de investimento/fiscal mais ricos e a rigidez da regra de Taylor.
-
----
-
-## 11. Riscos, decisões e limitações
+## 9. Riscos, decisões e limitações
 
 | Risco | Evidência | Mitigação / decisão |
 |---|---|---|
-| Dupla contagem UE + membros | UE é agregado | Excluída de somas; flag em `countries.yml` |
-| Perímetro da dívida | Divergência GMD vs WDI até 47 p.p. | GMD/WEO governo geral; WDI central só validação |
-| Primário governo geral vs central | 5,4 p.p. no Brasil | Ambos reportados; não substituídos |
-| Inflação pré-1980 | IPCA começa em 1980 | Lacuna sinalizada; não imputada |
-| Capital/PTF pós-2019 | PWT termina em 2019 | Não extrapolado; lacuna sinalizada |
-| Quebras de regime | 41/44 séries com quebra | 101 dummies; modelos reduzidos com controles |
-| Identificação DSGE | FEVD monetário 74%; corr(hiato,i) −0,79 vs −0,09 | Resultado reportado como **não estrutural**; núcleo calibrado |
-| Amostra trimestral | 16 países, não 22 | CHN/IND/CHL/COL/PER/RUS só anual |
-| Vintages | SGS não guarda vintage; WDI/WEO revisam | `manifest.json` registra data/hora; comparação real-time vs final limitada |
-| Duplicação de conceito | Muitas fontes para o mesmo conceito | Uma fonte primária por variável; validação em tabela separada |
+| Dupla contagem UE + membros | `EU` é agregado | Excluída de somas; flag em `countries.yml` |
+| Perímetro da dívida | divergência até 47 p.p. | GMD/WEO governo geral; WDI central só validação |
+| Primário geral vs central | 5,4 p.p. no Brasil | Ambos reportados |
+| Cobertura heterodoxa esparsa | Gini 37% mediano; ToT 2005+ | Sem imputação; cobertura explícita |
+| 2026 preliminar | ano incompleto | `preliminary`/`is_forecast=True`; fora das estimações |
+| Identificação SVAR | price/output puzzles | Cholesky documentado; robustez HP vs nível; LP como contraponto |
+| Amostra trimestral | 16 países, não 22 | China/Índia/Chile/Colômbia/Peru/Rússia só anual |
+| Vintages | SGS sem vintage; WDI/WEO revisam | `manifest.json` com data/hora e SHA-256 |
+| Zero imputação | lacunas preservadas | Documentado no codebook |
 
-**O que não foi feito (e por quê):**
-
-- Não se estimou o DSGE médio: 20+ parâmetros, 106 obs, identificação já fraca no pequeno.
-- Não se usou IFS direto: API instável; GMD já incorpora IFS e foi validado contra WEO/WDI.
-- Não se imputou inflação pré-1980, capital pós-2019 ou spread trimestral: ausência de proxy defensável.
-- Não se fez nowcasting nem dados em tempo real: fora do escopo.
+**Não foi feito:** modelo estrutural (removido), imputação de lacunas, nowcasting, dados em tempo real, séries não documentadas.
 
 ---
 
-## 12. Reprodutibilidade
+## 10. Reprodutibilidade
 
-1. `make fetch` — baixa e cacheia todas as fontes; grava `manifest.json` com URL, timestamp, SHA-256.
-2. `make build` — harmoniza e grava long/wide/coverage/regimes.
-3. `make validate` — cross-source, identidades, ADF/KPSS, Bai-Perron, Chow, outliers.
-4. `make dsge` — estima o NK pequeno (BRA/EUA) e roda o médio calibrado.
-5. `make reports` — figuras e tabelas.
-6. `make test` — testes de solver, schema e identidades.
+1. `make fetch` — cacheia fontes existentes e baixa apenas os novos indicadores WDI (fast-fail, timeout 20 s, sem retry).
+2. `make build` — harmoniza anual/trimestral, blocos heterodoxos e derivadas.
+3. `make validate` — cross-source, identidades, ADF/KPSS, Bai-Perron, Chow.
+4. `make empirical` — Taylor, Phillips, SVAR (gap/núcleo/nível), LP e cross-country.
+5. `make export` — Excel + CSVs consolidados.
+6. `make reports` — figuras, tabelas e docs.
+7. `make test` — schema, exportação e estabilidade do SVAR.
 
-O cache em `data/raw/` permite reproduzir sem rede; `MACRO_EXTRACTION_TS` fixa o timestamp. Versões em `requirements.txt`.
-
-**Teste de reprodução do zero:** remover `data/raw/parsed_*`, `data/processed/*` e rodar `make all`; o pipeline refaz a extração (requer rede) e os resultados devem ser idênticos, exceto por revisões das fontes (SGS/WDI/WEO não têm vintage).
+`manifest.json` registra URL, timestamp e SHA-256 de cada download; o cache em `data/raw/` permite reprodução offline.

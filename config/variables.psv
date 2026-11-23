@@ -1,109 +1,146 @@
-id|freq|label|unit|source|code|transform|role|models|dsge_var|measurement_equation|shock|coverage_note|notes
-gdp_nominal|A|PIB nominal|milhões de LC correntes|GMD|nGDP|level|endogenous|ISLM,MF,ADAS,DSGE_S,DSGE_M|Y_t|||1950–2025/26|Base do deflator e das razões % do PIB.
-gdp_real|A|PIB real|milhões de LC, preços constantes|GMD|rGDP|log|endogenous|ISLM,ADAS,SOLOW,DSGE_S,DSGE_M|y_t|||1950–2025/26|Série encadeada; ano-base varia por país no GMD (documentado por país).
-gdp_real_usd|A|PIB real em USD|milhões de USD constantes|GMD|rGDP_USD|log|exogenous|SOLOW,DSGE_M|y*_t|||1950–2025/26|Comparação de níveis reais entre países.
-gdp_nominal_usd|A|PIB nominal em USD|milhões de USD correntes|derived|nGDP/USDfx|level|exogenous|MF,DSGE_M|||1950–2025/26|Calculado como nGDP dividido pela taxa de câmbio média do ano.
-gdp_real_pc|A|PIB real per capita|LC constantes per capita|GMD|rGDP_pc|log|endogenous|SOLOW|||1950–2025/26|Usado no modelo de Solow e em convergência.
-gdp_deflator|A|Deflator implícito do PIB|índice (ano-base do PIB real = 100)|GMD|deflator|index|endogenous|ADAS,DSGE_S,DSGE_M|π_t|||1950–2025/26|GMD fornece a razão nominal/real; base coincide com a do PIB real do país. A versão 2010=100 está em gdp_deflator_2010.
-gdp_ppp_usd|A|PIB em paridade de poder de compra|milhões de int$ correntes|WEO|PPPGDP|level|exogenous|SOLOW,DSGE_M|||1980–2031|Apenas para comparação de níveis; não entra na lista TOP10_NOMINAL.
-gdp_growth|A|Crescimento real do PIB|% a.a.|derived|dlog(gdp_real)|yoy|endogenous|ADAS,PC,SOLOW,DSGE_S,DSGE_M|Δy_t|||1960–2025/26|Calculado por diferença de log; não usa a série de crescimento do GMD.
-potential_gdp|A|PIB potencial|milhões de LC constantes|derived|HP(log(gdp_real), λ=100)|hp_trend|latent|ADAS,DSGE_S,DSGE_M|y*_t|||1960–2025/26|Filtro HP bicaudal com λ=100 (anual); risco de viés de fim de amostra documentado.
-output_gap|A|Hiato do produto|% do PIB potencial|derived|100*(log(gdp_real)-log(potential_gdp))|hp_gap|latent|ADAS,PC,TR,DSGE_S,DSGE_M|x_t|x_obs,t = 100*x_t + e_x,t|choque de demanda|1960–2025/26|Observável do DSGE pequeno (com erro de medida); construído por HP.
-consumption_real|A|Consumo final real|milhões de LC constantes|GMD|cons|log|endogenous|ISLM,ADAS,DSGE_M|c_t|||1950–2025/26|Consumo final das famílias + governo quando a fonte não separa; ver nota por país.
-consumption_gdp|A|Consumo final (% do PIB)|% do PIB|GMD|cons_GDP|pct_gdp|endogenous|ISLM,ADAS,DSGE_M|||1950–2025/26|Razão nominal.
-investment_real|A|Formação bruta de capital real|milhões de LC constantes|GMD|inv|log|endogenous|ISLM,ADAS,DSGE_M|i_t|||1950–2025/26|Inclui variação de estoques quando disponível.
-investment_gdp|A|Investimento (% do PIB)|% do PIB|GMD|inv_GDP|pct_gdp|endogenous|ISLM,DSGE_M|||1950–2025/26|Razão nominal.
-fixed_investment_real|A|Formação bruta de capital fixo real|milhões de LC constantes|GMD|finv|log|endogenous|DSGE_M|inv_t|||1950–2025/26|Proxy de investimento das firmas.
-fixed_investment_gdp|A|Formação bruta de capital fixo (% do PIB)|% do PIB|GMD|finv_GDP|pct_gdp|endogenous|DSGE_M|||1950–2025/26|Razão nominal.
-gov_exp_real|A|Despesa do governo real|milhões de LC constantes|GMD|govexp|log|exogenous|ISLM,MF,ADAS,DSGE_M|g_t|||1950–2025/26|Consumo + investimento do governo; definição fiscal detalhada em gov_revenue.
-gov_exp_gdp|A|Despesa do governo (% do PIB)|% do PIB|GMD|govexp_GDP|pct_gdp|exogenous|ISLM,MF,ADAS,DSGE_M|||1950–2025/26|Razão nominal.
-gov_revenue_gdp|A|Receita do governo (% do PIB)|% do PIB|GMD|govrev_GDP|pct_gdp|exogenous|ISLM,DSGE_M|τ_t|||1950–2025/26|Receita total; inclui contribuições sociais quando a fonte reporta.
-tax_burden_gdp|A|Carga tributária (% do PIB)|% do PIB|GMD|govtax_GDP|pct_gdp|exogenous|ISLM,DSGE_M|||1950–2025/26|Tributos sobre produção e importação; não é receita total.
-gov_balance_gdp|A|Resultado fiscal (% do PIB)|% do PIB|GMD|govdef_GDP|pct_gdp|exogenous|ISLM,DSGE_M|b_t|||1950–2025/26|Sinal: positivo = superávit; ver normalize_sinal no build.
-gov_debt_gdp|A|Dívida bruta do governo (% do PIB)|% do PIB|GMD|govdebt_GDP|pct_gdp|exogenous|DSGE_M|d_t|||1950–2025/26|Dívida bruta; comparação com WDI/WEO na validação.
-exports_gdp|A|Exportações (% do PIB)|% do PIB|GMD|exports_GDP|pct_gdp|exogenous|ISLM,MF,DSGE_M|||1950–2025/26|Bens e serviços, preços correntes.
-imports_gdp|A|Importações (% do PIB)|% do PIB|GMD|imports_GDP|pct_gdp|exogenous|ISLM,MF,DSGE_M|||1950–2025/26|Bens e serviços, preços correntes.
-net_exports_gdp|A|Exportações líquidas (% do PIB)|% do PIB|derived|exports_GDP - imports_GDP|pct_gdp|endogenous|ISLM,MF,ADAS,DSGE_M|nx_t|||1950–2025/26|Identidade Y=C+I+G+NX; resíduo reportado na validação.
-current_account_gdp|A|Conta corrente (% do PIB)|% do PIB|GMD|CA_GDP|pct_gdp|exogenous|MF,DSGE_M|||1950–2025/26|Inclui renda de fatores e transferências.
-cpi_index|A|Índice de preços ao consumidor|índice 2010=100|GMD|CPI|index|endogenous|PC,ADAS|π_t|||1950–2025/26|GMD padroniza 2010=100.
-inflation|A|Inflação ao consumidor|% a.a.|GMD|infl|yoy|endogenous|ADAS,PC,TR,DSGE_S,DSGE_M|π_t|π_obs,t = 4*π_t + e_π,t|choque de markup|1950–2025/26|Variação anual do CPI; núcleo apenas onde existe (Brasil/EUA).
-population|A|População|milhões|GMD|pop|log|exogenous|SOLOW|||1950–2025/26|Usada em n e em per capita.
-unemployment|A|Taxa de desemprego|% da força de trabalho|GMD|unemp|level|endogenous|PC,DSGE_M|u_t|||1950–2025/26|Definições nacionais harmonizadas pelo GMD; ver notas por país.
-short_rate|A|Juro de curto prazo|% a.a.|GMD|strate|level|endogenous|ISLM,MF,TR,DSGE_S|i_t|||1950–2025/26|Taxa de mercado de curto prazo; instrumento da regra de Taylor.
-long_rate|A|Juro de longo prazo|% a.a.|GMD|ltrate|level|endogenous|ISLM,DSGE_M|||1950–2025/26|Título soberano de longo prazo; usado na curva de juros e na dívida.
-policy_rate|A|Taxa de política monetária|% a.a.|GMD|cbrate|level|exogenous|TR,DSGE_S,DSGE_M|i_t|||1950–2025/26|Taxa básica; para o Brasil vem do SGS 432 no trimestral.
-m0|A|Base monetária|milhões de LC|GMD|M0|log|exogenous|ISLM,MF|||1950–2025/26|Agregado monetário restrito.
-m1|A|M1|milhões de LC|GMD|M1|log|exogenous|ISLM,MF|||1950–2025/26|Papel-moeda + depósitos à vista.
-m2|A|M2|milhões de LC|GMD|M2|log|exogenous|ISLM,MF|||1950–2025/26|M1 + depósitos de poupança e a prazo.
-m3|A|M3|milhões de LC|GMD|M3|log|exogenous|ISLM,MF|||1950–2025/26|M2 + títulos e outros passivos.
-exchange_rate_nominal|A|Taxa de câmbio nominal|LC por USD (média anual)|GMD|USDfx|log|endogenous|MF,DSGE_M|S_t|||1950–2025/26|Orientación: unidades de moeda local por 1 USD; aumento = depreciação.
-reer|A|Câmbio real efetivo|índice 2010=100|GMD|REER|log|endogenous|MF,DSGE_M|q_t|||1950–2025/26|BIS/bruto; aumento = apreciação real.
-hpi|A|Índice de preços de imóveis|índice 2010=100|GMD|HPI|log|exogenous|DSGE_M|||1950–2025/26|Onde disponível; usado como controle de riqueza.
-primary_balance_gdp|A|Resultado primário (% do PIB)|% do PIB|WEO|pb|pct_gdp|exogenous|ISLM,DSGE_M|s_t|||1980–2031|WEO pós-1980; sinal positivo = superávit primário.
-net_debt_gdp|A|Dívida líquida do governo (% do PIB)|% do PIB|WEO|GGXWDN_G01_GDP_PT|pct_gdp|exogenous|DSGE_M|||1980–2031|Dívida líquida; cobertura menor que a bruta.
-inflation_weo|A|Inflação (WEO)|% a.a.|WEO|PCPIPCH|yoy|validation|ADAS,PC|||1980–2031|Série de validação/forecast; is_forecast=1 para anos > 2025.
-gov_debt_gdp_weo|A|Dívida bruta (WEO)|% do PIB|WEO|GGXWDG_NGDP|pct_gdp|validation|DSGE_M|||1980–2031|Validação cruzada da dívida.
-gdp_growth_weo|A|Crescimento do PIB (WEO)|% a.a.|WEO|NGDP_RPCH|yoy|validation|ADAS|||1980–2031|Validação cruzada do crescimento.
-gdp_nominal_usd_weo|A|PIB nominal USD (WEO)|milhões de USD|WEO|NGDPD|level|validation|MF|||1980–2031|Validação cruzada do PIB nominal.
-unemployment_weo|A|Desemprego (WEO)|%|WEO|LUR|level|validation|PC|||1980–2031|Validação cruzada do desemprego.
-participation_rate|A|Taxa de participação|% da população em idade ativa|WDI|SL.TLF.CACT.ZS|level|endogenous|DSGE_M|||1960–2025/26|Força de trabalho / população 15+.
-credit_private_gdp|A|Crédito ao setor privado (% do PIB)|% do PIB|WDI|FS.AST.PRVT.GD.ZS|pct_gdp|exogenous|DSGE_M|||1960–2025/26|Crédito doméstico ao setor privado; fricção financeira.
-gov_consumption_gdp|A|Consumo do governo (% do PIB)|% do PIB|WDI|NE.CON.GOVT.ZS|pct_gdp|validation|ISLM,DSGE_M|||1960–2025/26|Validação/complemento de gov_exp_gdp.
-gross_capital_formation_gdp|A|Formação bruta de capital (% do PIB)|% do PIB|WDI|NE.GDI.TOTL.ZS|pct_gdp|validation|ISLM,DSGE_M|||1960–2025/26|Validação/complemento de investment_gdp.
-tax_revenue_gdp_wdi|A|Receita tributária (% do PIB)|% do PIB|WDI|GC.TAX.TOTL.GD.ZS|pct_gdp|validation|DSGE_M|||1970–2025/26|Validação da carga tributária.
-central_gov_debt_gdp|A|Dívida do governo central (% do PIB)|% do PIB|WDI|GC.DOD.TOTL.GD.ZS|pct_gdp|validation|DSGE_M|||1970–2025/26|Validação/complemento da dívida bruta.
-real_gdp_wdi|A|PIB real (WDI)|USD constantes de 2015|WDI|NY.GDP.MKTP.KD|log|validation|ADAS,SOLOW|||1960–2025/26|Validação cruzada do nível de PIB real.
-inflation_wdi|A|Inflação (WDI)|% a.a.|WDI|FP.CPI.TOTL.ZG|yoy|validation|ADAS,PC|||1960–2025/26|Validação cruzada da inflação.
-unemployment_wdi|A|Desemprego (WDI)|%|WDI|SL.UEM.TOTL.ZS|level|validation|PC|||1991–2025/26|Validação cruzada do desemprego (OIT).
-population_wdi|A|População (WDI)|pessoas|WDI|SP.POP.TOTL|log|validation|SOLOW|||1960–2025/26|Validação da população.
-world_gdp_real|A|PIB real mundial|USD constantes de 2015|WDI|NY.GDP.MKTP.KD|log|exogenous|MF,DSGE_M|y*_t|||1960–2025/26|Agregado WLD do Banco Mundial; proxy de Y*.
-world_gdp_growth|A|Crescimento do PIB mundial|% a.a.|derived|dlog(world_gdp_real)|yoy|exogenous|MF,DSGE_M|||1961–2025/26|Choque externo comum.
-capital_stock|A|Estoque de capital|milhões de USD constantes de 2017|PWT|rnna|log|endogenous|SOLOW,DSGE_M|k_t|||1950–2019|PWT 10.01, variável rnna (capital a preços nacionais constantes); após 2019 não extrapolado.
-tfp|A|PTF (TFP)|índice 2017=1|PWT|rtfpna|log|endogenous|SOLOW,DSGE_M|A_t|||1950–2019|PTF de Solow ajustada por capital humano.
-employment|A|Emprego|milhões de trabalhadores|PWT|emp|log|endogenous|SOLOW,DSGE_M|n_t|||1950–2019|PWT emp; complementado por WDI/ILO quando necessário.
-hours_worked|A|Horas trabalhadas por trabalhador|horas/ano|PWT|avh|log|endogenous|DSGE_M|h_t|||1950–2019|PWT avh.
-labor_share|A|Participação do trabalho na renda|fração (0–1)|PWT|labsh|level|endogenous|DSGE_M|||1950–2019|PWT labsh; usado para calibrar salário/markup.
-human_capital|A|Capital humano|índice|PWT|hc|log|exogenous|SOLOW|||1950–2019|PWT hc.
-capital_output_ratio|A|Razão capital-produto|razão|derived|capital_stock/gdp_real|level|endogenous|SOLOW|||1950–2019|Unidades compatíveis (ambas em USD constantes de 2017).
-tfp_growth|A|Crescimento da PTF|% a.a.|derived|dlog(tfp)|yoy|endogenous|SOLOW,DSGE_M|||1951–2019|Choque de tecnologia.
-commodity_price_index|A|Índice de preços de commodities|índice (2016=100)|FRED|PALLFNFINDEXQ|log|exogenous|PC,DSGE_M|pcom_t|||1960–2025/26|Índice amplo de commodities do FMI, média anual.
-oil_price|A|Preço do petróleo Brent|USD/barril|FRED|POILBREUSDM|log|exogenous|ADAS,PC,DSGE_M|||1987–2025/26|Média anual; choque de oferta.
-vix|A|Índice de volatilidade VIX|índice|FRED|VIXCLS|log|exogenous|MF,DSGE_M|||1990–2025/26|Proxy de prêmio de risco global.
-foreign_policy_rate|A|Juro de política dos EUA|% a.a.|FRED|IR3TIB01USQ156N|level|exogenous|MF,DSGE_M|i*_t|||1960–2025/26|Média anual da taxa de 3 meses dos EUA.
-us_gdp_real|A|PIB real dos EUA|bilhões de USD encadeados de 2017|FRED|GDPC1|log|exogenous|MF,DSGE_M|y*_t|||1947–2025/26|Proxy de demanda externa para o Brasil.
-real_rate_ex_post|A|Juro real ex post|% a.a.|derived|policy_rate - inflation|fisher|endogenous|ISLM,TR,DSGE_S|||1950–2025/26|Aproximação de Fisher; usa inflação contemporânea.
-real_rate_ex_ante|A|Juro real ex ante|% a.a.|derived|policy_rate - inflation_expectations|fisher|endogenous|TR,DSGE_S|r_t|||2001–2025/26|Só para Brasil (Focus) e EUA (Michigan).
-neutral_rate|A|Taxa de juros neutra (r*)|% a.a.|derived|HP(real_rate_ex_ante, λ=100)|hp_trend|latent|TR,DSGE_S,DSGE_M|r*_t|||2001–2025/26|Proxy por filtro HP; não é estimativa estrutural de r*.
-inflation_expectations|A|Expectativas de inflação (survey)|% a.a. 12 meses à frente|BCB_FOCUS|ExpectativasMercadoInflacao12Meses|level|exogenous|PC,TR,DSGE_S|E_t π_{t+1}|||2001–2025/26|Focus (Brasil) e Michigan (EUA); demais países sem survey homogêneo.
-inflation_target|A|Meta de inflação|% a.a.|hardcoded|metas por país|level|regime|TR,DSGE_S|||1990–2025/26|Tabela em regimes.yml; ausente onde não há regime explícito.
-debt_dynamics_residual|A|Resíduo da dinâmica da dívida|% do PIB|derived|identidade da dívida|derived|validation|DSGE_M|||1980–2025/26|SFA (stock-flow adjustment); ver validação de identidades.
-banking_crisis|A|Crise bancária (dummy)|0/1|GMD|BankingCrisis|dummy|regime|ADAS,DSGE_M|||1800–2025/26|Dummy anual do GMD; complementa regimes.yml.
-currency_crisis|A|Crise cambial (dummy)|0/1|GMD|CurrencyCrisis|dummy|regime|MF,DSGE_M|||1800–2025/26|Dummy anual do GMD.
-sovereign_debt_crisis|A|Crise de dívida soberana (dummy)|0/1|GMD|SovDebtCrisis|dummy|regime|DSGE_M|||1800–2025/26|Dummy anual do GMD.
-output_per_worker|A|Produto por trabalhador|LC constantes por trabalhador|derived|gdp_real/employment|log|endogenous|SOLOW,DSGE_M|||1950–2019|Produtividade média do trabalho.
-gdp_real|Q|PIB real trimestral|milhões de LC, preços constantes, SA|FRED|NGDPRSAXDC{ISO2}Q|log|endogenous|ADAS,DSGE_S,DSGE_M|y_t|||1996–2026T2|Série OECD-MEI dessazonalizada; Brasil também validado contra IBGE.
-gdp_real_growth|Q|Crescimento trimestral do PIB|% a.a. (SAAR)|derived|400*dlog(gdp_real)|yoy|endogenous|ADAS,DSGE_S,DSGE_M|Δy_t|||1996–2026T2|Taxa anualizada da variação trimestral.
-potential_gdp|Q|PIB potencial trimestral|milhões de LC constantes|derived|HP(log(gdp_real), λ=1600)|hp_trend|latent|ADAS,DSGE_S,DSGE_M|y*_t|||1996–2026T2|HP bicaudal λ=1600.
-output_gap|Q|Hiato do produto trimestral|% do PIB potencial|derived|100*(log(gdp_real)-log(potential_gdp))|hp_gap|latent|ADAS,PC,TR,DSGE_S,DSGE_M|x_t|x_obs,t = 100*x_t + e_x,t|choque de demanda|1996–2026T2|Observável do DSGE pequeno; robustez com hiato unicaudal no relatório.
-inflation|Q|Inflação ao consumidor trimestral|% a.a. (variação 4 trimestres)|FRED|CPALTT01{ISO2}Q659N|yoy|endogenous|ADAS,PC,TR,DSGE_S,DSGE_M|π_t|π_obs,t = 4*π_t + e_π,t|choque de markup|1996–2026T2|Brasil: calculada do IPCA mensal (SGS 433); demais: OECD-MEI.
-core_inflation|Q|Núcleo da inflação|% a.a.|BCB|11427|yoy|endogenous|PC,DSGE_S|πcore_t|||2001–2026|Brasil: núcleo de médias aparadas com suavização; EUA: CPILFESL. Demais: ausente.
-unemployment|Q|Taxa de desemprego trimestral|%|FRED|LRHUTTTT{ISO2}Q156S|level|endogenous|PC,DSGE_M|u_t|||1996–2026T2|OECD-MEI, dessazonalizada.
-policy_rate|Q|Taxa de política monetária trimestral|% a.a.|BCB|432|level|exogenous|TR,DSGE_S,DSGE_M|i_t|i_obs,t = 4*i_t + e_i,t|choque monetário|1996–2026T2|Brasil: Selic meta (média do trimestre); EUA: fed funds efetivo; demais: 3m interbancária.
-short_rate|Q|Juro de curto prazo trimestral|% a.a.|FRED|IR3TIB01{ISO2}Q156N|level|endogenous|ISLM,MF,DSGE_S|||1996–2026T2|Taxa de 3 meses interbancária.
-long_rate|Q|Juro de longo prazo trimestral|% a.a.|FRED|IRLTLT01{ISO2}Q156N|level|endogenous|ISLM,DSGE_M|||1996–2026T2|Título soberano de 10 anos.
-exchange_rate_nominal|Q|Taxa de câmbio nominal trimestral|LC por USD|FRED|DEX{ISO2}|log|endogenous|MF,DSGE_M|S_t|||1996–2026T2|Média do trimestre; orientação LC por USD; EUR/GBP/AUD invertidos.
-reer|Q|Câmbio real efetivo trimestral|índice 2010=100|FRED|RB{ISO2}BIS|log|endogenous|MF,DSGE_M|q_t|||1994–2026T3|BIS broad, média trimestral.
-inflation_expectations|Q|Expectativas de inflação (survey)|% a.a. 12 meses à frente|BCB_FOCUS|ExpectativasMercadoInflacao12Meses|level|exogenous|PC,TR,DSGE_S|E_t π_{t+1}|||2001–2026|Brasil: Focus (média do trimestre); EUA: MICH.
-consumption_real|Q|Consumo das famílias real|milhões de BRL, preços de 1995|IBGE|6612/93404|log|endogenous|DSGE_M|c_t|||1996–2026T2|Brasil apenas; valores encadeados.
-gov_exp_real|Q|Consumo do governo real|milhões de BRL, preços de 1995|IBGE|6612/93405|log|exogenous|DSGE_M|g_t|||1996–2026T2|Brasil apenas; administração pública.
-investment_real|Q|Formação bruta de capital fixo real|milhões de BRL, preços de 1995|IBGE|6612/93406|log|endogenous|DSGE_M|inv_t|||1996–2026T2|Brasil apenas.
-exports_real|Q|Exportações reais|milhões de BRL, preços de 1995|IBGE|6612/93407|log|exogenous|DSGE_M|ex_t|||1996–2026T2|Brasil apenas.
-imports_real|Q|Importações reais|milhões de BRL, preços de 1995|IBGE|6612/93408|log|exogenous|DSGE_M|im_t|||1996–2026T2|Brasil apenas; sinal positivo (importação).
-gdp_nominal|Q|PIB nominal trimestral|milhões de BRL correntes|IBGE|1846/90707|level|endogenous|DSGE_M|Y_t|||1996–2026T2|Brasil apenas.
-gdp_deflator|Q|Deflator implícito trimestral|índice 1995=100|derived|100*gdp_nominal/gdp_real|index|endogenous|DSGE_M|π_t|||1996–2026T2|Brasil apenas; base 1995.
-real_rate_ex_ante|Q|Juro real ex ante trimestral|% a.a.|derived|policy_rate - inflation_expectations|fisher|endogenous|TR,DSGE_S|r_t|||2001–2026|Brasil.
-oil_price|Q|Preço do petróleo Brent|USD/barril|FRED|POILBREUSDM|log|exogenous|PC,DSGE_M|||1987–2026|Média trimestral.
-foreign_output|Q|PIB real dos EUA|bilhões de USD encadeados de 2017|FRED|GDPC1|log|exogenous|MF,DSGE_M|y*_t|||1947–2026T2|Proxy de demanda externa.
-foreign_policy_rate|Q|Juro de política dos EUA|% a.a.|FRED|DFF|level|exogenous|MF,DSGE_M|i*_t|||1954–2026|Média trimestral do fed funds efetivo.
-gdp_deflator_2010|A|Deflator implícito do PIB (2010=100)|índice 2010=100|derived|deflator reescalado|index|exogenous|ADAS,DSGE_S,DSGE_M|π_t|||1950–2026|Versão comparável entre países; NÃO usar com níveis de PIB real (base nacional). Para a identidade nominal/real usar gdp_deflator.
-primary_balance_brl|Q|Resultado primário do governo central|milhões de BRL|BCB|4649|level|exogenous|ISLM,DSGE_M|||2001–2026|Fluxo mensal somado no trimestre; perímetro do governo central, distinto do WEO (governo geral).
+id|freq|label|unit|source|code|transform|role|models|coverage_note|notes
+gdp_nominal|A|PIB nominal|milhões de LC correntes|GMD|nGDP|level|endogenous|ISLM,MF,ADAS|1950–2025/26|Base do deflator e das razões % do PIB.
+gdp_real|A|PIB real|milhões de LC, preços constantes|GMD|rGDP|log|endogenous|ISLM,ADAS,SOLOW|1950–2025/26|Série encadeada; ano-base varia por país no GMD (documentado por país).
+gdp_real_usd|A|PIB real em USD|milhões de USD constantes|GMD|rGDP_USD|log|exogenous|SOLOW|1950–2025/26|Comparação de níveis reais entre países.
+gdp_nominal_usd|A|PIB nominal em USD|milhões de USD correntes|derived|nGDP/USDfx|level|exogenous|MF|1950–2025/26|Calculado como nGDP dividido pela taxa de câmbio média do ano.
+gdp_real_pc|A|PIB real per capita|LC constantes per capita|GMD|rGDP_pc|log|endogenous|SOLOW|1950–2025/26|Usado no modelo de Solow e em convergência.
+gdp_deflator|A|Deflator implícito do PIB|índice (ano-base do PIB real = 100)|GMD|deflator|index|endogenous|ADAS|1950–2025/26|GMD fornece a razão nominal/real; base coincide com a do PIB real do país. A versão 2010=100 está em gdp_deflator_2010.
+gdp_ppp_usd|A|PIB em paridade de poder de compra|milhões de int$ correntes|WEO|PPPGDP|level|exogenous|SOLOW|1980–2031|Apenas para comparação de níveis; não entra na lista TOP10_NOMINAL.
+gdp_growth|A|Crescimento real do PIB|% a.a.|derived|dlog(gdp_real)|yoy|endogenous|ADAS,PC,SOLOW|1960–2025/26|Calculado por diferença de log; não usa a série de crescimento do GMD.
+potential_gdp|A|PIB potencial|milhões de LC constantes|derived|HP(log(gdp_real), λ=100)|hp_trend|latent|ADAS|1960–2025/26|Filtro HP bicaudal com λ=100 (anual); risco de viés de fim de amostra documentado.
+output_gap|A|Hiato do produto|% do PIB potencial|derived|100*(log(gdp_real)-log(potential_gdp))|hp_gap|latent|ADAS,PC,TR|1960–2025/26|Hiato construído por HP; usado no SVAR e nas Projeções Locais.
+consumption_real|A|Consumo final real|milhões de LC constantes|GMD|cons|log|endogenous|ISLM,ADAS|1950–2025/26|Consumo final das famílias + governo quando a fonte não separa; ver nota por país.
+consumption_gdp|A|Consumo final (% do PIB)|% do PIB|GMD|cons_GDP|pct_gdp|endogenous|ISLM,ADAS|1950–2025/26|Razão nominal.
+investment_real|A|Formação bruta de capital real|milhões de LC constantes|GMD|inv|log|endogenous|ISLM,ADAS|1950–2025/26|Inclui variação de estoques quando disponível.
+investment_gdp|A|Investimento (% do PIB)|% do PIB|GMD|inv_GDP|pct_gdp|endogenous|ISLM|1950–2025/26|Razão nominal.
+fixed_investment_real|A|Formação bruta de capital fixo real|milhões de LC constantes|GMD|finv|log|endogenous||1950–2025/26|Proxy de investimento das firmas.
+fixed_investment_gdp|A|Formação bruta de capital fixo (% do PIB)|% do PIB|GMD|finv_GDP|pct_gdp|endogenous||1950–2025/26|Razão nominal.
+gov_exp_real|A|Despesa do governo real|milhões de LC constantes|GMD|govexp|log|exogenous|ISLM,MF,ADAS|1950–2025/26|Consumo + investimento do governo; definição fiscal detalhada em gov_revenue.
+gov_exp_gdp|A|Despesa do governo (% do PIB)|% do PIB|GMD|govexp_GDP|pct_gdp|exogenous|ISLM,MF,ADAS|1950–2025/26|Razão nominal.
+gov_revenue_gdp|A|Receita do governo (% do PIB)|% do PIB|GMD|govrev_GDP|pct_gdp|exogenous|ISLM|1950–2025/26|Receita total; inclui contribuições sociais quando a fonte reporta.
+tax_burden_gdp|A|Carga tributária (% do PIB)|% do PIB|GMD|govtax_GDP|pct_gdp|exogenous|ISLM|1950–2025/26|Tributos sobre produção e importação; não é receita total.
+gov_balance_gdp|A|Resultado fiscal (% do PIB)|% do PIB|GMD|govdef_GDP|pct_gdp|exogenous|ISLM|1950–2025/26|Sinal: positivo = superávit; ver normalize_sinal no build.
+gov_debt_gdp|A|Dívida bruta do governo (% do PIB)|% do PIB|GMD|govdebt_GDP|pct_gdp|exogenous||1950–2025/26|Dívida bruta; comparação com WDI/WEO na validação.
+exports_gdp|A|Exportações (% do PIB)|% do PIB|GMD|exports_GDP|pct_gdp|exogenous|ISLM,MF|1950–2025/26|Bens e serviços, preços correntes.
+imports_gdp|A|Importações (% do PIB)|% do PIB|GMD|imports_GDP|pct_gdp|exogenous|ISLM,MF|1950–2025/26|Bens e serviços, preços correntes.
+net_exports_gdp|A|Exportações líquidas (% do PIB)|% do PIB|derived|exports_GDP - imports_GDP|pct_gdp|endogenous|ISLM,MF,ADAS|1950–2025/26|Identidade Y=C+I+G+NX; resíduo reportado na validação.
+current_account_gdp|A|Conta corrente (% do PIB)|% do PIB|GMD|CA_GDP|pct_gdp|exogenous|MF|1950–2025/26|Inclui renda de fatores e transferências.
+cpi_index|A|Índice de preços ao consumidor|índice 2010=100|GMD|CPI|index|endogenous|PC,ADAS|1950–2025/26|GMD padroniza 2010=100.
+inflation|A|Inflação ao consumidor|% a.a.|GMD|infl|yoy|endogenous|ADAS,PC,TR|1950–2025/26|Variação anual do CPI; núcleo apenas onde existe (Brasil/EUA).
+population|A|População|milhões|GMD|pop|log|exogenous|SOLOW|1950–2025/26|Usada em n e em per capita.
+unemployment|A|Taxa de desemprego|% da força de trabalho|GMD|unemp|level|endogenous|PC|1950–2025/26|Definições nacionais harmonizadas pelo GMD; ver notas por país.
+short_rate|A|Juro de curto prazo|% a.a.|GMD|strate|level|endogenous|ISLM,MF,TR|1950–2025/26|Taxa de mercado de curto prazo; instrumento da regra de Taylor.
+long_rate|A|Juro de longo prazo|% a.a.|GMD|ltrate|level|endogenous|ISLM|1950–2025/26|Título soberano de longo prazo; usado na curva de juros e na dívida.
+policy_rate|A|Taxa de política monetária|% a.a.|GMD|cbrate|level|exogenous|TR|1950–2025/26|Taxa básica; para o Brasil vem do SGS 432 no trimestral.
+m0|A|Base monetária|milhões de LC|GMD|M0|log|exogenous|ISLM,MF|1950–2025/26|Agregado monetário restrito.
+m1|A|M1|milhões de LC|GMD|M1|log|exogenous|ISLM,MF|1950–2025/26|Papel-moeda + depósitos à vista.
+m2|A|M2|milhões de LC|GMD|M2|log|exogenous|ISLM,MF|1950–2025/26|M1 + depósitos de poupança e a prazo.
+m3|A|M3|milhões de LC|GMD|M3|log|exogenous|ISLM,MF|1950–2025/26|M2 + títulos e outros passivos.
+exchange_rate_nominal|A|Taxa de câmbio nominal|LC por USD (média anual)|GMD|USDfx|log|endogenous|MF|1950–2025/26|Orientación: unidades de moeda local por 1 USD; aumento = depreciação.
+reer|A|Câmbio real efetivo|índice 2010=100|GMD|REER|log|endogenous|MF|1950–2025/26|BIS/bruto; aumento = apreciação real.
+hpi|A|Índice de preços de imóveis|índice 2010=100|GMD|HPI|log|exogenous||1950–2025/26|Onde disponível; usado como controle de riqueza.
+primary_balance_gdp|A|Resultado primário (% do PIB)|% do PIB|WEO|pb|pct_gdp|exogenous|ISLM|1980–2031|WEO pós-1980; sinal positivo = superávit primário.
+net_debt_gdp|A|Dívida líquida do governo (% do PIB)|% do PIB|WEO|GGXWDN_G01_GDP_PT|pct_gdp|exogenous||1980–2031|Dívida líquida; cobertura menor que a bruta.
+inflation_weo|A|Inflação (WEO)|% a.a.|WEO|PCPIPCH|yoy|validation|ADAS,PC|1980–2031|Série de validação/forecast; is_forecast=1 para anos > 2025.
+gov_debt_gdp_weo|A|Dívida bruta (WEO)|% do PIB|WEO|GGXWDG_NGDP|pct_gdp|validation||1980–2031|Validação cruzada da dívida.
+gdp_growth_weo|A|Crescimento do PIB (WEO)|% a.a.|WEO|NGDP_RPCH|yoy|validation|ADAS|1980–2031|Validação cruzada do crescimento.
+gdp_nominal_usd_weo|A|PIB nominal USD (WEO)|milhões de USD|WEO|NGDPD|level|validation|MF|1980–2031|Validação cruzada do PIB nominal.
+unemployment_weo|A|Desemprego (WEO)|%|WEO|LUR|level|validation|PC|1980–2031|Validação cruzada do desemprego.
+participation_rate|A|Taxa de participação|% da população em idade ativa|WDI|SL.TLF.CACT.ZS|level|endogenous||1960–2025/26|Força de trabalho / população 15+.
+credit_private_gdp|A|Crédito ao setor privado (% do PIB)|% do PIB|WDI|FS.AST.PRVT.GD.ZS|pct_gdp|exogenous||1960–2025/26|Crédito doméstico ao setor privado; fricção financeira.
+gov_consumption_gdp|A|Consumo do governo (% do PIB)|% do PIB|WDI|NE.CON.GOVT.ZS|pct_gdp|validation|ISLM|1960–2025/26|Validação/complemento de gov_exp_gdp.
+gross_capital_formation_gdp|A|Formação bruta de capital (% do PIB)|% do PIB|WDI|NE.GDI.TOTL.ZS|pct_gdp|validation|ISLM|1960–2025/26|Validação/complemento de investment_gdp.
+tax_revenue_gdp_wdi|A|Receita tributária (% do PIB)|% do PIB|WDI|GC.TAX.TOTL.GD.ZS|pct_gdp|validation||1970–2025/26|Validação da carga tributária.
+central_gov_debt_gdp|A|Dívida do governo central (% do PIB)|% do PIB|WDI|GC.DOD.TOTL.GD.ZS|pct_gdp|validation||1970–2025/26|Validação/complemento da dívida bruta.
+real_gdp_wdi|A|PIB real (WDI)|USD constantes de 2015|WDI|NY.GDP.MKTP.KD|log|validation|ADAS,SOLOW|1960–2025/26|Validação cruzada do nível de PIB real.
+inflation_wdi|A|Inflação (WDI)|% a.a.|WDI|FP.CPI.TOTL.ZG|yoy|validation|ADAS,PC|1960–2025/26|Validação cruzada da inflação.
+unemployment_wdi|A|Desemprego (WDI)|%|WDI|SL.UEM.TOTL.ZS|level|validation|PC|1991–2025/26|Validação cruzada do desemprego (OIT).
+population_wdi|A|População (WDI)|pessoas|WDI|SP.POP.TOTL|log|validation|SOLOW|1960–2025/26|Validação da população.
+world_gdp_real|A|PIB real mundial|USD constantes de 2015|WDI|NY.GDP.MKTP.KD|log|exogenous|MF|1960–2025/26|Agregado WLD do Banco Mundial; proxy de Y*.
+world_gdp_growth|A|Crescimento do PIB mundial|% a.a.|derived|dlog(world_gdp_real)|yoy|exogenous|MF|1961–2025/26|Choque externo comum.
+capital_stock|A|Estoque de capital|milhões de USD constantes de 2017|PWT|rnna|log|endogenous|SOLOW|1950–2019|PWT 10.01, variável rnna (capital a preços nacionais constantes); após 2019 não extrapolado.
+tfp|A|PTF (TFP)|índice 2017=1|PWT|rtfpna|log|endogenous|SOLOW|1950–2019|PTF de Solow ajustada por capital humano.
+employment|A|Emprego|milhões de trabalhadores|PWT|emp|log|endogenous|SOLOW|1950–2019|PWT emp; complementado por WDI/ILO quando necessário.
+hours_worked|A|Horas trabalhadas por trabalhador|horas/ano|PWT|avh|log|endogenous||1950–2019|PWT avh.
+labor_share|A|Participação do trabalho na renda|fração (0–1)|PWT|labsh|level|endogenous||1950–2019|PWT labsh; usado para calibrar salário/markup.
+human_capital|A|Capital humano|índice|PWT|hc|log|exogenous|SOLOW|1950–2019|PWT hc.
+capital_output_ratio|A|Razão capital-produto|razão|derived|capital_stock/gdp_real|level|endogenous|SOLOW|1950–2019|Unidades compatíveis (ambas em USD constantes de 2017).
+tfp_growth|A|Crescimento da PTF|% a.a.|derived|dlog(tfp)|yoy|endogenous|SOLOW|1951–2019|Choque de tecnologia.
+commodity_price_index|A|Índice de preços de commodities|índice (2016=100)|FRED|PALLFNFINDEXQ|log|exogenous|PC|1960–2025/26|Índice amplo de commodities do FMI, média anual.
+oil_price|A|Preço do petróleo Brent|USD/barril|FRED|POILBREUSDM|log|exogenous|ADAS,PC|1987–2025/26|Média anual; choque de oferta.
+vix|A|Índice de volatilidade VIX|índice|FRED|VIXCLS|log|exogenous|MF|1990–2025/26|Proxy de prêmio de risco global.
+foreign_policy_rate|A|Juro de política dos EUA|% a.a.|FRED|IR3TIB01USQ156N|level|exogenous|MF|1960–2025/26|Média anual da taxa de 3 meses dos EUA.
+us_gdp_real|A|PIB real dos EUA|bilhões de USD encadeados de 2017|FRED|GDPC1|log|exogenous|MF|1947–2025/26|Proxy de demanda externa para o Brasil.
+real_rate_ex_post|A|Juro real ex post|% a.a.|derived|policy_rate - inflation|fisher|endogenous|ISLM,TR|1950–2025/26|Aproximação de Fisher; usa inflação contemporânea.
+real_rate_ex_ante|A|Juro real ex ante|% a.a.|derived|policy_rate - inflation_expectations|fisher|endogenous|TR|2001–2025/26|Só para Brasil (Focus) e EUA (Michigan).
+neutral_rate|A|Taxa de juros neutra (r*)|% a.a.|derived|HP(real_rate_ex_ante, λ=100)|hp_trend|latent|TR|2001–2025/26|Proxy por filtro HP; não é estimativa estrutural de r*.
+inflation_expectations|A|Expectativas de inflação (survey)|% a.a. 12 meses à frente|BCB_FOCUS|ExpectativasMercadoInflacao12Meses|level|exogenous|PC,TR|2001–2025/26|Focus (Brasil) e Michigan (EUA); demais países sem survey homogêneo.
+inflation_target|A|Meta de inflação|% a.a.|hardcoded|metas por país|level|regime|TR|1990–2025/26|Tabela em regimes.yml; ausente onde não há regime explícito.
+debt_dynamics_residual|A|Resíduo da dinâmica da dívida|% do PIB|derived|identidade da dívida|derived|validation||1980–2025/26|SFA (stock-flow adjustment); ver validação de identidades.
+banking_crisis|A|Crise bancária (dummy)|0/1|GMD|BankingCrisis|dummy|regime|ADAS|1800–2025/26|Dummy anual do GMD; complementa regimes.yml.
+currency_crisis|A|Crise cambial (dummy)|0/1|GMD|CurrencyCrisis|dummy|regime|MF|1800–2025/26|Dummy anual do GMD.
+sovereign_debt_crisis|A|Crise de dívida soberana (dummy)|0/1|GMD|SovDebtCrisis|dummy|regime||1800–2025/26|Dummy anual do GMD.
+output_per_worker|A|Produto por trabalhador|LC constantes por trabalhador|derived|gdp_real/employment|log|endogenous|SOLOW|1950–2019|Produtividade média do trabalho.
+gdp_real|Q|PIB real trimestral|milhões de LC, preços constantes, SA|FRED|NGDPRSAXDC{ISO2}Q|log|endogenous|ADAS|1996–2026T2|Série OECD-MEI dessazonalizada; Brasil também validado contra IBGE.
+gdp_real_growth|Q|Crescimento trimestral do PIB|% a.a. (SAAR)|derived|400*dlog(gdp_real)|yoy|endogenous|ADAS|1996–2026T2|Taxa anualizada da variação trimestral.
+potential_gdp|Q|PIB potencial trimestral|milhões de LC constantes|derived|HP(log(gdp_real), λ=1600)|hp_trend|latent|ADAS|1996–2026T2|HP bicaudal λ=1600.
+output_gap|Q|Hiato do produto trimestral|% do PIB potencial|derived|100*(log(gdp_real)-log(potential_gdp))|hp_gap|latent|ADAS,PC,TR|1996–2026T2|Usado no SVAR e nas Projeções Locais; robustez com log-nível.
+inflation|Q|Inflação ao consumidor trimestral|% a.a. (variação 4 trimestres)|FRED|CPALTT01{ISO2}Q659N|yoy|endogenous|ADAS,PC,TR|1996–2026T2|Brasil: calculada do IPCA mensal (SGS 433); demais: OECD-MEI.
+core_inflation|Q|Núcleo da inflação|% a.a.|BCB|11427|yoy|endogenous|PC|2001–2026|Brasil: núcleo de médias aparadas com suavização; EUA: CPILFESL. Demais: ausente.
+unemployment|Q|Taxa de desemprego trimestral|%|FRED|LRHUTTTT{ISO2}Q156S|level|endogenous|PC|1996–2026T2|OECD-MEI, dessazonalizada.
+policy_rate|Q|Taxa de política monetária trimestral|% a.a.|BCB|432|level|exogenous|TR|1996–2026T2|Brasil: Selic meta (média do trimestre); EUA: fed funds efetivo; demais: 3m interbancária.
+short_rate|Q|Juro de curto prazo trimestral|% a.a.|FRED|IR3TIB01{ISO2}Q156N|level|endogenous|ISLM,MF|1996–2026T2|Taxa de 3 meses interbancária.
+long_rate|Q|Juro de longo prazo trimestral|% a.a.|FRED|IRLTLT01{ISO2}Q156N|level|endogenous|ISLM|1996–2026T2|Título soberano de 10 anos.
+exchange_rate_nominal|Q|Taxa de câmbio nominal trimestral|LC por USD|FRED|DEX{ISO2}|log|endogenous|MF|1996–2026T2|Média do trimestre; orientação LC por USD; EUR/GBP/AUD invertidos.
+reer|Q|Câmbio real efetivo trimestral|índice 2010=100|FRED|RB{ISO2}BIS|log|endogenous|MF|1994–2026T3|BIS broad, média trimestral.
+inflation_expectations|Q|Expectativas de inflação (survey)|% a.a. 12 meses à frente|BCB_FOCUS|ExpectativasMercadoInflacao12Meses|level|exogenous|PC,TR|2001–2026|Brasil: Focus (média do trimestre); EUA: MICH.
+consumption_real|Q|Consumo das famílias real|milhões de BRL, preços de 1995|IBGE|6612/93404|log|endogenous||1996–2026T2|Brasil apenas; valores encadeados.
+gov_exp_real|Q|Consumo do governo real|milhões de BRL, preços de 1995|IBGE|6612/93405|log|exogenous||1996–2026T2|Brasil apenas; administração pública.
+investment_real|Q|Formação bruta de capital fixo real|milhões de BRL, preços de 1995|IBGE|6612/93406|log|endogenous||1996–2026T2|Brasil apenas.
+exports_real|Q|Exportações reais|milhões de BRL, preços de 1995|IBGE|6612/93407|log|exogenous||1996–2026T2|Brasil apenas.
+imports_real|Q|Importações reais|milhões de BRL, preços de 1995|IBGE|6612/93408|log|exogenous||1996–2026T2|Brasil apenas; sinal positivo (importação).
+gdp_nominal|Q|PIB nominal trimestral|milhões de BRL correntes|IBGE|1846/90707|level|endogenous||1996–2026T2|Brasil apenas.
+gdp_deflator|Q|Deflator implícito trimestral|índice 1995=100|derived|100*gdp_nominal/gdp_real|index|endogenous||1996–2026T2|Brasil apenas; base 1995.
+real_rate_ex_ante|Q|Juro real ex ante trimestral|% a.a.|derived|policy_rate - inflation_expectations|fisher|endogenous|TR|2001–2026|Brasil.
+oil_price|Q|Preço do petróleo Brent|USD/barril|FRED|POILBREUSDM|log|exogenous|PC|1987–2026|Média trimestral.
+foreign_output|Q|PIB real dos EUA|bilhões de USD encadeados de 2017|FRED|GDPC1|log|exogenous|MF|1947–2026T2|Proxy de demanda externa.
+foreign_policy_rate|Q|Juro de política dos EUA|% a.a.|FRED|DFF|level|exogenous|MF|1954–2026|Média trimestral do fed funds efetivo.
+gdp_deflator_2010|A|Deflator implícito do PIB (2010=100)|índice 2010=100|derived|deflator reescalado|index|exogenous|ADAS|1950–2026|Versão comparável entre países; NÃO usar com níveis de PIB real (base nacional). Para a identidade nominal/real usar gdp_deflator.
+primary_balance_brl|Q|Resultado primário do governo central|milhões de BRL|BCB|4649|level|exogenous|ISLM|2001–2026|Fluxo mensal somado no trimestre; perímetro do governo central, distinto do WEO (governo geral).
+profit_share|A|Parcela dos lucros na renda|fração (0–1)|derived|1 - labor_share|level|endogenous|ISLM,PC,SOLOW|1960–2019|Derivada do PWT (1 - labsh); não é lucro contábil, é resíduo da renda do trabalho.
+gini_index|A|Índice de Gini|índice 0–100|WDI|SI.POV.GINI|level|exogenous|PC,SOLOW|1960–2024|Desigualdade de renda; cobertura esparsa e comparações entre países requerem cautela.
+income_share_top10|A|Parcela da renda do topo 10%|% da renda total|WDI|SI.DST.10TH.10|level|exogenous|PC,SOLOW|1960–2024|Share of income held by highest 10%.
+income_share_bottom20|A|Parcela da renda dos 20% mais pobres|% da renda total|WDI|SI.DST.FRST.20|level|exogenous|PC,SOLOW|1960–2024|Share of income held by lowest 20%.
+vulnerable_employment_pct|A|Emprego vulnerável|% do emprego total|WDI|SL.EMP.VULN.ZS|level|exogenous|PC,SOLOW|1960–2024|Proxy de informalidade/trabalho vulnerável (OIT).
+wage_bill_gdp|A|Massa salarial|% do PIB|derived|labor_share * 100|level|endogenous|ISLM,PC,SOLOW|1960–2019|Derivada do PWT (labsh × 100).
+terms_of_trade_index|A|Termos de troca|índice (2015=100)|WDI|TT.PRI.MRCH.XD.WD|level|exogenous|MF,PC|1960–2024|Net barter terms of trade; exportações/importações.
+intl_reserves_usd|A|Reservas internacionais|USD correntes|WDI|FI.RES.TOTL.CD|level|exogenous|MF|1960–2024|Reservas totais, excluindo ouro.
+intl_reserves_months_imports|A|Reservas em meses de importação|meses|WDI|FI.RES.TOTL.MO|level|exogenous|MF|1960–2024|Reservas / importações mensais.
+external_debt_gni|A|Dívida externa total|% do RNB|WDI|DT.DOD.DECT.GN.ZS|level|exogenous|MF|1960–2024|Dívida externa total, pública e privada.
+debt_service_exports|A|Serviço da dívida externa|% das exportações|WDI|DT.TDS.DECT.EX.ZS|level|exogenous|MF|1960–2024|Principal + juros / exportações.
+fdi_net_inflows_gdp|A|IDE líquido|% do PIB|WDI|BX.KLT.DINV.WD.GD.ZS|level|exogenous|MF,SOLOW|1960–2024|Investimento direto estrangeiro líquido.
+lending_rate|A|Taxa de empréstimo|% a.a.|WDI|FR.INR.LEND|level|exogenous|ISLM,MF|1960–2024|Taxa média de empréstimos bancários.
+interest_rate_spread|A|Spread bancário|p.p.|WDI|FR.INR.LNDP|level|exogenous|ISLM,MF|1960–2024|Spread entre empréstimo e depósito.
+bank_capital_to_assets|A|Capital bancário sobre ativos|%|WDI|FB.BNK.CAPA.ZS|level|exogenous|MF|1960–2024|Capital e reservas / ativos totais.
+bank_npl_pct|A|Inadimplência bancária|% dos empréstimos|WDI|FB.AST.NPER.ZS|level|exogenous|MF|1960–2024|Non-performing loans / total gross loans.
+market_cap_gdp|A|Capitalização de mercado|% do PIB|WDI|CM.MKT.LCAP.GD.ZS|level|exogenous|MF|1960–2024|Empresas domésticas listadas.
+co2_per_capita|A|Emissões de CO2 per capita|t CO2e per capita|WDI|EN.GHG.CO2.PC.CE.AR5|level|exogenous|SOLOW|1960–2023|Emissões de CO2 equivalentes, AR5.
+co2_per_gdp|A|Intensidade de carbono do PIB|kg CO2e por USD corrente|derived|co2_total_mt * 1000 / gdp_nominal_usd|level|exogenous|SOLOW|1960–2023|Derivada de EN.GHG.CO2.MT.CE.AR5 / PIB nominal USD.
+renewable_electricity_pct|A|Eletricidade renovável|% da matriz elétrica|WDI|EG.ELC.RNEW.ZS|level|exogenous|SOLOW|1960–2023|Participação de renováveis na geração elétrica.
+energy_intensity_gdp|A|Intensidade energética|MJ por 2017 PPP USD|WDI|EG.EGY.PRIM.PP.KD|level|exogenous|SOLOW|1960–2023|Energia primária por PIB PPP.
+manufacturing_gdp|A|Indústria de transformação|% do PIB|WDI|NV.IND.MANF.ZS|level|exogenous|SOLOW|1960–2024|Valor adicionado da manufatura.
+agriculture_gdp|A|Agricultura|% do PIB|WDI|NV.AGR.TOTL.ZS|level|exogenous|SOLOW|1960–2024|Valor adicionado da agricultura.
+manufactures_exports_pct|A|Exportações de manufaturados|% das exportações de mercadorias|WDI|TX.VAL.MANF.ZS.UN|level|exogenous|MF,SOLOW|1960–2024|Diversificação exportadora.
+fuel_ores_exports_pct|A|Exportações de combustíveis e minérios|% das exportações de mercadorias|derived|TX.VAL.FUEL.ZS.UN + TX.VAL.MMTL.ZS.UN|level|exogenous|MF,SOLOW|1960–2024|Soma estrita dos dois componentes; NaN se um faltar.
+gdp_real_wdi|A|PIB real (WDI, validação)|USD constantes de 2015|WDI|NY.GDP.MKTP.KD|log|validation|ADAS,SOLOW|1960–2025|Série de validação; não é a fonte primária do PIB real.
+gdp_nominal_wdi|A|PIB nominal (WDI, validação)|USD correntes|WDI|NY.GDP.MKTP.CD|level|validation|MF|1960–2025|Série de validação.
+gdp_deflator_wdi|A|Deflator do PIB (WDI, validação)|índice 2015=100|WDI|NY.GDP.DEFL.ZS|index|validation|ADAS|1960–2025|Série de validação.
+gdp_growth_wdi|A|Crescimento do PIB (WDI, validação)|% a.a.|WDI|NY.GDP.MKTP.KD.ZG|yoy|validation|ADAS|1961–2025|Série de validação.
+consumption_gdp_wdi|A|Consumo total (WDI, validação)|% do PIB|WDI|NE.CON.TOTL.ZS|pct_gdp|validation|ISLM,ADAS|1960–2025|Série de validação.
+exports_gdp_wdi|A|Exportações (WDI, validação)|% do PIB|WDI|NE.EXP.GNFS.ZS|pct_gdp|validation|MF|1960–2025|Série de validação.
+imports_gdp_wdi|A|Importações (WDI, validação)|% do PIB|WDI|NE.IMP.GNFS.ZS|pct_gdp|validation|MF|1960–2025|Série de validação.
+gov_balance_gdp_weo|A|Resultado fiscal (WEO, validação)|% do PIB|WEO|GGXCNL_G01_GDP_PT|pct_gdp|validation|ISLM|1980–2025|Série de validação; sinal positivo = superávit.
+rgdpna_pwt|A|PIB real PWT (validação)|milhões de USD 2017|PWT|rgdpna|log|validation|SOLOW|1950–2019|Usado para capital/produto e validação.
+commodity_price_index|Q|Índice de preços de commodities|índice (2016=100)|FRED|PALLFNFINDEXQ|log|exogenous|PC|1960–2026|Média trimestral do índice amplo de commodities do FMI.
+vix|Q|Índice de volatilidade VIX|índice|FRED|VIXCLS|log|exogenous|MF|1990–2026|Média trimestral; proxy de risco global.
+primary_balance_gdp|Q|Resultado primário (% do PIB)|% do PIB|BCB|5793|level|exogenous|ISLM|2001–2026|Média trimestral do resultado primário acumulado em 12 meses (governo central).

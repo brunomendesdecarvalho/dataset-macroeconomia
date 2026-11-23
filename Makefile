@@ -2,7 +2,7 @@ PY ?= .venv/bin/python
 export PYTHONPATH := src
 export MPLCONFIGDIR := $(CURDIR)/.cache/mpl
 
-.PHONY: fetch build validate dsge empirical reports docs test all clean
+.PHONY: fetch build validate empirical export reports docs test all clean
 
 fetch:
 	$(PY) -m macrodata.sources
@@ -13,12 +13,11 @@ build:
 validate:
 	$(PY) -m macrodata.validation
 
-dsge:
-	$(PY) -m macrodata.dsge.estimate
-	$(PY) -m macrodata.dsge.medium
-
 empirical:
 	$(PY) -m macrodata.empirical
+
+export:
+	$(PY) -m macrodata.export
 
 reports:
 	$(PY) -m macrodata.report
@@ -30,7 +29,7 @@ docs: reports
 test:
 	$(PY) -m pytest -q tests
 
-all: fetch build validate dsge reports test
+all: fetch build validate empirical export reports test
 
 clean:
 	rm -rf .cache

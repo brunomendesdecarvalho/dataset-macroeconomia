@@ -379,6 +379,12 @@ def run() -> dict[str, pd.DataFrame]:
     res["breaks_regime_map"] = mapa
     res["chow"] = chow(annual)
     res["coverage"], res["outliers"] = coverage_and_outliers(annual, quarterly)
+    # matrizes de cobertura variável x país
+    cov = res["coverage"]
+    for freq, name in (("A", "coverage_matrix_annual.csv"), ("Q", "coverage_matrix_quarterly.csv")):
+        cov[cov.freq == freq].pivot_table(index="variable", columns="iso3",
+                                          values="coverage_pct").to_csv(
+            settings.PROCESSED / name, encoding="utf-8-sig")
 
     for name, df in res.items():
         if df is None or df.empty:

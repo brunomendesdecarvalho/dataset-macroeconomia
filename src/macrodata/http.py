@@ -37,10 +37,12 @@ class CachedFetcher:
     caminho local e um `vintage` (data de extração) para auditoria.
     """
 
-    def __init__(self, force: bool = False, pause: float = 0.15, timeout: int = 90):
+    def __init__(self, force: bool = False, pause: float = 0.15, timeout: int = 90,
+                 max_retries: int = 5):
         self.force = force
         self.pause = pause
         self.timeout = timeout
+        self.max_retries = max_retries
         self.manifest = _load_manifest()
         self.session = requests.Session()
         self.session.headers.update(_UA)
@@ -63,7 +65,7 @@ class CachedFetcher:
         if path.exists() and not force and path.stat().st_size > 0:
             return path.read_bytes()
         last_err: Exception | None = None
-        for attempt in range(5):
+        for attempt in range(self.max_retries + 1):
             try:
                 resp = self.session.get(url, timeout=self.timeout)
                 if resp.status_code in (400, 401, 403, 404, 410):

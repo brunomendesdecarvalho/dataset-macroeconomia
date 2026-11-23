@@ -26,8 +26,6 @@ class Event:
     url: str
     variables: list[str]
     models: list[str]
-    dsge_role: str
-    dsge_note: str
     description: str
 
 
@@ -60,8 +58,8 @@ def load_events() -> list[Event]:
             permanent=permanent, point=bool(raw.get("point", False)),
             freq=[f.upper() for f in raw.get("freq", ["A", "Q"])],
             source=raw.get("source", ""), url=raw.get("url", ""),
-            variables=raw.get("variables", []), models=raw.get("models", []),
-            dsge_role=raw.get("dsge_role", "control"), dsge_note=raw.get("dsge_note", ""),
+            variables=raw.get("variables", []),
+            models=raw.get("models", []),
             description=raw.get("name", raw["id"]),
         ))
     return events
@@ -113,8 +111,7 @@ def metadata() -> pd.DataFrame:
             "fim": ("permanente" if e.permanent else e.end.strftime("%Y-%m-%d")),
             "frequencias": ";".join(e.freq), "fonte": e.source, "url": e.url,
             "variaveis_afetadas": ";".join(e.variables),
-            "modelos": ";".join(e.models), "papel_dsge": e.dsge_role,
-            "justificativa_dsge": e.dsge_note,
+            "modelos": ";".join(e.models),
         })
     return pd.DataFrame(rows)
 
@@ -131,18 +128,15 @@ def add_gmd_crises(annual: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
         {"dummy": "gmd_banking_crisis", "nome": "Crise bancária (GMD)", "tipo": "crisis_domestic",
          "escopo": "país", "paises": "todos", "inicio": "1800", "fim": "2025",
          "frequencias": "A", "fonte": "GMD", "url": "https://www.globalmacrodb.org",
-         "variaveis_afetadas": "credit_spread;gdp_real;policy_rate", "modelos": "DSGE_M",
-         "papel_dsge": "control", "justificativa_dsge": "Controle de crise; não identifica choque estrutural."},
+         "variaveis_afetadas": "credit_spread;gdp_real;policy_rate", "modelos": ""},
         {"dummy": "gmd_currency_crisis", "nome": "Crise cambial (GMD)", "tipo": "crisis_domestic",
          "escopo": "país", "paises": "todos", "inicio": "1800", "fim": "2025",
          "frequencias": "A", "fonte": "GMD", "url": "https://www.globalmacrodb.org",
-         "variaveis_afetadas": "exchange_rate_nominal;reer", "modelos": "MF;DSGE_M",
-         "papel_dsge": "control", "justificativa_dsge": "Controle de crise cambial."},
+         "variaveis_afetadas": "exchange_rate_nominal;reer", "modelos": "MF"},
         {"dummy": "gmd_sovereign_debt_crisis", "nome": "Crise de dívida soberana (GMD)", "tipo": "crisis_domestic",
          "escopo": "país", "paises": "todos", "inicio": "1800", "fim": "2025",
          "frequencias": "A", "fonte": "GMD", "url": "https://www.globalmacrodb.org",
-         "variaveis_afetadas": "gov_debt_gdp;credit_spread", "modelos": "DSGE_M",
-         "papel_dsge": "control", "justificativa_dsge": "Controle de risco soberano."},
+         "variaveis_afetadas": "gov_debt_gdp;credit_spread", "modelos": ""},
     ])
     return pd.concat([annual, wide], axis=1), meta
 

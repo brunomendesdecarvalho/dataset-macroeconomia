@@ -31,7 +31,11 @@ def fig_coverage(annual: pd.DataFrame) -> None:
     keys = ["gdp_real", "gdp_nominal", "inflation", "unemployment", "policy_rate", "long_rate",
             "exchange_rate_nominal", "reer", "gov_debt_gdp", "primary_balance_gdp",
             "credit_private_gdp", "capital_stock", "tfp", "current_account_gdp",
-            "consumption_gdp", "investment_gdp", "inflation_expectations", "output_gap"]
+            "consumption_gdp", "investment_gdp", "inflation_expectations", "output_gap",
+            "gini_index", "income_share_top10", "vulnerable_employment_pct",
+            "terms_of_trade_index", "intl_reserves_months_imports", "external_debt_gni",
+            "lending_rate", "interest_rate_spread", "market_cap_gdp",
+            "co2_per_capita", "renewable_electricity_pct", "manufacturing_gdp"]
     keys = [k for k in keys if k in cov.index]
     d = cov.loc[keys].drop(columns=[c for c in ["EU", "WLD"] if c in cov.columns])
     fig, ax = plt.subplots(figsize=(11, 5))
@@ -87,87 +91,6 @@ def fig_regimes() -> None:
     _save(fig, "fig_regime_timeline_bra.png")
 
 
-def fig_irf() -> None:
-    try:
-        irf = pd.read_csv(settings.PROCESSED / "dsge_small_irf_bra.csv")
-    except FileNotFoundError:
-        return
-    shocks = list(irf.shock.unique())
-    obs = ["output_gap", "inflation", "policy_rate"]
-    fig, axes = plt.subplots(len(shocks), 3, figsize=(10, 2.2 * len(shocks)), sharex=True)
-    for i, sh in enumerate(shocks):
-        for j, ob in enumerate(obs):
-            ax = axes[i, j] if len(shocks) > 1 else axes[j]
-            d = irf[(irf.shock == sh) & (irf.observable == ob)]
-            ax.plot(d.horizon, d.response, color="#1f4e79", lw=1.4)
-            ax.axhline(0, color="k", lw=0.6)
-            if i == 0: ax.set_title(ob)
-            if j == 0: ax.set_ylabel(sh)
-    fig.suptitle("IRFs do DSGE pequeno — choque de 1 desvio-padrão (p.p.)", y=1.01)
-    _save(fig, "fig_dsge_irf_small.png")
-
-
-def fig_posterior() -> None:
-    try:
-        p = pd.read_csv(settings.PROCESSED / "dsge_small_posterior_bra.csv")
-    except FileNotFoundError:
-        return
-    fig, ax = plt.subplots(figsize=(7, 3.5))
-    y = np.arange(len(p))
-    ax.errorbar(p.post_mean, y, xerr=[p.post_mean - p.q05, p.q95 - p.post_mean],
-                fmt="o", color="#1f4e79", capsize=2, label="Posterior (mediana e IC 90%)")
-    ax.scatter(p.prior_mean, y, marker="x", color="#c00000", label="Média a priori")
-    ax.set_yticks(y); ax.set_yticklabels(p.parameter); ax.legend()
-    ax.set_title("Prior vs posterior — DSGE pequeno, Brasil (1999T3–2025T4)")
-    _save(fig, "fig_dsge_prior_posterior.png")
-
-
-def fig_moments() -> None:
-    try:
-        d = pd.read_csv(settings.PROCESSED / "dsge_small_moments_bra.csv")
-    except FileNotFoundError:
-        return
-    fig, ax = plt.subplots(figsize=(7, 3.5))
-    x = np.arange(len(d))
-    ax.bar(x - 0.2, d.data, 0.4, label="Dados", color="#1f4e79")
-    ax.bar(x + 0.2, d.model, 0.4, label="Modelo", color="#c00000")
-    ax.set_xticks(x); ax.set_xticklabels(d.moment, rotation=45, ha="right")
-    ax.axhline(0, color="k", lw=0.6); ax.legend()
-    ax.set_title("Momentos: dados vs DSGE pequeno (Brasil)")
-    _save(fig, "fig_dsge_moments_small.png")
-
-
-def fig_medium() -> None:
-    try:
-        m = pd.read_csv(settings.PROCESSED / "dsge_medium_moments.csv")
-        s = pd.read_csv(settings.PROCESSED / "dsge_medium_sensitivity.csv")
-    except FileNotFoundError:
-        return
-    fig, ax = plt.subplots(figsize=(7, 3.5))
-    x = np.arange(len(m))
-    ax.bar(x - 0.2, m.data, 0.4, label="Dados", color="#1f4e79")
-    ax.bar(x + 0.2, m.model, 0.4, label="Modelo", color="#c00000")
-    ax.set_xticks(x); ax.set_xticklabels(m.moment, rotation=45, ha="right")
-    ax.axhline(0, color="k", lw=0.6); ax.legend()
-    ax.set_title("Momentos: dados vs DSGE médio calibrado (Brasil)")
-    _save(fig, "fig_dsge_moments_medium.png")
-
-    base = m.set_index("moment")["model"]
-    fig, ax = plt.subplots(figsize=(7, 3.5))
-    names = s.parameter.unique()
-    for i, nm in enumerate(names):
-        d = s[s.parameter == nm]
-        lo = d[d.variation == "-20%"].iloc[0]["sd_x"]
-        hi = d[d.variation == "+20%"].iloc[0]["sd_x"]
-        ax.plot([lo, hi], [i, i], color="#1f4e79", lw=2)
-        ax.scatter([lo, hi], [i, i], color="#1f4e79", s=10)
-    ax.axvline(base.get("sd_x", np.nan), color="#c00000", ls="--", label="calibração base")
-    ax.set_yticks(range(len(names))); ax.set_yticklabels(names)
-    ax.set_xlabel("desvio-padrão do hiato (%)"); ax.legend()
-    ax.set_title("Sensibilidade do DSGE médio a ±20% nos parâmetros")
-    _save(fig, "fig_dsge_medium_sensitivity.png")
-
-
 def coverage_panel(annual: pd.DataFrame, quarterly: pd.DataFrame) -> None:
     """Matriz país × variável × período (1 = presente, 0 = ausente)."""
     for freq, df, years, iso_list in (
@@ -217,16 +140,17 @@ def tables(annual: pd.DataFrame, quarterly: pd.DataFrame) -> None:
     pd.DataFrame(rows).to_csv(TAB / "table_country_groups.csv", index=False, encoding="utf-8-sig")
     # dicionário
     settings.VARIABLES.to_csv(TAB / "table_variable_dictionary.csv", index=False, encoding="utf-8-sig")
-    # DSGE
-    pd.read_csv(settings.CONFIG / "dsge_measurement.psv", sep="|").to_csv(
-        TAB / "table_dsge_measurement.csv", index=False, encoding="utf-8-sig")
-    pd.read_csv(settings.CONFIG / "dsge_latent_shocks.psv", sep="|").to_csv(
-        TAB / "table_dsge_latent_shocks.csv", index=False, encoding="utf-8-sig")
     # regimes
     pd.read_csv(settings.PROCESSED / "regime_metadata.csv").to_csv(
         TAB / "table_regime_metadata.csv", index=False, encoding="utf-8-sig")
     # cobertura agregada
     cov = pd.read_csv(settings.PROCESSED / "coverage.csv")
+    from .blocks import block_of
+    cov["block"] = cov["variable"].map(block_of)
+    cov.groupby(["block", "freq"]).agg(
+        n_variaveis=("variable", "nunique"), cobertura_media=("coverage_pct", "mean"),
+        cobertura_mediana=("coverage_pct", "median")).reset_index().to_csv(
+        TAB / "table_heterodox_coverage.csv", index=False, encoding="utf-8-sig")
     pd.read_csv(settings.PROCESSED / "cross_source_summary.csv").to_csv(
         TAB / "table_cross_source_summary.csv", index=False, encoding="utf-8-sig")
     pd.read_csv(settings.PROCESSED / "identity_summary.csv").to_csv(
@@ -237,17 +161,6 @@ def tables(annual: pd.DataFrame, quarterly: pd.DataFrame) -> None:
         TAB / "table_bai_perron.csv", index=False, encoding="utf-8-sig")
     pd.read_csv(settings.PROCESSED / "chow.csv").to_csv(
         TAB / "table_chow.csv", index=False, encoding="utf-8-sig")
-    if (settings.PROCESSED / "dsge_small_posterior_bra.csv").exists():
-        pd.read_csv(settings.PROCESSED / "dsge_small_posterior_bra.csv").to_csv(
-            TAB / "table_dsge_small_posterior_bra.csv", index=False, encoding="utf-8-sig")
-        pd.read_csv(settings.PROCESSED / "dsge_small_moments_bra.csv").to_csv(
-            TAB / "table_dsge_small_moments_bra.csv", index=False, encoding="utf-8-sig")
-    if (settings.PROCESSED / "dsge_medium_calibration.csv").exists():
-        pd.read_csv(settings.PROCESSED / "dsge_medium_calibration.csv").to_csv(
-            TAB / "table_dsge_medium_calibration.csv", index=False, encoding="utf-8-sig")
-        pd.read_csv(settings.PROCESSED / "dsge_medium_moments.csv").to_csv(
-            TAB / "table_dsge_medium_moments.csv", index=False, encoding="utf-8-sig")
-
     summary = {
         "annual_rows": int(len(annual)), "quarterly_rows": int(len(quarterly)),
         "annual_countries": int(annual.iso3.nunique()), "quarterly_countries": int(quarterly.iso3.nunique()),
@@ -267,10 +180,6 @@ def run() -> None:
     fig_coverage(annual)
     fig_brazil(annual)
     fig_regimes()
-    fig_irf()
-    fig_posterior()
-    fig_moments()
-    fig_medium()
     tables(annual, quarterly)
     coverage_panel(annual, quarterly)
     regime_by_country()

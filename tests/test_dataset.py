@@ -10,8 +10,11 @@ def test_schema_and_duplicates():
         assert not df.duplicated(["iso3", "date", "variable"]).any()
         assert df.value.notna().all()
         assert df.date.notna().all()
-        for col in ("iso3", "variable", "unit", "source", "role", "regime_dummy"):
+        for col in ("iso3", "country", "date", "year", "period", "variable", "block",
+                    "unit", "source", "source_code", "quality_flag", "is_forecast",
+                    "role", "model", "regime_dummy"):
             assert col in df.columns
+        assert not any("dsge" in c for c in df.columns)
 
 
 def test_annual_dates():
@@ -34,3 +37,21 @@ def test_capital_stock_uses_rnna():
     v = a[(a.iso3 == "BRA") & (a.year == 2019) & (a.variable == "capital_stock")]["value"].iloc[0]
     # rnna (milhões USD 2017) ~ 12,7 milhões; rkna (índice 2017=1) ~ 1,02
     assert v > 1_000_000
+
+
+def test_heterodox_blocks():
+    a = pd.read_parquet(settings.PROCESSED / "macro_annual_long.parquet")
+    expected = {
+        "distribuicao": {"profit_share", "gini_index", "income_share_top10",
+                         "income_share_bottom20", "vulnerable_employment_pct", "wage_bill_gdp"},
+        "restricao_externa": {"terms_of_trade_index", "intl_reserves_usd",
+                              "intl_reserves_months_imports", "external_debt_gni",
+                              "debt_service_exports", "fdi_net_inflows_gdp"},
+        "financeiro": {"lending_rate", "interest_rate_spread", "bank_capital_to_assets",
+                       "bank_npl_pct", "market_cap_gdp"},
+        "ecologia_estrutura": {"co2_per_capita", "co2_per_gdp", "renewable_electricity_pct",
+                               "energy_intensity_gdp", "manufacturing_gdp", "agriculture_gdp",
+                               "manufactures_exports_pct", "fuel_ores_exports_pct"},
+    }
+    for block, vars_ in expected.items():
+        assert vars_ <= set(a[a.block == block]["variable"]), block

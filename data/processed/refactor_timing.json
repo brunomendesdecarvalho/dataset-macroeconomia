@@ -1,0 +1,11 @@
+{
+  "start_utc": "2026-11-23T18:13:37Z",
+  "start_local": "2026-11-23T15:13:37-03:00",
+  "end_utc": "2026-11-23T19:06:40Z",
+  "stage1": "02h28min38s",
+  "stage2": "00h10min36s",
+  "stage3_seconds": 3183,
+  "stage3": "00h53min03s",
+  "total_seconds": 12737,
+  "total": "03h32min17s"
+}
