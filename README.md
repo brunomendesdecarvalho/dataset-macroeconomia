@@ -1,5 +1,7 @@
 # MacroData Brasil — dataset macroeconômico cross-country com variáveis heterodoxas e baseline SVAR
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24480760.svg)](https://doi.org/10.5281/zenodo.24480760)
+
 **Versão 1.0.0** · **Início da execução:** 2026-11-23T18:13:37Z (15:13:37 −03) · **Duração total:** `03h33min26s`
 
 ## Resumo
