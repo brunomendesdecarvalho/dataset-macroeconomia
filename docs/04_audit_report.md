@@ -1,6 +1,6 @@
 # Relatório de auditoria e validação cross-country
 
-**Dataset:** v1.0.0 · **Extração:** 2026-11-23T14:44Z · **Âncora:** Brasil
+**Dataset:** v1.0.0 · **Extração:** 2026-11-23 · **Âncora:** Brasil
 **Escopo:** 22 países + UE (agregado) + WLD (PIB mundial) · anual 1960–2026 · trimestral 1995T1–2026T4
 
 ---
@@ -255,7 +255,7 @@ A política monetária absorve a maior parte da variância — resultado **não 
 
 ![IRFs do DSGE pequeno](../reports/figures/fig_dsge_irf_small.png)
 
-Os IRFs são qualitativamente plausíveis para demanda e markup; o IRF monetário tem sinal inicial ambíguo (o choque positivo é um afrouxamento e o juro cai pouco, com queda inicial do hiato), outro sintoma de identificação.
+Os IRFs têm sinais plausíveis: um choque de demanda eleva hiato e inflação; um choque de markup eleva inflação e reduz hiato; um choque monetário contracionista eleva a Selic e reduz hiato e inflação. As magnitudes, porém, são grandes e a FEVD/correlações cruzadas seguem implausíveis — o problema é de identificação e especificação, não de sinal.
 
 ---
 

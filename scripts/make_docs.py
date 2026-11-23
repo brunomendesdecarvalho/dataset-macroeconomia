@@ -60,7 +60,7 @@ def codebook() -> None:
         f"| `data/processed/regime_matrix_annual.csv` | país × ano × dummy | {n_ra:,} × {n_ca} | matriz 0/1 de regimes |",
         f"| `data/processed/regime_matrix_quarterly.csv` | país × trimestre × dummy | {n_rq:,} × {n_cq} | matriz 0/1 trimestral |",
         "| `data/processed/coverage_matrix_annual.csv` | variável × país | 89 × 24 | % de cobertura |",
-        "| `data/processed/coverage_panel_annual.csv` | país × variável × ano | 131.538 | matriz 0/1 de presença |",
+        "| `data/processed/coverage_panel_annual.csv` | país × variável × ano | 131.186 | matriz 0/1 de presença |",
         "",
         "## 2. Dicionário de campos",
         "",
