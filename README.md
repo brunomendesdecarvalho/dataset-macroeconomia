@@ -100,7 +100,7 @@ make test       # pytest
 
 ```bibtex
 @dataset{castelo_branco_macrodata_2026,
-  author       = {Castelo Branco, Bruno Mendes de Carvalho},
+  author       = {CASTELO BRANCO, Bruno Mendes de Carvalho},
   title        = {MacroData Brasil: dataset macroeconômico cross-country com variáveis heterodoxas e baseline SVAR},
   year         = {2026},
   publisher    = {GitHub},
@@ -112,7 +112,7 @@ make test       # pytest
 
 ### APA
 
-Castelo Branco, B. M. de C. (2026). *MacroData Brasil: dataset macroeconômico cross-country com variáveis heterodoxas e baseline SVAR* (Versão 2.0.0) [Data set]. GitHub. https://github.com/brunomendesdecarvalho/dataset-macroeconomia
+CASTELO BRANCO, Bruno Mendes de Carvalho. (2026). *MacroData Brasil: dataset macroeconômico cross-country com variáveis heterodoxas e baseline SVAR* (Versão 2.0.0) [Data set]. GitHub. https://github.com/brunomendesdecarvalho/dataset-macroeconomia
 
 O DOI será adicionado a este README e ao `CITATION.cff` após a primeira release no Zenodo.
 
