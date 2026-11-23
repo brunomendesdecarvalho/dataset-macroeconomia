@@ -20,9 +20,3 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
----
-
-Os DADOS não são licenciados sob MIT. Cada série mantém a licença da fonte
-original (GMD e WDI: CC BY 4.0; PWT: CC BY 4.0; FRED/OCDE/BIS/FMI/BCB/IBGE:
-termos das respectivas instituições). Ver config/sources.yml e
-data/processed/manifest.json.
