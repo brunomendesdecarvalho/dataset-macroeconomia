@@ -1,0 +1,1449 @@
+# =============================================================================
+# Dummies de regime país-tempo — especificação, metadados e papel no DSGE
+# =============================================================================
+# Regras de codificação (implementadas em src/macrodata/regimes.py):
+#  - start/end em YYYY-MM. Para eventos anuais, usar YYYY-01 e YYYY-12.
+#  - `permanent: true` => dummy step = 1 de start até o fim da amostra.
+#  - Resolução anual: ano = 1 se houver sobreposição de >= 1 trimestre com o evento.
+#  - Resolução trimestral: trimestre = 1 se o evento cobre o trimestre inteiro
+#    (>= 2 meses) ou se é um evento pontual declarado em `point: true`.
+#  - `countries: [ALL]` expande para os 22 países (não para o agregado EU).
+#  - `kind`: monetary | fiscal | crisis_global | crisis_domestic | commodity | methodology
+#  - `dsge_role`: observed_shock | parameter_break | control | sample_split
+#    * observed_shock: entra como regressor exógeno/choque observável;
+#    * parameter_break: quebra de parâmetro (ex.: persistência da Taylor);
+#    * control: controle em modelos reduzidos, sem papel estrutural;
+#    * sample_split: define amostra, não entra como regressor.
+# =============================================================================
+
+events:
+  # ---------------------------------------------------------------------------
+  # CHOQUES E CRISES GLOBAIS
+  # ---------------------------------------------------------------------------
+  - id: g_oil_1973
+    name: Primeiro choque do petróleo (embargo da OPEP)
+    kind: crisis_global
+    scope: global
+    countries: [ALL]
+    start: 1973-10
+    end: 1975-03
+    freq: [A, Q]
+    source: "História econômica; preço do Brent (FRED POILBREUSDM); NBER recessions"
+    url: https://fred.stlouisfed.org/series/POILBREUSDM
+    variables: [inflation, gdp_real, oil_price, output_gap, current_account_gdp]
+    models: [ADAS, PC, DSGE_S, DSGE_M]
+    dsge_role: observed_shock
+    dsge_note: "Choque de oferta/oferta de energia; no DSGE médio entra como choque de preço de commodity (pcom) e, no pequeno, como choque de markup."
+  - id: g_volcker_1979
+    name: Choque Volcker (aperto monetário dos EUA)
+    kind: crisis_global
+    scope: global
+    countries: [ALL]
+    start: 1979-08
+    end: 1982-12
+    freq: [A, Q]
+    source: "Federal Reserve History; FRED FEDFUNDS"
+    url: https://fred.stlouisfed.org/series/FEDFUNDS
+    variables: [policy_rate, inflation, exchange_rate_nominal, gdp_real, foreign_policy_rate]
+    models: [MF, TR, DSGE_S, DSGE_M]
+    dsge_role: observed_shock
+    dsge_note: "Choque monetário externo e de prêmio de risco; entra como i* e risco externo."
+  - id: g_latam_debt_1982
+    name: Crise da dívida da América Latina
+    kind: crisis_global
+    scope: regional
+    countries: [ARG, BRA, CHL, COL, MEX, PER]
+    start: 1982-08
+    end: 1985-12
+    freq: [A, Q]
+    source: "Reinhart & Rogoff (2009); GMD (SovDebtCrisis)"
+    url: https://www.nber.org/papers/w14558
+    variables: [gov_debt_gdp, inflation, exchange_rate_nominal, gdp_real, current_account_gdp]
+    models: [MF, ADAS, DSGE_M]
+    dsge_role: observed_shock
+    dsge_note: "Prêmio de risco soberano e restrição externa; no DSGE médio, choque de prêmio de risco."
+  - id: g_asia_1997
+    name: Crise asiática
+    kind: crisis_global
+    scope: regional
+    countries: [IDN, KOR, CHN, IND, JPN]
+    start: 1997-07
+    end: 1998-12
+    freq: [A, Q]
+    source: "IMF; GMD (CurrencyCrisis, BankingCrisis)"
+    url: https://www.imf.org
+    variables: [exchange_rate_nominal, gdp_real, policy_rate, credit_private_gdp, reer]
+    models: [MF, DSGE_M]
+    dsge_role: observed_shock
+    dsge_note: "Choque cambial e financeiro; entra como prêmio de risco e quebra de parâmetro da regra monetária."
+  - id: g_russia_1998
+    name: Default russo e contágio (LTCM)
+    kind: crisis_global
+    scope: global
+    countries: [ALL]
+    start: 1998-08
+    end: 1998-12
+    freq: [A, Q]
+    source: "IMF; GMD (SovDebtCrisis)"
+    url: https://www.imf.org
+    variables: [exchange_rate_nominal, reer, policy_rate, gdp_real, credit_spread]
+    models: [MF, DSGE_M]
+    dsge_role: observed_shock
+    dsge_note: "Choque de risco global; entra como prêmio de risco externo."
+  - id: g_gfc_2008
+    name: Crise financeira global (GFC)
+    kind: crisis_global
+    scope: global
+    countries: [ALL]
+    start: 2008-09
+    end: 2009-12
+    freq: [A, Q]
+    source: "Federal Reserve; IMF; GMD (BankingCrisis)"
+    url: https://www.federalreserve.gov
+    variables: [gdp_real, credit_spread, policy_rate, exchange_rate_nominal, unemployment, investment_real]
+    models: [ISLM, MF, ADAS, PC, DSGE_S, DSGE_M]
+    dsge_role: observed_shock
+    dsge_note: "Choque de demanda agregada e de prêmio de risco; no DSGE pequeno, choque de demanda; no médio, risco e investimento."
+  - id: g_euro_crisis_2010
+    name: Crise da dívida soberana da área do euro
+    kind: crisis_global
+    scope: regional
+    countries: [DEU, FRA, ITA, EU]
+    start: 2010-05
+    end: 2012-12
+    freq: [A, Q]
+    source: "ECB; European Commission"
+    url: https://www.ecb.europa.eu
+    variables: [long_rate, gov_debt_gdp, gdp_real, credit_spread]
+    models: [ISLM, DSGE_M]
+    dsge_role: observed_shock
+    dsge_note: "Spread soberano como prêmio de risco; no DSGE médio, choque de prêmio de risco doméstico."
+  - id: g_commodity_supercycle
+    name: Superciclo das commodities
+    kind: commodity
+    scope: global
+    countries: [BRA, ARG, CHL, COL, PER, RUS, SAU, ZAF, IDN, AUS]
+    start: 2003-01
+    end: 2011-12
+    freq: [A, Q]
+    source: "IMF Commodity Price Index; FRED PALLFNFINDEXQ"
+    url: https://fred.stlouisfed.org/series/PALLFNFINDEXQ
+    variables: [commodity_price_index, oil_price, current_account_gdp, exchange_rate_nominal, gdp_real, inflation]
+    models: [ADAS, PC, DSGE_M]
+    dsge_role: observed_shock
+    dsge_note: "Termos de troca; entra como choque de preço de commodity no DSGE médio e como controle nos modelos reduzidos."
+  - id: g_pandemic_2020
+    name: Pandemia de COVID-19
+    kind: crisis_global
+    scope: global
+    countries: [ALL]
+    start: 2020-01
+    end: 2021-12
+    freq: [A, Q]
+    source: "OMS; IMF WEO; GMD"
+    url: https://www.imf.org/en/Publications/WEO
+    variables: [gdp_real, unemployment, gov_exp_gdp, gov_debt_gdp, policy_rate, investment_real]
+    models: [ISLM, ADAS, PC, DSGE_S, DSGE_M]
+    dsge_role: observed_shock
+    dsge_note: "Choque de demanda e de oferta simultâneos; no DSGE, combinação de choque de preferência e de oferta de trabalho."
+  - id: g_inflation_energy_2022
+    name: Choque inflacionário de energia e alimentos (2022)
+    kind: crisis_global
+    scope: global
+    countries: [ALL]
+    start: 2022-01
+    end: 2023-12
+    freq: [A, Q]
+    source: "FRED; IMF WEO"
+    url: https://fred.stlouisfed.org/series/POILBREUSDM
+    variables: [inflation, oil_price, commodity_price_index, policy_rate, real_rate_ex_ante]
+    models: [PC, TR, DSGE_S, DSGE_M]
+    dsge_role: observed_shock
+    dsge_note: "Choque de markup/oferta; no DSGE pequeno, choque de custo; no médio, preço de commodity."
+  - id: g_taper_tantrum_2013
+    name: Taper tantrum (choque financeiro externo)
+    kind: crisis_global
+    scope: global
+    countries: [BRA, IND, IDN, TUR, ZAF, ARG, MEX, CHL, COL, PER]
+    start: 2013-05
+    end: 2013-12
+    freq: [A, Q]
+    source: "Federal Reserve; IMF"
+    url: https://www.federalreserve.gov
+    variables: [exchange_rate_nominal, credit_spread, policy_rate, reer]
+    models: [MF, DSGE_M]
+    dsge_role: observed_shock
+    dsge_note: "Prêmio de risco externo; entra como choque de risco no DSGE médio."
+
+  # ---------------------------------------------------------------------------
+  # BRASIL
+  # ---------------------------------------------------------------------------
+  - id: br_hyperinflation
+    name: Hiperinflação brasileira
+    kind: crisis_domestic
+    scope: country
+    countries: [BRA]
+    start: 1980-01
+    end: 1994-06
+    freq: [A, Q]
+    source: "BCB SGS 433; IBGE; Simonsen (1995)"
+    url: https://api.bcb.gov.br/dados/serie/bcdata.sgs.433/dados
+    variables: [inflation, exchange_rate_nominal, policy_rate, m1, gdp_real, real_rate_ex_post]
+    models: [ISLM, MF, ADAS, PC, DSGE_S]
+    dsge_role: sample_split
+    dsge_note: "Excluída da amostra de estimação DSGE; usada para validação histórica e modelos reduzidos."
+  - id: br_cruzado
+    name: Plano Cruzado
+    kind: crisis_domestic
+    scope: country
+    countries: [BRA]
+    start: 1986-02
+    end: 1987-06
+    freq: [A, Q]
+    source: "BCB; Decreto-Lei 2.283/1986"
+    url: https://www.bcb.gov.br
+    variables: [inflation, exchange_rate_nominal, policy_rate, real_rate_ex_post]
+    models: [ADAS, PC]
+    dsge_role: parameter_break
+    dsge_note: "Congelamento de preços; quebra na curva de Phillips e na formação de expectativas."
+  - id: br_bresser
+    name: Plano Bresser
+    kind: crisis_domestic
+    scope: country
+    countries: [BRA]
+    start: 1987-06
+    end: 1989-01
+    freq: [A, Q]
+    source: "BCB; Decreto-Lei 2.335/1987"
+    url: https://www.bcb.gov.br
+    variables: [inflation, exchange_rate_nominal, policy_rate]
+    models: [ADAS, PC]
+    dsge_role: parameter_break
+    dsge_note: "Novo congelamento; quebra de parâmetro na inflação."
+  - id: br_verao
+    name: Plano Verão
+    kind: crisis_domestic
+    scope: country
+    countries: [BRA]
+    start: 1989-01
+    end: 1990-03
+    freq: [A, Q]
+    source: "BCB; Lei 7.730/1989"
+    url: https://www.bcb.gov.br
+    variables: [inflation, exchange_rate_nominal, policy_rate]
+    models: [ADAS, PC]
+    dsge_role: parameter_break
+    dsge_note: "Congelamento e reforma monetária; quebra de parâmetro."
+  - id: br_collor
+    name: Plano Collor
+    kind: crisis_domestic
+    scope: country
+    countries: [BRA]
+    start: 1990-03
+    end: 1991-01
+    freq: [A, Q]
+    source: "BCB; Lei 8.024/1990"
+    url: https://www.bcb.gov.br
+    variables: [inflation, m1, m2, policy_rate, gdp_real, exchange_rate_nominal]
+    models: [ISLM, MF, ADAS, PC]
+    dsge_role: parameter_break
+    dsge_note: "Bloqueio de ativos e mudança de indexação; quebra monetária e de expectativas."
+  - id: br_real_plan
+    name: Plano Real
+    kind: crisis_domestic
+    scope: country
+    countries: [BRA]
+    start: 1994-07
+    end: 1995-06
+    freq: [A, Q]
+    source: "BCB; Lei 8.880/1994"
+    url: https://www.bcb.gov.br
+    variables: [inflation, exchange_rate_nominal, policy_rate, real_rate_ex_ante, gdp_real]
+    models: [ISLM, MF, ADAS, PC, DSGE_S]
+    dsge_role: parameter_break
+    dsge_note: "Fim da hiperinflação e mudança de âncora nominal; quebra estrutural na curva de Phillips."
+  - id: br_crawling_band
+    name: Câmbio administrado com bandas (pós-Real)
+    kind: monetary
+    scope: country
+    countries: [BRA]
+    start: 1995-03
+    end: 1999-01
+    freq: [A, Q]
+    source: "BCB; IMF AREAER"
+    url: https://www.bcb.gov.br
+    variables: [exchange_rate_nominal, policy_rate, inflation, reer]
+    models: [MF, DSGE_S]
+    dsge_role: parameter_break
+    dsge_note: "Regra cambial; no DSGE, quebra do parâmetro de resposta cambial ou exclusão da amostra."
+  - id: br_floating
+    name: Câmbio flutuante
+    kind: monetary
+    scope: country
+    countries: [BRA]
+    start: 1999-01
+    permanent: true
+    freq: [A, Q]
+    source: "BCB; Comunicado 6.565/1999"
+    url: https://www.bcb.gov.br
+    variables: [exchange_rate_nominal, reer, policy_rate, inflation]
+    models: [MF, DSGE_S, DSGE_M]
+    dsge_role: sample_split
+    dsge_note: "Define o início do regime monetário atual; entra como dummy de regime (step) nas equações de câmbio."
+  - id: br_it
+    name: Regime de metas de inflação
+    kind: monetary
+    scope: country
+    countries: [BRA]
+    start: 1999-06
+    permanent: true
+    freq: [A, Q]
+    source: "BCB; Decreto 3.088/1999"
+    url: https://www.bcb.gov.br/controleinflacao/historicometas
+    variables: [inflation, inflation_expectations, policy_rate, inflation_target, output_gap]
+    models: [TR, DSGE_S, DSGE_M]
+    dsge_role: parameter_break
+    dsge_note: "Muda a regra monetária e a formação de expectativas; no DSGE, quebra de parâmetro da Taylor e início da amostra de estimação (1999T3)."
+  - id: br_primary_targets
+    name: Metas de superávit primário
+    kind: fiscal
+    scope: country
+    countries: [BRA]
+    start: 1999-01
+    end: 2016-12
+    freq: [A, Q]
+    source: "Tesouro Nacional; LDO 2000; IMF"
+    url: https://www.tesourotransparente.gov.br
+    variables: [primary_balance_gdp, gov_debt_gdp, policy_rate]
+    models: [ISLM, DSGE_M]
+    dsge_role: parameter_break
+    dsge_note: "Regra fiscal baseada em meta de superávit; no DSGE médio, quebra do parâmetro de resposta fiscal."
+  - id: br_lrf
+    name: Lei de Responsabilidade Fiscal
+    kind: fiscal
+    scope: country
+    countries: [BRA]
+    start: 2000-05
+    permanent: true
+    freq: [A, Q]
+    source: "Lei Complementar 101/2000"
+    url: https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp101.htm
+    variables: [gov_exp_gdp, gov_debt_gdp, primary_balance_gdp]
+    models: [DSGE_M]
+    dsge_role: parameter_break
+    dsge_note: "Regra fiscal e de transparência; quebra de parâmetro de resposta do gasto."
+  - id: br_election_2002
+    name: Crise de confiança eleitoral de 2002
+    kind: crisis_domestic
+    scope: country
+    countries: [BRA]
+    start: 2002-07
+    end: 2002-12
+    freq: [A, Q]
+    source: "BCB; IMF"
+    url: https://www.bcb.gov.br
+    variables: [exchange_rate_nominal, credit_spread, inflation, policy_rate, reer]
+    models: [MF, DSGE_S]
+    dsge_role: observed_shock
+    dsge_note: "Choque de prêmio de risco; entra como dummy de risco no DSGE."
+  - id: br_gfc
+    name: Crise financeira global no Brasil
+    kind: crisis_global
+    scope: country
+    countries: [BRA]
+    start: 2008-09
+    end: 2009-12
+    freq: [A, Q]
+    source: "BCB; GMD"
+    url: https://www.bcb.gov.br
+    variables: [gdp_real, credit_spread, policy_rate, exchange_rate_nominal, investment_real]
+    models: [ISLM, MF, DSGE_S, DSGE_M]
+    dsge_role: observed_shock
+    dsge_note: "Choque de demanda e de risco; mesma codificação do choque global, com defasagem de um trimestre."
+  - id: br_recession_2014
+    name: Recessão 2014–2016 e crise política
+    kind: crisis_domestic
+    scope: country
+    countries: [BRA]
+    start: 2014-04
+    end: 2016-12
+    freq: [A, Q]
+    source: "IBGE; BCB"
+    url: https://sidra.ibge.gov.br
+    variables: [gdp_real, unemployment, investment_real, inflation, primary_balance_gdp, policy_rate]
+    models: [ADAS, PC, DSGE_S, DSGE_M]
+    dsge_role: observed_shock
+    dsge_note: "Choque de demanda e de incerteza; no DSGE pequeno, choque de demanda; no médio, prêmio de risco e gasto."
+  - id: br_ceiling
+    name: Teto de gastos (EC 95/2016)
+    kind: fiscal
+    scope: country
+    countries: [BRA]
+    start: 2016-12
+    permanent: true
+    freq: [A, Q]
+    source: "Emenda Constitucional 95/2016"
+    url: https://www.planalto.gov.br/ccivil_03/constituicao/emendas/emc/emc95.htm
+    variables: [gov_exp_gdp, primary_balance_gdp, gov_debt_gdp]
+    models: [DSGE_M]
+    dsge_role: parameter_break
+    dsge_note: "Regra de crescimento real do gasto; quebra do parâmetro fiscal."
+  - id: br_pandemic
+    name: Emergência COVID-19 no Brasil
+    kind: crisis_global
+    scope: country
+    countries: [BRA]
+    start: 2020-03
+    end: 2021-12
+    freq: [A, Q]
+    source: "Ministério da Saúde; BCB; IBGE"
+    url: https://www.gov.br/saude
+    variables: [gdp_real, gov_exp_gdp, gov_debt_gdp, unemployment, policy_rate, investment_real]
+    models: [ISLM, ADAS, PC, DSGE_S, DSGE_M]
+    dsge_role: observed_shock
+    dsge_note: "Choque de demanda/oferta e transferências emergenciais; dummy de gasto no DSGE médio."
+  - id: br_tightening_2021
+    name: Ciclo de aperto monetário 2021–2023
+    kind: monetary
+    scope: country
+    countries: [BRA]
+    start: 2021-03
+    end: 2023-08
+    freq: [A, Q]
+    source: "BCB; Copom"
+    url: https://www.bcb.gov.br
+    variables: [policy_rate, inflation, inflation_expectations, output_gap, real_rate_ex_ante]
+    models: [TR, DSGE_S]
+    dsge_role: observed_shock
+    dsge_note: "Sequência de choques monetários; pode ser tratada como choque observável (desvios da Taylor) ou quebra de parâmetro."
+  - id: br_new_framework
+    name: Novo arcabouço fiscal (LC 200/2023)
+    kind: fiscal
+    scope: country
+    countries: [BRA]
+    start: 2023-08
+    permanent: true
+    freq: [A, Q]
+    source: "Lei Complementar 200/2023"
+    url: https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp200.htm
+    variables: [gov_exp_gdp, primary_balance_gdp, gov_debt_gdp]
+    models: [DSGE_M]
+    dsge_role: parameter_break
+    dsge_note: "Nova regra fiscal; quebra do parâmetro de resposta do gasto/primário."
+  - id: br_gdp_rebase_2010
+    name: Mudança de base das Contas Nacionais (2010)
+    kind: methodology
+    scope: country
+    countries: [BRA]
+    start: 2010-01
+    end: 2010-12
+    point: true
+    freq: [A]
+    source: "IBGE; nota metodológica das Contas Nacionais"
+    url: https://www.ibge.gov.br
+    variables: [gdp_real, gdp_nominal, investment_gdp, consumption_gdp]
+    models: [SOLOW, DSGE_M]
+    dsge_role: parameter_break
+    dsge_note: "Quebra metodológica no nível do PIB; dummy de nível, não de ciclo."
+  - id: br_ipca_rebase_2012
+    name: Nova estrutura de pesos do IPCA (2012)
+    kind: methodology
+    scope: country
+    countries: [BRA]
+    start: 2012-01
+    end: 2012-01
+    point: true
+    freq: [A, Q]
+    source: "IBGE; nota metodológica do IPCA"
+    url: https://www.ibge.gov.br
+    variables: [inflation, cpi_index, core_inflation]
+    models: [PC, DSGE_S]
+    dsge_role: parameter_break
+    dsge_note: "Mudança de pesos da cesta; quebra na média da inflação."
+  - id: br_govdebt_method_2008
+    name: Mudança metodológica da dívida pública (2008)
+    kind: methodology
+    scope: country
+    countries: [BRA]
+    start: 2008-01
+    end: 2008-01
+    point: true
+    freq: [A, Q]
+    source: "Tesouro Nacional; BCB"
+    url: https://www.tesourotransparente.gov.br
+    variables: [gov_debt_gdp, net_debt_gdp, primary_balance_gdp]
+    models: [DSGE_M]
+    dsge_role: parameter_break
+    dsge_note: "Alteração de perímetro/metodologia da dívida; dummy de nível."
+
+  # ---------------------------------------------------------------------------
+  # ARGENTINA
+  # ---------------------------------------------------------------------------
+  - id: ar_hyperinflation
+    name: Hiperinflação argentina (1989–1990)
+    kind: crisis_domestic
+    scope: country
+    countries: [ARG]
+    start: 1989-01
+    end: 1990-12
+    freq: [A, Q]
+    source: "INDEC; BCRA; Reinhart & Rogoff"
+    url: https://www.indec.gob.ar
+    variables: [inflation, exchange_rate_nominal, policy_rate, gdp_real]
+    models: [ADAS, PC, DSGE_S]
+    dsge_role: sample_split
+    dsge_note: "Excluída da amostra DSGE; validação histórica."
+  - id: ar_convertibility
+    name: Plano de Convertibilidade (1 peso = 1 dólar)
+    kind: monetary
+    scope: country
+    countries: [ARG]
+    start: 1991-04
+    end: 2001-12
+    freq: [A, Q]
+    source: "BCRA; Ley 23.928/1991"
+    url: https://www.bcra.gob.ar
+    variables: [exchange_rate_nominal, inflation, policy_rate, reer, gdp_real]
+    models: [MF, DSGE_S]
+    dsge_role: parameter_break
+    dsge_note: "Câmbio fixo rígido; quebra do parâmetro cambial."
+  - id: ar_tequila
+    name: Efeito tequila na Argentina
+    kind: crisis_global
+    scope: country
+    countries: [ARG]
+    start: 1995-01
+    end: 1995-12
+    freq: [A, Q]
+    source: "BCRA; IMF"
+    url: https://www.imf.org
+    variables: [gdp_real, unemployment, credit_spread, policy_rate]
+    models: [ISLM, MF]
+    dsge_role: observed_shock
+    dsge_note: "Choque de demanda externo."
+  - id: ar_default_2001
+    name: Default e crise da convertibilidade (2001–2002)
+    kind: crisis_domestic
+    scope: country
+    countries: [ARG]
+    start: 2001-12
+    end: 2002-06
+    freq: [A, Q]
+    source: "BCRA; IMF; GMD (SovDebtCrisis)"
+    url: https://www.imf.org
+    variables: [exchange_rate_nominal, gdp_real, inflation, gov_debt_gdp, unemployment, credit_spread]
+    models: [MF, ADAS, DSGE_M]
+    dsge_role: observed_shock
+    dsge_note: "Choque de risco soberano e cambial; no DSGE médio, prêmio de risco."
+  - id: ar_cepo
+    name: Controle de capitais e cepo cambial
+    kind: monetary
+    scope: country
+    countries: [ARG]
+    start: 2011-10
+    end: 2015-12
+    freq: [A, Q]
+    source: "BCRA; IMF AREAER"
+    url: https://www.bcra.gob.ar
+    variables: [exchange_rate_nominal, reer, inflation, credit_spread]
+    models: [MF, DSGE_M]
+    dsge_role: parameter_break
+    dsge_note: "Restrição cambial; quebra do parâmetro de câmbio."
+  - id: ar_it_2016
+    name: Metas de inflação na Argentina (2016–2018)
+    kind: monetary
+    scope: country
+    countries: [ARG]
+    start: 2016-09
+    end: 2018-09
+    freq: [A, Q]
+    source: "BCRA"
+    url: https://www.bcra.gob.ar
+    variables: [inflation, policy_rate, inflation_target, inflation_expectations]
+    models: [TR, DSGE_S]
+    dsge_role: parameter_break
+    dsge_note: "Regime de metas curto e interrompido; entra como dummy de regime."
+  - id: ar_indec_2007
+    name: Intervenção no INDEC e quebra do IPC (2007–2015)
+    kind: methodology
+    scope: country
+    countries: [ARG]
+    start: 2007-01
+    end: 2015-12
+    freq: [A, Q]
+    source: "INDEC; IMF; imprensa especializada"
+    url: https://www.indec.gob.ar
+    variables: [inflation, cpi_index, inflation_expectations]
+    models: [PC, DSGE_S]
+    dsge_role: parameter_break
+    dsge_note: "Quebra metodológica na inflação argentina; dummy de nível/viés, não de ciclo."
+  - id: ar_indec_2016
+    name: Nova série de IPC argentina (2016)
+    kind: methodology
+    scope: country
+    countries: [ARG]
+    start: 2016-01
+    end: 2016-12
+    point: true
+    freq: [A, Q]
+    source: "INDEC"
+    url: https://www.indec.gob.ar
+    variables: [inflation, cpi_index]
+    models: [PC]
+    dsge_role: parameter_break
+    dsge_note: "Reinício da série oficial; quebra na média da inflação."
+  - id: ar_imf_2018
+    name: Programa com o FMI (2018)
+    kind: fiscal
+    scope: country
+    countries: [ARG]
+    start: 2018-06
+    end: 2019-12
+    freq: [A, Q]
+    source: "IMF"
+    url: https://www.imf.org
+    variables: [primary_balance_gdp, gov_debt_gdp, policy_rate, exchange_rate_nominal]
+    models: [DSGE_M]
+    dsge_role: parameter_break
+    dsge_note: "Condicionalidade fiscal; quebra do parâmetro fiscal."
+  - id: ar_default_2020
+    name: Reestruturação da dívida argentina (2020)
+    kind: crisis_domestic
+    scope: country
+    countries: [ARG]
+    start: 2020-05
+    end: 2020-09
+    freq: [A, Q]
+    source: "Ministério da Economia; IMF"
+    url: https://www.imf.org
+    variables: [gov_debt_gdp, credit_spread, exchange_rate_nominal]
+    models: [DSGE_M]
+    dsge_role: observed_shock
+    dsge_note: "Prêmio de risco soberano."
+
+  # ---------------------------------------------------------------------------
+  # MÉXICO
+  # ---------------------------------------------------------------------------
+  - id: mx_tequila
+    name: Crise do tequila
+    kind: crisis_domestic
+    scope: country
+    countries: [MEX]
+    start: 1994-12
+    end: 1995-12
+    freq: [A, Q]
+    source: "Banxico; IMF"
+    url: https://www.banxico.org.mx
+    variables: [exchange_rate_nominal, gdp_real, inflation, policy_rate, credit_spread]
+    models: [MF, ADAS, DSGE_S]
+    dsge_role: observed_shock
+    dsge_note: "Choque cambial e de risco; entra como dummy de crise."
+  - id: mx_it
+    name: Metas de inflação no México
+    kind: monetary
+    scope: country
+    countries: [MEX]
+    start: 2001-01
+    permanent: true
+    freq: [A, Q]
+    source: "Banxico"
+    url: https://www.banxico.org.mx
+    variables: [inflation, inflation_target, policy_rate, inflation_expectations]
+    models: [TR, DSGE_S]
+    dsge_role: parameter_break
+    dsge_note: "Mudança da regra monetária."
+  - id: mx_gfc
+    name: GFC no México
+    kind: crisis_global
+    scope: country
+    countries: [MEX]
+    start: 2008-09
+    end: 2009-12
+    freq: [A, Q]
+    source: "Banxico; INEGI"
+    url: https://www.inegi.org.mx
+    variables: [gdp_real, exchange_rate_nominal, policy_rate, credit_spread]
+    models: [ISLM, MF, DSGE_S]
+    dsge_role: observed_shock
+    dsge_note: "Choque externo comum."
+
+  # ---------------------------------------------------------------------------
+  # ESTADOS UNIDOS
+  # ---------------------------------------------------------------------------
+  - id: us_volcker
+    name: Aperto Volcker
+    kind: monetary
+    scope: country
+    countries: [USA]
+    start: 1979-10
+    end: 1982-12
+    freq: [A, Q]
+    source: "Federal Reserve History"
+    url: https://www.federalreservehistory.org
+    variables: [policy_rate, inflation, output_gap, unemployment]
+    models: [TR, DSGE_S]
+    dsge_role: observed_shock
+    dsge_note: "Grande choque monetário; útil para identificar a curva IS."
+  - id: us_zlb_2008
+    name: Zero lower bound (2008–2015)
+    kind: monetary
+    scope: country
+    countries: [USA]
+    start: 2008-12
+    end: 2015-12
+    freq: [A, Q]
+    source: "FOMC statements"
+    url: https://www.federalreserve.gov
+    variables: [policy_rate, inflation, output_gap, long_rate]
+    models: [TR, DSGE_S, DSGE_M]
+    dsge_role: parameter_break
+    dsge_note: "Restrição de ZLB; quebra da regra de Taylor."
+  - id: us_zlb_2020
+    name: ZLB da pandemia (2020–2022)
+    kind: monetary
+    scope: country
+    countries: [USA]
+    start: 2020-03
+    end: 2022-03
+    freq: [A, Q]
+    source: "FOMC statements"
+    url: https://www.federalreserve.gov
+    variables: [policy_rate, inflation, output_gap]
+    models: [TR, DSGE_S]
+    dsge_role: parameter_break
+    dsge_note: "ZLB e QE; quebra da regra."
+  - id: us_qt_2017
+    name: Normalização e redução do balanço (QT)
+    kind: monetary
+    scope: country
+    countries: [USA]
+    start: 2017-10
+    end: 2019-08
+    freq: [A, Q]
+    source: "FOMC"
+    url: https://www.federalreserve.gov
+    variables: [policy_rate, long_rate, output_gap]
+    models: [DSGE_M]
+    dsge_role: control
+    dsge_note: "Controle de política; não é choque exógeno."
+  - id: us_tightening_2022
+    name: Ciclo de aperto 2022–2023
+    kind: monetary
+    scope: country
+    countries: [USA]
+    start: 2022-03
+    end: 2023-07
+    freq: [A, Q]
+    source: "FOMC"
+    url: https://www.federalreserve.gov
+    variables: [policy_rate, inflation, output_gap, exchange_rate_nominal]
+    models: [TR, DSGE_S]
+    dsge_role: observed_shock
+    dsge_note: "Choque monetário convencional."
+
+  # ---------------------------------------------------------------------------
+  # ÁREA DO EURO / ALEMANHA / ITÁLIA / FRANÇA
+  # ---------------------------------------------------------------------------
+  - id: eu_maastricht
+    name: Tratado de Maastricht em vigor
+    kind: fiscal
+    scope: regional
+    countries: [DEU, FRA, ITA, EU]
+    start: 1993-11
+    permanent: true
+    freq: [A, Q]
+    source: "Tratado da União Europeia"
+    url: https://eur-lex.europa.eu
+    variables: [gov_debt_gdp, primary_balance_gdp, inflation]
+    models: [DSGE_M]
+    dsge_role: parameter_break
+    dsge_note: "Critérios de convergência fiscal; quebra do parâmetro fiscal."
+  - id: eu_euro
+    name: Adoção do euro
+    kind: monetary
+    scope: regional
+    countries: [DEU, FRA, ITA, EU]
+    start: 1999-01
+    permanent: true
+    freq: [A, Q]
+    source: "BCE"
+    url: https://www.ecb.europa.eu
+    variables: [policy_rate, exchange_rate_nominal, inflation, long_rate]
+    models: [MF, DSGE_S, DSGE_M]
+    dsge_role: parameter_break
+    dsge_note: "União monetária; quebra do parâmetro de política e do câmbio."
+  - id: eu_ecb_it
+    name: Estratégia de inflação do BCE
+    kind: monetary
+    scope: regional
+    countries: [DEU, FRA, ITA, EU]
+    start: 2003-05
+    permanent: true
+    freq: [A, Q]
+    source: "BCE"
+    url: https://www.ecb.europa.eu
+    variables: [inflation, inflation_target, policy_rate]
+    models: [TR]
+    dsge_role: parameter_break
+    dsge_note: "Meta quantitativa; quebra na regra."
+  - id: eu_zlb
+    name: ZLB e QE do BCE
+    kind: monetary
+    scope: regional
+    countries: [DEU, FRA, ITA, EU]
+    start: 2014-06
+    end: 2022-07
+    freq: [A, Q]
+    source: "BCE"
+    url: https://www.ecb.europa.eu
+    variables: [policy_rate, inflation, long_rate, output_gap]
+    models: [TR, DSGE_M]
+    dsge_role: parameter_break
+    dsge_note: "Restrição de ZLB; quebra da regra."
+  - id: de_reunification
+    name: Reunificação alemã
+    kind: methodology
+    scope: country
+    countries: [DEU]
+    start: 1990-10
+    end: 1991-12
+    freq: [A, Q]
+    source: "Destatis"
+    url: https://www.destatis.de
+    variables: [gdp_real, gov_exp_gdp, unemployment, population]
+    models: [SOLOW, DSGE_M]
+    dsge_role: parameter_break
+    dsge_note: "Quebra de nível e de composição do PIB."
+  - id: de_hartz
+    name: Reformas Hartz (mercado de trabalho)
+    kind: fiscal
+    scope: country
+    countries: [DEU]
+    start: 2003-01
+    end: 2005-12
+    freq: [A, Q]
+    source: "Bundesagentur für Arbeit; OECD"
+    url: https://www.oecd.org
+    variables: [unemployment, participation_rate, gdp_real]
+    models: [PC, DSGE_M]
+    dsge_role: parameter_break
+    dsge_note: "Mudança estrutural do mercado de trabalho; quebra em u_n."
+
+  # ---------------------------------------------------------------------------
+  # REINO UNIDO
+  # ---------------------------------------------------------------------------
+  - id: gb_erm_exit
+    name: Saída do ERM (quarta-feira negra)
+    kind: monetary
+    scope: country
+    countries: [GBR]
+    start: 1992-09
+    end: 1992-09
+    point: true
+    freq: [A, Q]
+    source: "Bank of England"
+    url: https://www.bankofengland.co.uk
+    variables: [exchange_rate_nominal, policy_rate, inflation, reer]
+    models: [MF, DSGE_S]
+    dsge_role: parameter_break
+    dsge_note: "Quebra cambial e de credibilidade."
+  - id: gb_it
+    name: Metas de inflação no Reino Unido
+    kind: monetary
+    scope: country
+    countries: [GBR]
+    start: 1992-10
+    permanent: true
+    freq: [A, Q]
+    source: "Bank of England"
+    url: https://www.bankofengland.co.uk
+    variables: [inflation, inflation_target, policy_rate, inflation_expectations]
+    models: [TR, DSGE_S]
+    dsge_role: parameter_break
+    dsge_note: "Mudança da regra monetária."
+  - id: gb_brexit
+    name: Brexit (referendo e saída)
+    kind: crisis_domestic
+    scope: country
+    countries: [GBR]
+    start: 2016-06
+    end: 2020-12
+    freq: [A, Q]
+    source: "UK Government; ONS"
+    url: https://www.ons.gov.uk
+    variables: [exchange_rate_nominal, gdp_real, investment_real, inflation, reer]
+    models: [MF, DSGE_M]
+    dsge_role: observed_shock
+    dsge_note: "Choque de incerteza e de comércio; no DSGE médio, prêmio de risco e demanda externa."
+
+  # ---------------------------------------------------------------------------
+  # JAPÃO
+  # ---------------------------------------------------------------------------
+  - id: jp_bubble_burst
+    name: Estouro da bolha japonesa
+    kind: crisis_domestic
+    scope: country
+    countries: [JPN]
+    start: 1991-01
+    end: 2001-12
+    freq: [A, Q]
+    source: "Bank of Japan; Cabinet Office"
+    url: https://www.boj.or.jp
+    variables: [gdp_real, investment_real, inflation, policy_rate, hpi]
+    models: [ISLM, ADAS, DSGE_M]
+    dsge_role: observed_shock
+    dsge_note: "Choque de demanda e de balanço; no DSGE médio, risco e investimento."
+  - id: jp_zlb_1999
+    name: ZLB japonês (1999–2006)
+    kind: monetary
+    scope: country
+    countries: [JPN]
+    start: 1999-02
+    end: 2006-07
+    freq: [A, Q]
+    source: "Bank of Japan"
+    url: https://www.boj.or.jp
+    variables: [policy_rate, inflation, output_gap, long_rate]
+    models: [TR, DSGE_S]
+    dsge_role: parameter_break
+    dsge_note: "Restrição de ZLB."
+  - id: jp_qe
+    name: Quantitative easing japonês (2001–2006)
+    kind: monetary
+    scope: country
+    countries: [JPN]
+    start: 2001-03
+    end: 2006-03
+    freq: [A, Q]
+    source: "Bank of Japan"
+    url: https://www.boj.or.jp
+    variables: [policy_rate, m2, long_rate, inflation]
+    models: [DSGE_M]
+    dsge_role: control
+    dsge_note: "Política não convencional; controle."
+  - id: jp_abenomics
+    name: Abenomics
+    kind: monetary
+    scope: country
+    countries: [JPN]
+    start: 2013-01
+    permanent: true
+    freq: [A, Q]
+    source: "Bank of Japan; Government of Japan"
+    url: https://www.boj.or.jp
+    variables: [policy_rate, inflation, inflation_target, exchange_rate_nominal, output_gap]
+    models: [TR, DSGE_S, DSGE_M]
+    dsge_role: parameter_break
+    dsge_note: "Mudança de meta e de QQE; quebra de parâmetro."
+  - id: jp_tax_2014
+    name: Aumento do IVA (2014)
+    kind: fiscal
+    scope: country
+    countries: [JPN]
+    start: 2014-04
+    end: 2014-04
+    point: true
+    freq: [A, Q]
+    source: "Ministério das Finanças do Japão"
+    url: https://www.mof.go.jp
+    variables: [inflation, consumption_real, gdp_real]
+    models: [ISLM, DSGE_M]
+    dsge_role: observed_shock
+    dsge_note: "Choque fiscal de consumo."
+  - id: jp_tax_2019
+    name: Aumento do IVA (2019)
+    kind: fiscal
+    scope: country
+    countries: [JPN]
+    start: 2019-10
+    end: 2019-10
+    point: true
+    freq: [A, Q]
+    source: "Ministério das Finanças do Japão"
+    url: https://www.mof.go.jp
+    variables: [inflation, consumption_real, gdp_real]
+    models: [ISLM, DSGE_M]
+    dsge_role: observed_shock
+    dsge_note: "Choque fiscal de consumo."
+
+  # ---------------------------------------------------------------------------
+  # CHINA
+  # ---------------------------------------------------------------------------
+  - id: cn_wto
+    name: Entrada da China na OMC
+    kind: crisis_global
+    scope: country
+    countries: [CHN]
+    start: 2001-12
+    permanent: true
+    freq: [A, Q]
+    source: "WTO"
+    url: https://www.wto.org
+    variables: [exports_gdp, gdp_real, investment_gdp, commodity_price_index]
+    models: [SOLOW, DSGE_M]
+    dsge_role: parameter_break
+    dsge_note: "Abertura comercial; quebra de parâmetro de comércio."
+  - id: cn_stimulus
+    name: Pacote de estímulo chinês
+    kind: fiscal
+    scope: country
+    countries: [CHN]
+    start: 2008-11
+    end: 2010-12
+    freq: [A, Q]
+    source: "Governo da China; IMF"
+    url: https://www.imf.org
+    variables: [gdp_real, investment_real, credit_private_gdp, commodity_price_index]
+    models: [ISLM, DSGE_M]
+    dsge_role: observed_shock
+    dsge_note: "Choque fiscal e de investimento; transbordamento via commodities."
+  - id: cn_zero_covid
+    name: Política zero-COVID
+    kind: crisis_domestic
+    scope: country
+    countries: [CHN]
+    start: 2020-01
+    end: 2022-12
+    freq: [A, Q]
+    source: "Governo da China; OMS"
+    url: https://www.who.int
+    variables: [gdp_real, consumption_real, unemployment, exports_gdp]
+    models: [ADAS, DSGE_M]
+    dsge_role: observed_shock
+    dsge_note: "Choque de oferta e de mobilidade."
+  - id: cn_fx_reform
+    name: Reforma cambial chinesa (2005)
+    kind: monetary
+    scope: country
+    countries: [CHN]
+    start: 2005-07
+    permanent: true
+    freq: [A, Q]
+    source: "PBOC"
+    url: http://www.pbc.gov.cn
+    variables: [exchange_rate_nominal, reer, inflation]
+    models: [MF]
+    dsge_role: parameter_break
+    dsge_note: "Transição para flutuação administrada."
+
+  # ---------------------------------------------------------------------------
+  # ÍNDIA / INDONÉSIA / COREIA
+  # ---------------------------------------------------------------------------
+  - id: in_liberalization
+    name: Liberalização econômica indiana (1991)
+    kind: fiscal
+    scope: country
+    countries: [IND]
+    start: 1991-07
+    permanent: true
+    freq: [A, Q]
+    source: "Government of India; IMF"
+    url: https://www.imf.org
+    variables: [gdp_real, investment_gdp, exports_gdp, inflation]
+    models: [SOLOW, DSGE_M]
+    dsge_role: parameter_break
+    dsge_note: "Quebra estrutural de crescimento."
+  - id: in_it
+    name: Metas de inflação na Índia
+    kind: monetary
+    scope: country
+    countries: [IND]
+    start: 2016-08
+    permanent: true
+    freq: [A, Q]
+    source: "RBI"
+    url: https://www.rbi.org.in
+    variables: [inflation, inflation_target, policy_rate, inflation_expectations]
+    models: [TR, DSGE_S]
+    dsge_role: parameter_break
+    dsge_note: "Mudança da regra monetária."
+  - id: in_demonetization
+    name: Demonetização indiana
+    kind: crisis_domestic
+    scope: country
+    countries: [IND]
+    start: 2016-11
+    end: 2017-06
+    freq: [A, Q]
+    source: "RBI"
+    url: https://www.rbi.org.in
+    variables: [m1, m2, gdp_real, inflation]
+    models: [ISLM, DSGE_M]
+    dsge_role: observed_shock
+    dsge_note: "Choque monetário transitório."
+  - id: in_gst
+    name: Implantação do GST
+    kind: fiscal
+    scope: country
+    countries: [IND]
+    start: 2017-07
+    permanent: true
+    freq: [A, Q]
+    source: "Government of India"
+    url: https://www.gst.gov.in
+    variables: [tax_burden_gdp, gov_revenue_gdp, inflation]
+    models: [DSGE_M]
+    dsge_role: parameter_break
+    dsge_note: "Mudança tributária."
+  - id: id_asia_crisis
+    name: Crise asiática na Indonésia
+    kind: crisis_domestic
+    scope: country
+    countries: [IDN]
+    start: 1997-07
+    end: 1999-12
+    freq: [A, Q]
+    source: "Bank Indonesia; IMF"
+    url: https://www.bi.go.id
+    variables: [exchange_rate_nominal, gdp_real, inflation, credit_spread, policy_rate]
+    models: [MF, ADAS, DSGE_M]
+    dsge_role: observed_shock
+    dsge_note: "Choque cambial, bancário e político."
+  - id: id_it
+    name: Metas de inflação na Indonésia
+    kind: monetary
+    scope: country
+    countries: [IDN]
+    start: 2005-07
+    permanent: true
+    freq: [A, Q]
+    source: "Bank Indonesia"
+    url: https://www.bi.go.id
+    variables: [inflation, inflation_target, policy_rate]
+    models: [TR]
+    dsge_role: parameter_break
+    dsge_note: "Mudança da regra monetária."
+  - id: kr_asia_crisis
+    name: Crise asiática na Coreia
+    kind: crisis_domestic
+    scope: country
+    countries: [KOR]
+    start: 1997-11
+    end: 1998-12
+    freq: [A, Q]
+    source: "Bank of Korea; IMF"
+    url: https://www.bok.or.kr
+    variables: [exchange_rate_nominal, gdp_real, policy_rate, credit_spread, unemployment]
+    models: [MF, DSGE_M]
+    dsge_role: observed_shock
+    dsge_note: "Choque cambial e financeiro."
+  - id: kr_it
+    name: Metas de inflação na Coreia
+    kind: monetary
+    scope: country
+    countries: [KOR]
+    start: 1998-04
+    permanent: true
+    freq: [A, Q]
+    source: "Bank of Korea"
+    url: https://www.bok.or.kr
+    variables: [inflation, inflation_target, policy_rate]
+    models: [TR]
+    dsge_role: parameter_break
+    dsge_note: "Mudança da regra monetária."
+
+  # ---------------------------------------------------------------------------
+  # RÚSSIA / TURQUIA / ÁFRICA DO SUL
+  # ---------------------------------------------------------------------------
+  - id: ru_default_1998
+    name: Default russo
+    kind: crisis_domestic
+    scope: country
+    countries: [RUS]
+    start: 1998-08
+    end: 1999-12
+    freq: [A, Q]
+    source: "IMF; GMD (SovDebtCrisis)"
+    url: https://www.imf.org
+    variables: [exchange_rate_nominal, inflation, gdp_real, gov_debt_gdp, policy_rate]
+    models: [MF, ADAS, DSGE_S]
+    dsge_role: observed_shock
+    dsge_note: "Choque cambial e de risco."
+  - id: ru_sanctions_2014
+    name: Sanções internacionais à Rússia
+    kind: crisis_global
+    scope: country
+    countries: [RUS]
+    start: 2014-03
+    end: 2021-12
+    freq: [A, Q]
+    source: "UE; EUA; IMF"
+    url: https://www.imf.org
+    variables: [exchange_rate_nominal, gdp_real, inflation, credit_spread, reer]
+    models: [MF, DSGE_M]
+    dsge_role: observed_shock
+    dsge_note: "Prêmio de risco e choque de comércio."
+  - id: ru_war_2022
+    name: Invasão da Ucrânia e sanções ampliadas
+    kind: crisis_global
+    scope: country
+    countries: [RUS]
+    start: 2022-02
+    permanent: true
+    freq: [A, Q]
+    source: "IMF; UE; EUA"
+    url: https://www.imf.org
+    variables: [exchange_rate_nominal, inflation, gdp_real, credit_spread, oil_price]
+    models: [MF, DSGE_M]
+    dsge_role: observed_shock
+    dsge_note: "Choque de oferta e de risco; quebra estrutural."
+  - id: tr_crisis_2001
+    name: Crise financeira turca de 2001
+    kind: crisis_domestic
+    scope: country
+    countries: [TUR]
+    start: 2001-02
+    end: 2001-12
+    freq: [A, Q]
+    source: "CBRT; IMF"
+    url: https://www.tcmb.gov.tr
+    variables: [exchange_rate_nominal, policy_rate, inflation, gdp_real, credit_spread]
+    models: [MF, ADAS, DSGE_S]
+    dsge_role: observed_shock
+    dsge_note: "Choque cambial e bancário."
+  - id: tr_it
+    name: Metas de inflação na Turquia
+    kind: monetary
+    scope: country
+    countries: [TUR]
+    start: 2006-01
+    permanent: true
+    freq: [A, Q]
+    source: "CBRT"
+    url: https://www.tcmb.gov.tr
+    variables: [inflation, inflation_target, policy_rate, inflation_expectations]
+    models: [TR, DSGE_S]
+    dsge_role: parameter_break
+    dsge_note: "Mudança da regra monetária."
+  - id: tr_crisis_2018
+    name: Crise cambial turca de 2018
+    kind: crisis_domestic
+    scope: country
+    countries: [TUR]
+    start: 2018-08
+    end: 2018-12
+    freq: [A, Q]
+    source: "CBRT; IMF"
+    url: https://www.tcmb.gov.tr
+    variables: [exchange_rate_nominal, inflation, policy_rate, credit_spread, gdp_real]
+    models: [MF, DSGE_S, DSGE_M]
+    dsge_role: observed_shock
+    dsge_note: "Choque de risco e de credibilidade."
+  - id: tr_unconventional_2021
+    name: Política monetária não convencional turca (2021–2023)
+    kind: monetary
+    scope: country
+    countries: [TUR]
+    start: 2021-09
+    end: 2023-05
+    freq: [A, Q]
+    source: "CBRT"
+    url: https://www.tcmb.gov.tr
+    variables: [policy_rate, inflation, exchange_rate_nominal, real_rate_ex_ante]
+    models: [TR, DSGE_S]
+    dsge_role: parameter_break
+    dsge_note: "Regra de Taylor invertida; quebra de parâmetro."
+  - id: za_democracy
+    name: Transição democrática sul-africana
+    kind: fiscal
+    scope: country
+    countries: [ZAF]
+    start: 1994-04
+    permanent: true
+    freq: [A, Q]
+    source: "Government of South Africa"
+    url: https://www.gov.za
+    variables: [gdp_real, gov_exp_gdp, inflation, unemployment]
+    models: [SOLOW, DSGE_M]
+    dsge_role: parameter_break
+    dsge_note: "Quebra política e fiscal."
+  - id: za_it
+    name: Metas de inflação na África do Sul
+    kind: monetary
+    scope: country
+    countries: [ZAF]
+    start: 2000-02
+    permanent: true
+    freq: [A, Q]
+    source: "SARB"
+    url: https://www.resbank.co.za
+    variables: [inflation, inflation_target, policy_rate, inflation_expectations]
+    models: [TR, DSGE_S]
+    dsge_role: parameter_break
+    dsge_note: "Mudança da regra monetária."
+
+  # ---------------------------------------------------------------------------
+  # CHILE / COLÔMBIA / PERU
+  # ---------------------------------------------------------------------------
+  - id: cl_debt_crisis_1982
+    name: Crise da dívida chilena
+    kind: crisis_domestic
+    scope: country
+    countries: [CHL]
+    start: 1982-01
+    end: 1983-12
+    freq: [A, Q]
+    source: "Banco Central de Chile; GMD"
+    url: https://www.bcentral.cl
+    variables: [gdp_real, exchange_rate_nominal, inflation, credit_spread, unemployment]
+    models: [MF, ADAS, DSGE_M]
+    dsge_role: observed_shock
+    dsge_note: "Choque bancário e cambial."
+  - id: cl_it
+    name: Metas de inflação no Chile
+    kind: monetary
+    scope: country
+    countries: [CHL]
+    start: 1999-09
+    permanent: true
+    freq: [A, Q]
+    source: "Banco Central de Chile"
+    url: https://www.bcentral.cl
+    variables: [inflation, inflation_target, policy_rate, inflation_expectations]
+    models: [TR, DSGE_S]
+    dsge_role: parameter_break
+    dsge_note: "Mudança da regra monetária."
+  - id: cl_social_unrest
+    name: Estallido social chileno
+    kind: crisis_domestic
+    scope: country
+    countries: [CHL]
+    start: 2019-10
+    end: 2019-12
+    freq: [A, Q]
+    source: "Banco Central de Chile; IMF"
+    url: https://www.bcentral.cl
+    variables: [gdp_real, investment_real, exchange_rate_nominal, credit_spread]
+    models: [ISLM, DSGE_S]
+    dsge_role: observed_shock
+    dsge_note: "Choque de demanda e de incerteza."
+  - id: co_crisis_1999
+    name: Crise colombiana de 1999
+    kind: crisis_domestic
+    scope: country
+    countries: [COL]
+    start: 1999-01
+    end: 1999-12
+    freq: [A, Q]
+    source: "Banco de la República; IMF"
+    url: https://www.banrep.gov.co
+    variables: [gdp_real, exchange_rate_nominal, policy_rate, unemployment, credit_spread]
+    models: [MF, DSGE_S]
+    dsge_role: observed_shock
+    dsge_note: "Choque cambial e de demanda."
+  - id: co_it
+    name: Metas de inflação na Colômbia
+    kind: monetary
+    scope: country
+    countries: [COL]
+    start: 1999-09
+    permanent: true
+    freq: [A, Q]
+    source: "Banco de la República"
+    url: https://www.banrep.gov.co
+    variables: [inflation, inflation_target, policy_rate, inflation_expectations]
+    models: [TR]
+    dsge_role: parameter_break
+    dsge_note: "Mudança da regra monetária."
+  - id: pe_hyperinflation
+    name: Hiperinflação peruana
+    kind: crisis_domestic
+    scope: country
+    countries: [PER]
+    start: 1988-01
+    end: 1990-07
+    freq: [A, Q]
+    source: "BCRP; INEI"
+    url: https://www.bcrp.gob.pe
+    variables: [inflation, exchange_rate_nominal, gdp_real, policy_rate]
+    models: [ADAS, PC, DSGE_S]
+    dsge_role: sample_split
+    dsge_note: "Excluída da amostra DSGE."
+  - id: pe_fujishock
+    name: Fujishock
+    kind: crisis_domestic
+    scope: country
+    countries: [PER]
+    start: 1990-08
+    end: 1991-12
+    freq: [A, Q]
+    source: "BCRP"
+    url: https://www.bcrp.gob.pe
+    variables: [inflation, exchange_rate_nominal, gdp_real, policy_rate, real_rate_ex_post]
+    models: [ADAS, PC]
+    dsge_role: parameter_break
+    dsge_note: "Estabilização abrupta; quebra da curva de Phillips."
+  - id: pe_it
+    name: Metas de inflação no Peru
+    kind: monetary
+    scope: country
+    countries: [PER]
+    start: 2002-01
+    permanent: true
+    freq: [A, Q]
+    source: "BCRP"
+    url: https://www.bcrp.gob.pe
+    variables: [inflation, inflation_target, policy_rate, inflation_expectations]
+    models: [TR]
+    dsge_role: parameter_break
+    dsge_note: "Mudança da regra monetária."
+
+  # ---------------------------------------------------------------------------
+  # AUSTRÁLIA / ARÁBIA SAUDITA
+  # ---------------------------------------------------------------------------
+  - id: au_it
+    name: Metas de inflação na Austrália
+    kind: monetary
+    scope: country
+    countries: [AUS]
+    start: 1993-01
+    permanent: true
+    freq: [A, Q]
+    source: "Reserve Bank of Australia"
+    url: https://www.rba.gov.au
+    variables: [inflation, inflation_target, policy_rate, inflation_expectations]
+    models: [TR]
+    dsge_role: parameter_break
+    dsge_note: "Mudança da regra monetária."
+  - id: au_mining_boom
+    name: Boom mineral australiano
+    kind: commodity
+    scope: country
+    countries: [AUS]
+    start: 2003-01
+    end: 2012-12
+    freq: [A, Q]
+    source: "RBA; IMF"
+    url: https://www.rba.gov.au
+    variables: [commodity_price_index, exchange_rate_nominal, reer, investment_gdp, gdp_real]
+    models: [ADAS, DSGE_M]
+    dsge_role: observed_shock
+    dsge_note: "Termos de troca."
+  - id: sa_oil_2014
+    name: Queda do preço do petróleo (2014–2016)
+    kind: commodity
+    scope: country
+    countries: [SAU]
+    start: 2014-06
+    end: 2016-12
+    freq: [A, Q]
+    source: "FRED; IMF"
+    url: https://fred.stlouisfed.org/series/POILBREUSDM
+    variables: [oil_price, gdp_real, gov_balance_gdp, current_account_gdp]
+    models: [ADAS, DSGE_M]
+    dsge_role: observed_shock
+    dsge_note: "Choque de termos de troca."
+  - id: sa_vision_2030
+    name: Vision 2030
+    kind: fiscal
+    scope: country
+    countries: [SAU]
+    start: 2016-04
+    permanent: true
+    freq: [A, Q]
+    source: "Government of Saudi Arabia"
+    url: https://www.vision2030.gov.sa
+    variables: [gov_exp_gdp, gdp_real, investment_gdp, tax_burden_gdp]
+    models: [DSGE_M]
+    dsge_role: parameter_break
+    dsge_note: "Mudança estrutural fiscal."

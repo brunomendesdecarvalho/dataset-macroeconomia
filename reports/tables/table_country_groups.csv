@@ -1,0 +1,115 @@
+﻿grupo,iso3,pais,justificativa
+BRICS,BRA,Brasil,Composição original do acrônimo (2001) e do bloco formal desde 2009. A expansão de 2024 é deliberadamente excluída para manter a lista fechada e comparável ao longo de todo o período; novos membros entram apenas se já pertencerem a outro grupo do desenho.
+BRICS,RUS,Rússia,Composição original do acrônimo (2001) e do bloco formal desde 2009. A expansão de 2024 é deliberadamente excluída para manter a lista fechada e comparável ao longo de todo o período; novos membros entram apenas se já pertencerem a outro grupo do desenho.
+BRICS,IND,Índia,Composição original do acrônimo (2001) e do bloco formal desde 2009. A expansão de 2024 é deliberadamente excluída para manter a lista fechada e comparável ao longo de todo o período; novos membros entram apenas se já pertencerem a outro grupo do desenho.
+BRICS,CHN,China,Composição original do acrônimo (2001) e do bloco formal desde 2009. A expansão de 2024 é deliberadamente excluída para manter a lista fechada e comparável ao longo de todo o período; novos membros entram apenas se já pertencerem a outro grupo do desenho.
+BRICS,ZAF,África do Sul,Composição original do acrônimo (2001) e do bloco formal desde 2009. A expansão de 2024 é deliberadamente excluída para manter a lista fechada e comparável ao longo de todo o período; novos membros entram apenas se já pertencerem a outro grupo do desenho.
+G20,ARG,Argentina,Composição oficial do G20 (19 países + União Europeia). A UE é agregado e é excluída de qualquer soma/média de países para evitar dupla contagem.
+G20,AUS,Austrália,Composição oficial do G20 (19 países + União Europeia). A UE é agregado e é excluída de qualquer soma/média de países para evitar dupla contagem.
+G20,BRA,Brasil,Composição oficial do G20 (19 países + União Europeia). A UE é agregado e é excluída de qualquer soma/média de países para evitar dupla contagem.
+G20,CAN,Canadá,Composição oficial do G20 (19 países + União Europeia). A UE é agregado e é excluída de qualquer soma/média de países para evitar dupla contagem.
+G20,CHN,China,Composição oficial do G20 (19 países + União Europeia). A UE é agregado e é excluída de qualquer soma/média de países para evitar dupla contagem.
+G20,FRA,França,Composição oficial do G20 (19 países + União Europeia). A UE é agregado e é excluída de qualquer soma/média de países para evitar dupla contagem.
+G20,DEU,Alemanha,Composição oficial do G20 (19 países + União Europeia). A UE é agregado e é excluída de qualquer soma/média de países para evitar dupla contagem.
+G20,IND,Índia,Composição oficial do G20 (19 países + União Europeia). A UE é agregado e é excluída de qualquer soma/média de países para evitar dupla contagem.
+G20,IDN,Indonésia,Composição oficial do G20 (19 países + União Europeia). A UE é agregado e é excluída de qualquer soma/média de países para evitar dupla contagem.
+G20,ITA,Itália,Composição oficial do G20 (19 países + União Europeia). A UE é agregado e é excluída de qualquer soma/média de países para evitar dupla contagem.
+G20,JPN,Japão,Composição oficial do G20 (19 países + União Europeia). A UE é agregado e é excluída de qualquer soma/média de países para evitar dupla contagem.
+G20,KOR,Coreia do Sul,Composição oficial do G20 (19 países + União Europeia). A UE é agregado e é excluída de qualquer soma/média de países para evitar dupla contagem.
+G20,MEX,México,Composição oficial do G20 (19 países + União Europeia). A UE é agregado e é excluída de qualquer soma/média de países para evitar dupla contagem.
+G20,RUS,Rússia,Composição oficial do G20 (19 países + União Europeia). A UE é agregado e é excluída de qualquer soma/média de países para evitar dupla contagem.
+G20,SAU,Arábia Saudita,Composição oficial do G20 (19 países + União Europeia). A UE é agregado e é excluída de qualquer soma/média de países para evitar dupla contagem.
+G20,ZAF,África do Sul,Composição oficial do G20 (19 países + União Europeia). A UE é agregado e é excluída de qualquer soma/média de países para evitar dupla contagem.
+G20,TUR,Turquia,Composição oficial do G20 (19 países + União Europeia). A UE é agregado e é excluída de qualquer soma/média de países para evitar dupla contagem.
+G20,GBR,Reino Unido,Composição oficial do G20 (19 países + União Europeia). A UE é agregado e é excluída de qualquer soma/média de países para evitar dupla contagem.
+G20,USA,Estados Unidos,Composição oficial do G20 (19 países + União Europeia). A UE é agregado e é excluída de qualquer soma/média de países para evitar dupla contagem.
+G20,EU,EU,Composição oficial do G20 (19 países + União Europeia). A UE é agregado e é excluída de qualquer soma/média de países para evitar dupla contagem.
+G7,CAN,Canadá,Composição oficial do G7; economias avançadas de referência.
+G7,FRA,França,Composição oficial do G7; economias avançadas de referência.
+G7,DEU,Alemanha,Composição oficial do G7; economias avançadas de referência.
+G7,ITA,Itália,Composição oficial do G7; economias avançadas de referência.
+G7,JPN,Japão,Composição oficial do G7; economias avançadas de referência.
+G7,GBR,Reino Unido,Composição oficial do G7; economias avançadas de referência.
+G7,USA,Estados Unidos,Composição oficial do G7; economias avançadas de referência.
+TOP10_NOMINAL,USA,Estados Unidos,"Métrica FIXA: PIB nominal em USD correntes, estimativa WEO de outubro/2025 para 2025. Inclui o Brasil (âncora). A métrica PPP é reportada apenas como variável (gdp_ppp_usd), nunca para redefinir o grupo."
+TOP10_NOMINAL,CHN,China,"Métrica FIXA: PIB nominal em USD correntes, estimativa WEO de outubro/2025 para 2025. Inclui o Brasil (âncora). A métrica PPP é reportada apenas como variável (gdp_ppp_usd), nunca para redefinir o grupo."
+TOP10_NOMINAL,DEU,Alemanha,"Métrica FIXA: PIB nominal em USD correntes, estimativa WEO de outubro/2025 para 2025. Inclui o Brasil (âncora). A métrica PPP é reportada apenas como variável (gdp_ppp_usd), nunca para redefinir o grupo."
+TOP10_NOMINAL,JPN,Japão,"Métrica FIXA: PIB nominal em USD correntes, estimativa WEO de outubro/2025 para 2025. Inclui o Brasil (âncora). A métrica PPP é reportada apenas como variável (gdp_ppp_usd), nunca para redefinir o grupo."
+TOP10_NOMINAL,IND,Índia,"Métrica FIXA: PIB nominal em USD correntes, estimativa WEO de outubro/2025 para 2025. Inclui o Brasil (âncora). A métrica PPP é reportada apenas como variável (gdp_ppp_usd), nunca para redefinir o grupo."
+TOP10_NOMINAL,GBR,Reino Unido,"Métrica FIXA: PIB nominal em USD correntes, estimativa WEO de outubro/2025 para 2025. Inclui o Brasil (âncora). A métrica PPP é reportada apenas como variável (gdp_ppp_usd), nunca para redefinir o grupo."
+TOP10_NOMINAL,FRA,França,"Métrica FIXA: PIB nominal em USD correntes, estimativa WEO de outubro/2025 para 2025. Inclui o Brasil (âncora). A métrica PPP é reportada apenas como variável (gdp_ppp_usd), nunca para redefinir o grupo."
+TOP10_NOMINAL,ITA,Itália,"Métrica FIXA: PIB nominal em USD correntes, estimativa WEO de outubro/2025 para 2025. Inclui o Brasil (âncora). A métrica PPP é reportada apenas como variável (gdp_ppp_usd), nunca para redefinir o grupo."
+TOP10_NOMINAL,BRA,Brasil,"Métrica FIXA: PIB nominal em USD correntes, estimativa WEO de outubro/2025 para 2025. Inclui o Brasil (âncora). A métrica PPP é reportada apenas como variável (gdp_ppp_usd), nunca para redefinir o grupo."
+TOP10_NOMINAL,CAN,Canadá,"Métrica FIXA: PIB nominal em USD correntes, estimativa WEO de outubro/2025 para 2025. Inclui o Brasil (âncora). A métrica PPP é reportada apenas como variável (gdp_ppp_usd), nunca para redefinir o grupo."
+LATAM6,BRA,Brasil,Seis maiores economias da América Latina por PIB nominal e cobertura consistente em GMD/WDI/WEO; bloco solicitado na especificação.
+LATAM6,MEX,México,Seis maiores economias da América Latina por PIB nominal e cobertura consistente em GMD/WDI/WEO; bloco solicitado na especificação.
+LATAM6,ARG,Argentina,Seis maiores economias da América Latina por PIB nominal e cobertura consistente em GMD/WDI/WEO; bloco solicitado na especificação.
+LATAM6,CHL,Chile,Seis maiores economias da América Latina por PIB nominal e cobertura consistente em GMD/WDI/WEO; bloco solicitado na especificação.
+LATAM6,COL,Colômbia,Seis maiores economias da América Latina por PIB nominal e cobertura consistente em GMD/WDI/WEO; bloco solicitado na especificação.
+LATAM6,PER,Peru,Seis maiores economias da América Latina por PIB nominal e cobertura consistente em GMD/WDI/WEO; bloco solicitado na especificação.
+EMERG_COMP,BRA,Brasil,"Países emergentes de renda média com PIB relevante, regimes monetários documentados e cobertura razoável desde 1980; grupo solicitado."
+EMERG_COMP,MEX,México,"Países emergentes de renda média com PIB relevante, regimes monetários documentados e cobertura razoável desde 1980; grupo solicitado."
+EMERG_COMP,IND,Índia,"Países emergentes de renda média com PIB relevante, regimes monetários documentados e cobertura razoável desde 1980; grupo solicitado."
+EMERG_COMP,IDN,Indonésia,"Países emergentes de renda média com PIB relevante, regimes monetários documentados e cobertura razoável desde 1980; grupo solicitado."
+EMERG_COMP,TUR,Turquia,"Países emergentes de renda média com PIB relevante, regimes monetários documentados e cobertura razoável desde 1980; grupo solicitado."
+EMERG_COMP,ZAF,África do Sul,"Países emergentes de renda média com PIB relevante, regimes monetários documentados e cobertura razoável desde 1980; grupo solicitado."
+ADVANCED,USA,Estados Unidos,Referência de fronteira tecnológica e de política monetária.
+ADVANCED,DEU,Alemanha,Referência de fronteira tecnológica e de política monetária.
+ADVANCED,GBR,Reino Unido,Referência de fronteira tecnológica e de política monetária.
+ADVANCED,JPN,Japão,Referência de fronteira tecnológica e de política monetária.
+ADVANCED,CAN,Canadá,Referência de fronteira tecnológica e de política monetária.
+ADVANCED,FRA,França,Referência de fronteira tecnológica e de política monetária.
+ADVANCED,ITA,Itália,Referência de fronteira tecnológica e de política monetária.
+ADVANCED,AUS,Austrália,Referência de fronteira tecnológica e de política monetária.
+ADVANCED,KOR,Coreia do Sul,Referência de fronteira tecnológica e de política monetária.
+QUARTERLY_CORE,BRA,Brasil,"Países com PIB trimestral encadeado e deflator/CPI trimestral estáveis em FRED/OCDE-MEI, IBGE e BCB. O núcleo mínimo solicitado (BRA, USA, DEU, GBR, JPN, CAN, MEX) é sempre preservado; os demais entram se cumprirem o critério de >= 60 trimestres."
+QUARTERLY_CORE,USA,Estados Unidos,"Países com PIB trimestral encadeado e deflator/CPI trimestral estáveis em FRED/OCDE-MEI, IBGE e BCB. O núcleo mínimo solicitado (BRA, USA, DEU, GBR, JPN, CAN, MEX) é sempre preservado; os demais entram se cumprirem o critério de >= 60 trimestres."
+QUARTERLY_CORE,DEU,Alemanha,"Países com PIB trimestral encadeado e deflator/CPI trimestral estáveis em FRED/OCDE-MEI, IBGE e BCB. O núcleo mínimo solicitado (BRA, USA, DEU, GBR, JPN, CAN, MEX) é sempre preservado; os demais entram se cumprirem o critério de >= 60 trimestres."
+QUARTERLY_CORE,GBR,Reino Unido,"Países com PIB trimestral encadeado e deflator/CPI trimestral estáveis em FRED/OCDE-MEI, IBGE e BCB. O núcleo mínimo solicitado (BRA, USA, DEU, GBR, JPN, CAN, MEX) é sempre preservado; os demais entram se cumprirem o critério de >= 60 trimestres."
+QUARTERLY_CORE,JPN,Japão,"Países com PIB trimestral encadeado e deflator/CPI trimestral estáveis em FRED/OCDE-MEI, IBGE e BCB. O núcleo mínimo solicitado (BRA, USA, DEU, GBR, JPN, CAN, MEX) é sempre preservado; os demais entram se cumprirem o critério de >= 60 trimestres."
+QUARTERLY_CORE,CAN,Canadá,"Países com PIB trimestral encadeado e deflator/CPI trimestral estáveis em FRED/OCDE-MEI, IBGE e BCB. O núcleo mínimo solicitado (BRA, USA, DEU, GBR, JPN, CAN, MEX) é sempre preservado; os demais entram se cumprirem o critério de >= 60 trimestres."
+QUARTERLY_CORE,MEX,México,"Países com PIB trimestral encadeado e deflator/CPI trimestral estáveis em FRED/OCDE-MEI, IBGE e BCB. O núcleo mínimo solicitado (BRA, USA, DEU, GBR, JPN, CAN, MEX) é sempre preservado; os demais entram se cumprirem o critério de >= 60 trimestres."
+QUARTERLY_CORE,AUS,Austrália,"Países com PIB trimestral encadeado e deflator/CPI trimestral estáveis em FRED/OCDE-MEI, IBGE e BCB. O núcleo mínimo solicitado (BRA, USA, DEU, GBR, JPN, CAN, MEX) é sempre preservado; os demais entram se cumprirem o critério de >= 60 trimestres."
+QUARTERLY_CORE,FRA,França,"Países com PIB trimestral encadeado e deflator/CPI trimestral estáveis em FRED/OCDE-MEI, IBGE e BCB. O núcleo mínimo solicitado (BRA, USA, DEU, GBR, JPN, CAN, MEX) é sempre preservado; os demais entram se cumprirem o critério de >= 60 trimestres."
+QUARTERLY_CORE,ITA,Itália,"Países com PIB trimestral encadeado e deflator/CPI trimestral estáveis em FRED/OCDE-MEI, IBGE e BCB. O núcleo mínimo solicitado (BRA, USA, DEU, GBR, JPN, CAN, MEX) é sempre preservado; os demais entram se cumprirem o critério de >= 60 trimestres."
+QUARTERLY_CORE,KOR,Coreia do Sul,"Países com PIB trimestral encadeado e deflator/CPI trimestral estáveis em FRED/OCDE-MEI, IBGE e BCB. O núcleo mínimo solicitado (BRA, USA, DEU, GBR, JPN, CAN, MEX) é sempre preservado; os demais entram se cumprirem o critério de >= 60 trimestres."
+QUARTERLY_CORE,ZAF,África do Sul,"Países com PIB trimestral encadeado e deflator/CPI trimestral estáveis em FRED/OCDE-MEI, IBGE e BCB. O núcleo mínimo solicitado (BRA, USA, DEU, GBR, JPN, CAN, MEX) é sempre preservado; os demais entram se cumprirem o critério de >= 60 trimestres."
+QUARTERLY_CORE,TUR,Turquia,"Países com PIB trimestral encadeado e deflator/CPI trimestral estáveis em FRED/OCDE-MEI, IBGE e BCB. O núcleo mínimo solicitado (BRA, USA, DEU, GBR, JPN, CAN, MEX) é sempre preservado; os demais entram se cumprirem o critério de >= 60 trimestres."
+QUARTERLY_CORE,IND,Índia,"Países com PIB trimestral encadeado e deflator/CPI trimestral estáveis em FRED/OCDE-MEI, IBGE e BCB. O núcleo mínimo solicitado (BRA, USA, DEU, GBR, JPN, CAN, MEX) é sempre preservado; os demais entram se cumprirem o critério de >= 60 trimestres."
+QUARTERLY_CORE,IDN,Indonésia,"Países com PIB trimestral encadeado e deflator/CPI trimestral estáveis em FRED/OCDE-MEI, IBGE e BCB. O núcleo mínimo solicitado (BRA, USA, DEU, GBR, JPN, CAN, MEX) é sempre preservado; os demais entram se cumprirem o critério de >= 60 trimestres."
+QUARTERLY_CORE,CHN,China,"Países com PIB trimestral encadeado e deflator/CPI trimestral estáveis em FRED/OCDE-MEI, IBGE e BCB. O núcleo mínimo solicitado (BRA, USA, DEU, GBR, JPN, CAN, MEX) é sempre preservado; os demais entram se cumprirem o critério de >= 60 trimestres."
+COMMODITY_EXPORTERS,BRA,Brasil,Para dummies de choque de commodities e termos de troca.
+COMMODITY_EXPORTERS,ARG,Argentina,Para dummies de choque de commodities e termos de troca.
+COMMODITY_EXPORTERS,CHL,Chile,Para dummies de choque de commodities e termos de troca.
+COMMODITY_EXPORTERS,COL,Colômbia,Para dummies de choque de commodities e termos de troca.
+COMMODITY_EXPORTERS,PER,Peru,Para dummies de choque de commodities e termos de troca.
+COMMODITY_EXPORTERS,RUS,Rússia,Para dummies de choque de commodities e termos de troca.
+COMMODITY_EXPORTERS,SAU,Arábia Saudita,Para dummies de choque de commodities e termos de troca.
+COMMODITY_EXPORTERS,ZAF,África do Sul,Para dummies de choque de commodities e termos de troca.
+COMMODITY_EXPORTERS,IDN,Indonésia,Para dummies de choque de commodities e termos de troca.
+COMMODITY_EXPORTERS,AUS,Austrália,Para dummies de choque de commodities e termos de troca.
+HIGH_INFLATION_HISTORY,BRA,Brasil,Países com inflação anual > 100% em algum momento pós-1960; justifica amostra DSGE pós-estabilização e dummies de hiperinflação/planos.
+HIGH_INFLATION_HISTORY,ARG,Argentina,Países com inflação anual > 100% em algum momento pós-1960; justifica amostra DSGE pós-estabilização e dummies de hiperinflação/planos.
+HIGH_INFLATION_HISTORY,PER,Peru,Países com inflação anual > 100% em algum momento pós-1960; justifica amostra DSGE pós-estabilização e dummies de hiperinflação/planos.
+HIGH_INFLATION_HISTORY,TUR,Turquia,Países com inflação anual > 100% em algum momento pós-1960; justifica amostra DSGE pós-estabilização e dummies de hiperinflação/planos.
+HIGH_INFLATION_HISTORY,RUS,Rússia,Países com inflação anual > 100% em algum momento pós-1960; justifica amostra DSGE pós-estabilização e dummies de hiperinflação/planos.
+IT_REGIME,BRA,Brasil,Regime explícito ou quasi-explícito de meta; usado para dummies monetárias e para definir a amostra de estimação. ARG entra apenas 2016–2018.
+IT_REGIME,MEX,México,Regime explícito ou quasi-explícito de meta; usado para dummies monetárias e para definir a amostra de estimação. ARG entra apenas 2016–2018.
+IT_REGIME,CHL,Chile,Regime explícito ou quasi-explícito de meta; usado para dummies monetárias e para definir a amostra de estimação. ARG entra apenas 2016–2018.
+IT_REGIME,COL,Colômbia,Regime explícito ou quasi-explícito de meta; usado para dummies monetárias e para definir a amostra de estimação. ARG entra apenas 2016–2018.
+IT_REGIME,PER,Peru,Regime explícito ou quasi-explícito de meta; usado para dummies monetárias e para definir a amostra de estimação. ARG entra apenas 2016–2018.
+IT_REGIME,ZAF,África do Sul,Regime explícito ou quasi-explícito de meta; usado para dummies monetárias e para definir a amostra de estimação. ARG entra apenas 2016–2018.
+IT_REGIME,TUR,Turquia,Regime explícito ou quasi-explícito de meta; usado para dummies monetárias e para definir a amostra de estimação. ARG entra apenas 2016–2018.
+IT_REGIME,IDN,Indonésia,Regime explícito ou quasi-explícito de meta; usado para dummies monetárias e para definir a amostra de estimação. ARG entra apenas 2016–2018.
+IT_REGIME,KOR,Coreia do Sul,Regime explícito ou quasi-explícito de meta; usado para dummies monetárias e para definir a amostra de estimação. ARG entra apenas 2016–2018.
+IT_REGIME,GBR,Reino Unido,Regime explícito ou quasi-explícito de meta; usado para dummies monetárias e para definir a amostra de estimação. ARG entra apenas 2016–2018.
+IT_REGIME,CAN,Canadá,Regime explícito ou quasi-explícito de meta; usado para dummies monetárias e para definir a amostra de estimação. ARG entra apenas 2016–2018.
+IT_REGIME,AUS,Austrália,Regime explícito ou quasi-explícito de meta; usado para dummies monetárias e para definir a amostra de estimação. ARG entra apenas 2016–2018.
+IT_REGIME,DEU,Alemanha,Regime explícito ou quasi-explícito de meta; usado para dummies monetárias e para definir a amostra de estimação. ARG entra apenas 2016–2018.
+IT_REGIME,FRA,França,Regime explícito ou quasi-explícito de meta; usado para dummies monetárias e para definir a amostra de estimação. ARG entra apenas 2016–2018.
+IT_REGIME,ITA,Itália,Regime explícito ou quasi-explícito de meta; usado para dummies monetárias e para definir a amostra de estimação. ARG entra apenas 2016–2018.
+IT_REGIME,EU,EU,Regime explícito ou quasi-explícito de meta; usado para dummies monetárias e para definir a amostra de estimação. ARG entra apenas 2016–2018.
+IT_REGIME,USA,Estados Unidos,Regime explícito ou quasi-explícito de meta; usado para dummies monetárias e para definir a amostra de estimação. ARG entra apenas 2016–2018.
+IT_REGIME,JPN,Japão,Regime explícito ou quasi-explícito de meta; usado para dummies monetárias e para definir a amostra de estimação. ARG entra apenas 2016–2018.
+IT_REGIME,IND,Índia,Regime explícito ou quasi-explícito de meta; usado para dummies monetárias e para definir a amostra de estimação. ARG entra apenas 2016–2018.
+IT_REGIME,ARG,Argentina,Regime explícito ou quasi-explícito de meta; usado para dummies monetárias e para definir a amostra de estimação. ARG entra apenas 2016–2018.

@@ -1,0 +1,13 @@
+{
+  "annual_rows": 101818,
+  "quarterly_rows": 19357,
+  "annual_countries": 24,
+  "quarterly_countries": 17,
+  "annual_variables": 89,
+  "quarterly_variables": 28,
+  "annual_start": "1960-12-31",
+  "annual_end": "2026-12-31",
+  "quarterly_start": "1995-03-31",
+  "quarterly_end": "2026-12-31",
+  "regime_dummies": 101
+}

@@ -1,0 +1,12 @@
+# Dataset macro cross-country — ambiente fixado (Python 3.14)
+pandas==2.3.3
+numpy==2.4.6
+scipy==1.16.2
+statsmodels==0.14.6
+matplotlib==3.10.8
+pyarrow==23.0.1
+PyYAML==6.0.3
+requests==2.33.1
+x13as==1.1.62.post1
+openpyxl==3.1.5
+pytest==9.2.0

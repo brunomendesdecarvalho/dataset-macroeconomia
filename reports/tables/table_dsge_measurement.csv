@@ -1,0 +1,12 @@
+﻿model,observable,source,transformation,model_variable,measurement_equation,shock,notes
+DSGE_S,output_gap,IBGE/FRED PIB trimestral SA -> HP(1600),100*(log y_t - log y*_t),x_t,"x_obs,t = 100*x_t + e_x,t",demanda,Hiato HP bicaudal; robustez com hiato unicaudal e funcao de producao no relatorio.
+DSGE_S,inflation,BCB IPCA mensal -> indice trimestral -> X-13 -> qoq SAAR,"400*dlog(CPI_SA,t)",pi_t,"pi_obs,t = 400*pi_t + e_pi,t",markup,Inflacao cheia; nucleo usado em robustez.
+DSGE_S,policy_rate,BCB Selic meta (media trimestral),taxa anual %,i_t,"i_obs,t = 400*i_t + e_i,t",monetario,"Taxa trimestral simples; erro de medida 0,10 p.p."
+DSGE_S,inflation_expectations,BCB Focus (IPCA 12m),media trimestral,E_t pi_{t+1},usada em r_t = i_t - E_t pi_{t+1},-,Nao entra como observavel na estimacao basica; usada no juro real ex ante.
+DSGE_M,output_gap,IBGE/FRED PIB trimestral SA -> HP(1600),100*(log y_t - log y*_t),x_t,"x_obs,t = 100*x_t",demanda,Mesmo hiato do modelo pequeno.
+DSGE_M,inflation,BCB IPCA -> X-13 -> qoq SAAR,"400*dlog(CPI_SA,t)",pi_t,"pi_obs,t = 400*pi_t",markup,Curva de Phillips hibrida.
+DSGE_M,policy_rate,BCB Selic meta,taxa anual %,i_t,"i_obs,t = 400*i_t",monetario,Regra de Taylor com suavizacao.
+DSGE_M,consumption_real,IBGE CNT 6612 (consumo das familias),100*HP(log C_t),c_t,"c_obs,t = 100*c_t",preferencia,Componente da demanda.
+DSGE_M,investment_real,IBGE CNT 6612 (FBCF),100*HP(log I_t),inv_t,"inv_obs,t = 100*inv_t",investimento,Demanda de investimento reduzida.
+DSGE_M,gov_exp_real,IBGE CNT 6612 (consumo do governo),100*HP(log G_t),g_t,"g_obs,t = 100*g_t",fiscal,Gasto publico real.
+DSGE_M,foreign_output,FRED GDPC1 (PIB EUA),100*HP(log Y*_t),ystar_t,"y*_obs,t = 100*ystar_t",externo,Proxy de demanda externa.

@@ -1,0 +1,7 @@
+﻿concept,primary,validation,tolerance,decision
+gdp_growth,GMD (derivado do PIB real),WEO NGDP_RPCH; WDI NY.GDP.MKTP.KD.ZG,1 p.p.,GMD é a espinha dorsal harmonizada; divergências > 1 p.p. sinalizadas e investigadas.
+inflation,BCB/IPCA (Brasil); GMD (demais),WEO PCPIPCH; WDI FP.CPI.TOTL.ZG,2 p.p.,Para o Brasil a IPCA é a medida oficial; GMD/WEO/WDI só validam.
+unemployment,GMD,WEO LUR; WDI SL.UEM.TOTL.ZS,1 p.p.,Definições nacionais diferem; GMD harmoniza; WDI (OIT) é a referência conceitual.
+gov_debt_gdp,GMD (dívida bruta),WEO GGXWDG_NGDP; WDI GC.DOD.TOTL.GD.ZS (governo central),5 p.p.,Perímetros diferentes (governo geral vs central); WDI não é usada como verdade.
+gdp_nominal_usd,GMD (nGDP/USDfx),WEO NGDPD; WDI NY.GDP.MKTP.CD,5%,Divergências cambiais explicam a maior parte; mantém-se o cálculo com câmbio médio do GMD.
+primary_balance,WEO pb (governo geral),"BCB SGS 5793 (governo central, Brasil)",2 p.p.,"Perímetros distintos; para o Brasil reportam-se ambos, sem substituição."

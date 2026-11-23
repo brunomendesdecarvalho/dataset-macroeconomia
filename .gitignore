@@ -1,0 +1,9 @@
+.venv/
+.cache/
+__pycache__/
+*.pyc
+.pytest_cache/
+.env
+reports/make_all.log
+data/raw/
+data/processed/macro_long.csv

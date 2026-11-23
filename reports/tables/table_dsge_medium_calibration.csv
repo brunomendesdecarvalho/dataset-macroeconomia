@@ -1,0 +1,36 @@
+﻿parameter,value,status
+beta,0.9925,calibrado
+sigma,1.5,calibrado
+a_x,0.5,calibrado
+theta_g,0.2,calibrado
+theta_y,0.1,calibrado
+bp,0.5,calibrado
+kappa,0.1,calibrado
+bw,0.5,calibrado
+kappa_w,0.1,calibrado
+sigma_c,1.5,calibrado
+phi,1.0,calibrado
+alpha,0.33,calibrado
+delta,0.025,calibrado
+a_i,0.5,calibrado
+kappa_x,0.3,calibrado
+kappa_r,0.1,calibrado
+rho,0.8,calibrado
+phi_pi,1.5,calibrado
+phi_x,0.125,calibrado
+c_y,0.6,calibrado
+i_y,0.2,calibrado
+g_y,0.2,calibrado
+rho_g,0.5,calibrado
+rho_y,0.5,calibrado
+rho_r,0.5,calibrado
+rho_a,0.5,calibrado
+sd_ed,0.0003015218419501,calibrado para casar volatilidades
+sd_epi,0.0035454126916362,calibrado para casar volatilidades
+sd_ew,0.003,calibrado
+sd_ei,2.93570972004696e-05,calibrado para casar volatilidades
+sd_eg,0.004,calibrado
+sd_ey,0.006,calibrado
+sd_er,0.003,calibrado
+sd_ea,0.004,calibrado
+sd_einv,0.006,calibrado

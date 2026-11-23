@@ -1,0 +1,13 @@
+cff-version: 1.2.0
+title: "Dataset macroeconômico cross-country — âncora Brasil (v1.0.0)"
+message: "Se usar este dataset, cite as fontes originais e este repositório."
+type: dataset
+version: 1.0.0
+date-released: 2026-11-23
+license: MIT
+keywords:
+  - macroeconomia
+  - cross-country
+  - Brasil
+  - DSGE
+  - dados

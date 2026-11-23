@@ -1,0 +1,271 @@
+# =============================================================================
+# Lista fechada de países e grupos — dataset macro cross-country (âncora: Brasil)
+# Versão: 1.0.0  |  Corte: 1960–2026 (anual) / 1996–2026 (trimestral)
+# =============================================================================
+# Regras:
+#  - A lista de países é FECHADA: só entram os 22 países abaixo + agregado UE.
+#  - O agregado "EU" (União Europeia) NÃO é país e é excluído de somas/médias
+#    cross-country para evitar dupla contagem (UE + Estados-membros).
+#  - Grupos são sobrepostos de propósito (um país pertence a vários grupos).
+#  - "quarterly": True somente se houver PIB trimestral com cobertura estável
+#    (>= 60 trimestres) em fonte oficial/FRED-OECD.
+# =============================================================================
+
+countries:
+  - iso3: ARG
+    name_pt: Argentina
+    name_en: Argentina
+    region: América Latina
+    income_group: Renda média-alta
+    currency: ARS
+    quarterly: true
+    notes: "Histórico de alta inflação; regime de metas 2016–2018; default 2001/2020."
+  - iso3: AUS
+    name_pt: Austrália
+    name_en: Australia
+    region: Ásia-Pacífico
+    income_group: Renda alta
+    currency: AUD
+    quarterly: true
+    notes: "Exportador de commodities; metas de inflação desde 1993."
+  - iso3: BRA
+    name_pt: Brasil
+    name_en: Brazil
+    region: América Latina
+    income_group: Renda média-alta
+    currency: BRL
+    quarterly: true
+    notes: "ÂNCORA. Metas de inflação desde jun/1999; câmbio flutuante desde jan/1999."
+  - iso3: CAN
+    name_pt: Canadá
+    name_en: Canada
+    region: América do Norte
+    income_group: Renda alta
+    currency: CAD
+    quarterly: true
+    notes: "Metas de inflação desde 1991."
+  - iso3: CHL
+    name_pt: Chile
+    name_en: Chile
+    region: América Latina
+    income_group: Renda alta
+    currency: CLP
+    quarterly: false
+    notes: "Metas de inflação desde 1999; economia pequena e aberta."
+  - iso3: CHN
+    name_pt: China
+    name_en: China
+    region: Ásia-Pacífico
+    income_group: Renda média-alta
+    currency: CNY
+    quarterly: false
+    notes: "Controles de capital; câmbio administrado; quebras metodológicas do PIB."
+  - iso3: COL
+    name_pt: Colômbia
+    name_en: Colombia
+    region: América Latina
+    income_group: Renda média-alta
+    currency: COP
+    quarterly: false
+    notes: "Metas de inflação desde 1999; crise de 1999."
+  - iso3: DEU
+    name_pt: Alemanha
+    name_en: Germany
+    region: Europa
+    income_group: Renda alta
+    currency: EUR
+    quarterly: true
+    notes: "Reunificação 1990; membro da área do euro desde 1999."
+  - iso3: FRA
+    name_pt: França
+    name_en: France
+    region: Europa
+    income_group: Renda alta
+    currency: EUR
+    quarterly: true
+    notes: "Membro da área do euro desde 1999."
+  - iso3: GBR
+    name_pt: Reino Unido
+    name_en: United Kingdom
+    region: Europa
+    income_group: Renda alta
+    currency: GBP
+    quarterly: true
+    notes: "Metas de inflação desde out/1992; Brexit 2016–2020."
+  - iso3: IDN
+    name_pt: Indonésia
+    name_en: Indonesia
+    region: Ásia-Pacífico
+    income_group: Renda média-alta
+    currency: IDR
+    quarterly: true
+    notes: "Crise asiática 1997–98; metas de inflação desde 2005."
+  - iso3: IND
+    name_pt: Índia
+    name_en: India
+    region: Ásia-Pacífico
+    income_group: Renda média-baixa
+    currency: INR
+    quarterly: false
+    notes: "Liberalização 1991; metas de inflação desde 2016; PIB anual com ano fiscal."
+  - iso3: ITA
+    name_pt: Itália
+    name_en: Italy
+    region: Europa
+    income_group: Renda alta
+    currency: EUR
+    quarterly: true
+    notes: "Membro da área do euro desde 1999."
+  - iso3: JPN
+    name_pt: Japão
+    name_en: Japan
+    region: Ásia-Pacífico
+    income_group: Renda alta
+    currency: JPY
+    quarterly: true
+    notes: "Bolha 1991; ZLB 1999–2006 e 2016–2024; Abenomics 2013."
+  - iso3: KOR
+    name_pt: Coreia do Sul
+    name_en: South Korea
+    region: Ásia-Pacífico
+    income_group: Renda alta
+    currency: KRW
+    quarterly: true
+    notes: "Crise asiática 1997–98; metas de inflação desde 1998."
+  - iso3: MEX
+    name_pt: México
+    name_en: Mexico
+    region: América Latina
+    income_group: Renda média-alta
+    currency: MXN
+    quarterly: true
+    notes: "Crise do tequila 1994–95; metas de inflação desde 2001."
+  - iso3: PER
+    name_pt: Peru
+    name_en: Peru
+    region: América Latina
+    income_group: Renda média-alta
+    currency: PEN
+    quarterly: false
+    notes: "Hiperinflação 1988–90; metas de inflação desde 2002."
+  - iso3: RUS
+    name_pt: Rússia
+    name_en: Russia
+    region: Europa/Ásia
+    income_group: Renda alta
+    currency: RUB
+    quarterly: false
+    notes: "Default 1998; sanções 2014; invasão da Ucrânia 2022."
+  - iso3: SAU
+    name_pt: Arábia Saudita
+    name_en: Saudi Arabia
+    region: Oriente Médio
+    income_group: Renda alta
+    currency: SAR
+    quarterly: true
+    notes: "Regime de câmbio fixo (peg ao USD); exportador de petróleo."
+  - iso3: TUR
+    name_pt: Turquia
+    name_en: Turkey
+    region: Europa/Ásia
+    income_group: Renda média-alta
+    currency: TRY
+    quarterly: true
+    notes: "Crise 2001; metas de inflação desde 2006; crise cambial 2018."
+  - iso3: USA
+    name_pt: Estados Unidos
+    name_en: United States
+    region: América do Norte
+    income_group: Renda alta
+    currency: USD
+    quarterly: true
+    notes: "Emissor da moeda de reserva; ZLB 2008–15 e 2020–22."
+  - iso3: ZAF
+    name_pt: África do Sul
+    name_en: South Africa
+    region: África
+    income_group: Renda média-alta
+    currency: ZAR
+    quarterly: true
+    notes: "Metas de inflação desde 2000; exportador de commodities."
+
+aggregates:
+  - iso3: EU
+    name_pt: União Europeia (agregado)
+    name_en: European Union (aggregate)
+    region: Europa
+    income_group: n/a
+    currency: EUR
+    quarterly: true
+    notes: "AGREGADO, não país. Incluído no G20; excluído de somas cross-country."
+
+# -----------------------------------------------------------------------------
+# Grupos (listas fechadas). A justificativa metodológica está em
+# docs/05_country_groups.md e é repetida aqui em uma linha.
+# -----------------------------------------------------------------------------
+groups:
+  BRICS:
+    name: BRICS (composição original)
+    members: [BRA, RUS, IND, CHN, ZAF]
+    justification: >-
+      Composição original do acrônimo (2001) e do bloco formal desde 2009.
+      A expansão de 2024 é deliberadamente excluída para manter a lista fechada
+      e comparável ao longo de todo o período; novos membros entram apenas se
+      já pertencerem a outro grupo do desenho.
+  G20:
+    name: G20 (países + UE)
+    members: [ARG, AUS, BRA, CAN, CHN, FRA, DEU, IND, IDN, ITA, JPN, KOR, MEX, RUS, SAU, ZAF, TUR, GBR, USA, EU]
+    justification: >-
+      Composição oficial do G20 (19 países + União Europeia). A UE é agregado e
+      é excluída de qualquer soma/média de países para evitar dupla contagem.
+  G7:
+    name: G7
+    members: [CAN, FRA, DEU, ITA, JPN, GBR, USA]
+    justification: "Composição oficial do G7; economias avançadas de referência."
+  TOP10_NOMINAL:
+    name: 10 maiores economias — PIB nominal USD (WEO out/2025)
+    members: [USA, CHN, DEU, JPN, IND, GBR, FRA, ITA, BRA, CAN]
+    justification: >-
+      Métrica FIXA: PIB nominal em USD correntes, estimativa WEO de outubro/2025
+      para 2025. Inclui o Brasil (âncora). A métrica PPP é reportada apenas como
+      variável (gdp_ppp_usd), nunca para redefinir o grupo.
+  LATAM6:
+    name: América Latina (6 maiores)
+    members: [BRA, MEX, ARG, CHL, COL, PER]
+    justification: >-
+      Seis maiores economias da América Latina por PIB nominal e cobertura
+      consistente em GMD/WDI/WEO; bloco solicitado na especificação.
+  EMERG_COMP:
+    name: Emergentes comparáveis
+    members: [BRA, MEX, IND, IDN, TUR, ZAF]
+    justification: >-
+      Países emergentes de renda média com PIB relevante, regimes monetários
+      documentados e cobertura razoável desde 1980; grupo solicitado.
+  ADVANCED:
+    name: Economias avançadas
+    members: [USA, DEU, GBR, JPN, CAN, FRA, ITA, AUS, KOR]
+    justification: "Referência de fronteira tecnológica e de política monetária."
+  QUARTERLY_CORE:
+    name: Núcleo trimestral
+    members: [BRA, USA, DEU, GBR, JPN, CAN, MEX, AUS, FRA, ITA, KOR, ZAF, TUR, IND, IDN, CHN]
+    justification: >-
+      Países com PIB trimestral encadeado e deflator/CPI trimestral estáveis em
+      FRED/OCDE-MEI, IBGE e BCB. O núcleo mínimo solicitado (BRA, USA, DEU, GBR,
+      JPN, CAN, MEX) é sempre preservado; os demais entram se cumprirem o
+      critério de >= 60 trimestres.
+  COMMODITY_EXPORTERS:
+    name: Exportadores de commodities
+    members: [BRA, ARG, CHL, COL, PER, RUS, SAU, ZAF, IDN, AUS]
+    justification: "Para dummies de choque de commodities e termos de troca."
+  HIGH_INFLATION_HISTORY:
+    name: Histórico de alta inflação
+    members: [BRA, ARG, PER, TUR, RUS]
+    justification: >-
+      Países com inflação anual > 100% em algum momento pós-1960; justifica
+      amostra DSGE pós-estabilização e dummies de hiperinflação/planos.
+  IT_REGIME:
+    name: Regime de metas de inflação (datas em regimes.yml)
+    members: [BRA, MEX, CHL, COL, PER, ZAF, TUR, IDN, KOR, GBR, CAN, AUS, DEU, FRA, ITA, EU, USA, JPN, IND, ARG]
+    justification: >-
+      Regime explícito ou quasi-explícito de meta; usado para dummies monetárias
+      e para definir a amostra de estimação. ARG entra apenas 2016–2018.

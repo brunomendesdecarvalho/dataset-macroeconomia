@@ -1,0 +1,10 @@
+shock,observable,share
+demanda,output_gap,0.19676559966956925
+demanda,inflation,0.012474873421047632
+demanda,policy_rate,0.0359989546804577
+markup,output_gap,0.07271052779345775
+markup,inflation,0.4422572856448925
+markup,policy_rate,0.23255741955035658
+monetario,output_gap,0.7335507773758622
+monetario,inflation,0.5433278758370882
+monetario,policy_rate,0.7412592262949552

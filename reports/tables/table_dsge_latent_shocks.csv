@@ -1,0 +1,17 @@
+﻿tipo,nome,descricao,observaveis_identificadores,papel_no_modelo,risco_identificacao
+latente,PIB potencial,tendencia nao observada do produto,output_gap; inflacao; juros,y*_t,Filtro HP impoe tendencia suave e viés de fim de amostra.
+latente,Hiato do produto,x_t = 100*(log y - log y*),output_gap,estado,Construcao por HP gera erro de medida e look-ahead.
+latente,Taxa neutra r*,juro real de equilibrio,juro real ex ante; juros; inflacao,r*_t,Proxy por HP do juro real ex ante; nao e estimativa estrutural.
+latente,Desemprego natural u_n,desemprego de equilibrio,desemprego; inflacao,u_n,Sem Curva de Phillips com desemprego na estimacao; usado em modelos reduzidos.
+latente,Capital,estoque de capital,investimento; PIB,k_t,PWT termina em 2019; extrapolacao nao usada.
+latente,Salario real,w_t,salario real; inflacao; produtividade,w_t,Dados trimestrais de salario ausentes para o Brasil; calibrado.
+latente,Markup,margem de precos,inflacao; custo marginal,mc_t,Nao observado diretamente; identificado pelo choque de markup.
+latente,Expectativas,E_t pi_{t+1},Focus; inflacao realizada,expectativas,"Survey Focus cobre 12m a frente, nao o horizonte de 1 trimestre."
+choque,Tecnologia,a_t,PIB; investimento; produtividade,a_t,PWT anual; sem proxy trimestral confiavel.
+choque,Preferencia,demanda,hiato; consumo,ed_t,Choque composto de demanda; nao separa consumo publico/privado.
+choque,Politica monetaria,ei_t,Selic; hiato; inflacao,ei_t,Regra de Taylor com erro; risco de contaminacao por regime.
+choque,Politica fiscal,eg_t,gasto; divida; PIB,eg_t,Gasto total vs consumo do governo; perimetro fiscal.
+choque,Markup,epi_t,inflacao; custo marginal,epi_t,Pode capturar choques de commodities e cambio.
+choque,Premio de risco,er_t,spread; cambio; juros,rp_t,Spread brasileiro sem serie trimestral harmonizada.
+choque,Externo,ey_t,PIB mundial; exportacoes,ystar_t,Proxy por PIB dos EUA; nao e demanda externa ponderada.
+choque,Oferta de trabalho,ew_t,emprego; salario; inflacao,ew_t,Sem horas trimestrais para o Brasil.
