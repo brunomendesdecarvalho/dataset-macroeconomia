@@ -7,3 +7,6 @@ __pycache__/
 reports/make_all.log
 data/raw/
 data/processed/macro_long.csv
+
+# lockfiles de editores
+.~lock.*#

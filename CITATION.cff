@@ -12,9 +12,8 @@ type: dataset
 version: 2.0.0
 date-released: 2026-11-23
 license: CC-BY-4.0
-doi: "[DOI]"
-url: "[URL]"
-repository-code: "[URL do repositório]"
+url: "https://github.com/brunomendesdecarvalho/dataset-macroeconomia"
+repository-code: "https://github.com/brunomendesdecarvalho/dataset-macroeconomia"
 keywords:
   - macroeconomia
   - cross-country
@@ -28,7 +27,7 @@ keywords:
   - financiarização
   - ecologia
 authors:
-  - family-names: "[Sobrenome]"
-    given-names: "[Nome]"
-    affiliation: "[Instituição]"
-    orcid: "[ORCID]"
+  - family-names: "Castelo Branco"
+    given-names: "Bruno Mendes de Carvalho"
+    affiliation: "Universidade Federal do Piauí (UFPI)"
+    orcid: "https://orcid.org/0009-0005-8188-9001"

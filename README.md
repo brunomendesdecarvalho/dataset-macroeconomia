@@ -90,26 +90,31 @@ make test       # pytest
 - `data/processed/refactor_timing.json` registra o início e a duração da Etapa 3.
 - Versões fixadas em `requirements.txt`.
 
+## Autoria e afiliação
+
+**Bruno Mendes de Carvalho Castelo Branco** — projeto independente. Doutorando na Universidade Federal do Piauí (UFPI); este dataset não faz parte da pesquisa de doutorado. ORCID: https://orcid.org/0009-0005-8188-9001.
+
 ## Como citar
 
 ### BibTeX
 
 ```bibtex
-@dataset{macroeconomia_brasil_2026,
-  author       = {[Sobrenome, Nome]},
+@dataset{castelo_branco_macrodata_2026,
+  author       = {Castelo Branco, Bruno Mendes de Carvalho},
   title        = {MacroData Brasil: dataset macroeconômico cross-country com variáveis heterodoxas e baseline SVAR},
-  year         = {[Ano]},
-  publisher    = {Zenodo},
+  year         = {2026},
+  publisher    = {GitHub},
   version      = {2.0.0},
-  doi          = {[DOI]},
-  url          = {[URL]},
+  url          = {https://github.com/brunomendesdecarvalho/dataset-macroeconomia},
   license      = {CC-BY-4.0}
 }
 ```
 
 ### APA
 
-[Sobrenome, Nome]. ([Ano]). *MacroData Brasil: dataset macroeconômico cross-country com variáveis heterodoxas e baseline SVAR* (Versão 2.0.0) [Data set]. Zenodo. https://doi.org/[DOI]
+Castelo Branco, B. M. de C. (2026). *MacroData Brasil: dataset macroeconômico cross-country com variáveis heterodoxas e baseline SVAR* (Versão 2.0.0) [Data set]. GitHub. https://github.com/brunomendesdecarvalho/dataset-macroeconomia
+
+O DOI será adicionado a este README e ao `CITATION.cff` após a primeira release no Zenodo.
 
 ## Licenças
 
