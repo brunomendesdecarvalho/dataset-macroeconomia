@@ -1,4 +1,4 @@
-# Codebook — dataset macroeconômico cross-country (v2.0.0)
+# Codebook — dataset macroeconômico cross-country (v1.0.0)
 
 Extração: **2026-11-23T18:27:25Z**. Âncora: **Brasil**. Anual 1960–2026; trimestral 1995T1–2026T4.
 

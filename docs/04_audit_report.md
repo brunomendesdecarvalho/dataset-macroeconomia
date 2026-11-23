@@ -1,4 +1,4 @@
-# Relatório de auditoria e validação — v2.0.0
+# Relatório de auditoria e validação — v1.0.0
 
 **Dataset:** macroeconômico cross-country, âncora Brasil · **Extração:** 2026-11-23
 **Escopo:** 22 países + `EU` (agregado) + `WLD` (PIB mundial) · anual 1960–2026 · trimestral 1995T1–2026T4

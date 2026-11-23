@@ -1,6 +1,6 @@
 # MacroData Brasil — dataset macroeconômico cross-country com variáveis heterodoxas e baseline SVAR
 
-**Versão 2.0.0** · **Início da execução:** 2026-11-23T18:13:37Z (15:13:37 −03) · **Duração total:** `03h33min26s`
+**Versão 1.0.0** · **Início da execução:** 2026-11-23T18:13:37Z (15:13:37 −03) · **Duração total:** `03h33min26s`
 
 ## Resumo
 
@@ -104,7 +104,7 @@ make test       # pytest
   title        = {MacroData Brasil: dataset macroeconômico cross-country com variáveis heterodoxas e baseline SVAR},
   year         = {2026},
   publisher    = {Zenodo},
-  version      = {2.0.0},
+  version      = {1.0.0},
   doi          = {10.5281/zenodo.24480760},
   url          = {https://doi.org/10.5281/zenodo.24480760},
   license      = {CC-BY-4.0}
@@ -113,7 +113,7 @@ make test       # pytest
 
 ### APA
 
-CASTELO BRANCO, Bruno Mendes de Carvalho. (2026). *MacroData Brasil: dataset macroeconômico cross-country com variáveis heterodoxas e baseline SVAR* (Versão 2.0.0) [Data set]. Zenodo. https://doi.org/10.5281/zenodo.24480760
+CASTELO BRANCO, Bruno Mendes de Carvalho. (2026). *MacroData Brasil: dataset macroeconômico cross-country com variáveis heterodoxas e baseline SVAR* (Versão 1.0.0) [Data set]. Zenodo. https://doi.org/10.5281/zenodo.24480760
 
 ## Licenças
 

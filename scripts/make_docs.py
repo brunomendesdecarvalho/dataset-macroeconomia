@@ -58,7 +58,7 @@ def codebook() -> None:
     blocks = blocks.merge(obs, on=["block", "freq"], how="left")
 
     lines = [
-        "# Codebook — dataset macroeconômico cross-country (v2.0.0)",
+        "# Codebook — dataset macroeconômico cross-country (v1.0.0)",
         "",
         f"Extração: **{ext}**. Âncora: **Brasil**. "
         f"Anual {settings.ANNUAL_START}–{settings.ANNUAL_END}; trimestral 1995T1–2026T4.",

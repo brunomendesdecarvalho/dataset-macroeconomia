@@ -1,4 +1,4 @@
-# Proposta e escopo — dataset macroeconômico cross-country v2.0.0
+# Proposta e escopo — dataset macroeconômico cross-country v1.0.0
 
 **Extração:** 2026-11-23 · **Âncora:** Brasil · **Anual:** 1960–2026 · **Trimestral:** 1995T1–2026T4
 

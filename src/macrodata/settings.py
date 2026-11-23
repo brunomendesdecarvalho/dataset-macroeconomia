@@ -23,7 +23,7 @@ for _p in (RAW, PROCESSED, REPORTS, FIGURES, TABLES, DOCS, RAW / "gmd", RAW / "w
            RAW / "weo", RAW / "pwt", RAW / "fred", RAW / "bcb", RAW / "ibge", RAW / "focus"):
     _p.mkdir(parents=True, exist_ok=True)
 
-VERSION = "2.0.0"
+VERSION = "1.0.0"
 ANNUAL_START = 1960
 ANNUAL_END = 2026          # 2026 = ano em curso; marcado como preliminar
 ANNUAL_ACTUAL_END = 2025   # última observação anual consolidada

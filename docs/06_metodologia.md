@@ -1,4 +1,4 @@
-# Metodologia, harmonização e tratamento — v2.0.0
+# Metodologia, harmonização e tratamento — v1.0.0
 
 **Extração:** 2026-11-23 · cache em `data/raw/` · manifesto com SHA-256 em `data/processed/manifest.json`.
 
