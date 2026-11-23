@@ -1,4 +1,4 @@
-iso3,country,period,date,commodity_price_index,consumption_real,core_inflation,exchange_rate_nominal,exports_real,foreign_output,foreign_policy_rate,gdp_deflator,gdp_nominal,gdp_real,gdp_real_growth,gov_exp_real,imports_real,inflation,inflation_expectations,investment_real,long_rate,oil_price,output_gap,policy_rate,potential_gdp,primary_balance_brl,primary_balance_gdp,real_rate_ex_ante,reer,short_rate,unemployment,vix
+iso3,country,quarter,date,commodity_price_index,consumption_real,core_inflation,exchange_rate_nominal,exports_real,foreign_output,foreign_policy_rate,gdp_deflator,gdp_nominal,gdp_real,gdp_real_growth,gov_exp_real,imports_real,inflation,inflation_expectations,investment_real,long_rate,oil_price,output_gap,policy_rate,potential_gdp,primary_balance_brl,primary_balance_gdp,real_rate_ex_ante,reer,short_rate,unemployment,vix
 ARG,Argentina,1995Q1,1995-03-31,,,,,,,,,,,,,,,,,,,,,,,,,431.84,,,
 ARG,Argentina,1995Q2,1995-06-30,,,,,,,,,,,,,,,,,,,,,,,,,416.98333333333335,,,
 ARG,Argentina,1995Q3,1995-09-30,,,,,,,,,,,,,,,,,,,,,,,,,417.6233333333333,,,

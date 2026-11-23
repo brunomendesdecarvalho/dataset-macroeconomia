@@ -27,6 +27,6 @@ def test_wide_files_exist():
     a = pd.read_csv(settings.DATA / "exports" / "macro_anual_wide.csv", nrows=5)
     q = pd.read_csv(settings.DATA / "exports" / "macro_trimestral_wide.csv", nrows=5)
     assert {"iso3", "country", "year", "date"}.issubset(a.columns)
-    assert {"iso3", "country", "period", "date"}.issubset(q.columns)
+    assert {"iso3", "country", "quarter", "date"}.issubset(q.columns)
     assert "gini_index" in a.columns
     assert "co2_per_capita" in a.columns

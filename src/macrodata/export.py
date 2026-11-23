@@ -49,6 +49,7 @@ def build_frames(a: pd.DataFrame, q: pd.DataFrame):
     q = q.sort_values(["iso3", "period", "variable"])
     wa = _wide(a, ["iso3", "country", "year", "date"])
     wq = _wide(q, ["iso3", "country", "period", "date"])
+    wq = wq.rename(columns={"period": "quarter"})
     wa["date"] = pd.to_datetime(wa["date"]).dt.strftime("%Y-%m-%d")
     wq["date"] = pd.to_datetime(wq["date"]).dt.strftime("%Y-%m-%d")
 

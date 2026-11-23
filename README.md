@@ -1,6 +1,6 @@
 # MacroData Brasil — dataset macroeconômico cross-country com variáveis heterodoxas e baseline SVAR
 
-**Versão 2.0.0** · **Início da execução:** 2026-11-23T18:13:37Z (15:13:37 −03) · **Duração total:** `03h32min17s`
+**Versão 2.0.0** · **Início da execução:** 2026-11-23T18:13:37Z (15:13:37 −03) · **Duração total:** `03h33min26s`
 
 ## Resumo
 
@@ -21,7 +21,7 @@ O dataset é _research-ready_: inclui codebook, manifesto de proveniência com S
 |---|---|
 | [data/exports/macro_dataset_consolidado.xlsx](data/exports/macro_dataset_consolidado.xlsx) | **Planilha única**: `Anual_Wide`, `Trimestral_Wide`, `Regimes_Anual`, `Codebook_Fontes`; cabeçalho congelado e autofiltro. |
 | [data/exports/macro_anual_wide.csv](data/exports/macro_anual_wide.csv) | Wide anual: uma linha por `(iso3, country, year, date)`, todas as variáveis. |
-| [data/exports/macro_trimestral_wide.csv](data/exports/macro_trimestral_wide.csv) | Wide trimestral: uma linha por `(iso3, country, period, date)`. |
+| [data/exports/macro_trimestral_wide.csv](data/exports/macro_trimestral_wide.csv) | Wide trimestral: uma linha por `(iso3, country, quarter, date)`. |
 | [data/exports/macro_todos_dados_long.csv](data/exports/macro_todos_dados_long.csv) | Long único: `freq, iso3, country, date, period, variable, block, value, unit, source, source_code, quality_flag, is_forecast, regime_dummy`. |
 | [data/processed/macro_long.parquet](data/processed/macro_long.parquet) | Dataset interno completo (anual + trimestral). |
 | [docs/01_codebook.md](docs/01_codebook.md) | Codebook, dicionário de campos, blocos, fontes e lacunas. |
@@ -68,8 +68,8 @@ O dataset é _research-ready_: inclui codebook, manifesto de proveniência com S
 |---|---|
 | Etapa 1 — Construção inicial crua (coleta, harmonização, auditoria e protótipo DSGE) | `2h28min38s` |
 | Etapa 2 — Macroeconometria empírica (SVAR, Projeções Locais, Taylor e Phillips) | `10min36s` |
-| Etapa 3 — Refinamento pela literatura via LeapSpace (remoção do DSGE, 4 blocos heterodoxos, exportação consolidada e documentação) | `00h53min03s` |
-| **Total** | **`03h32min17s`** |
+| Etapa 3 — Refinamento pela literatura via LeapSpace (remoção do DSGE, 4 blocos heterodoxos, exportação consolidada e documentação) | `00h54min12s` |
+| **Total** | **`03h33min26s`** |
 
 A Etapa 3 foi medida a partir do timestamp `2026-11-23T18:13:37Z`; o cálculo usa o relógio do sistema e está registrado em `data/processed/refactor_timing.json`.
 
