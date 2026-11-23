@@ -103,18 +103,17 @@ make test       # pytest
   author       = {CASTELO BRANCO, Bruno Mendes de Carvalho},
   title        = {MacroData Brasil: dataset macroeconômico cross-country com variáveis heterodoxas e baseline SVAR},
   year         = {2026},
-  publisher    = {GitHub},
+  publisher    = {Zenodo},
   version      = {2.0.0},
-  url          = {https://github.com/brunomendesdecarvalho/dataset-macroeconomia},
+  doi          = {10.5281/zenodo.24480760},
+  url          = {https://doi.org/10.5281/zenodo.24480760},
   license      = {CC-BY-4.0}
 }
 ```
 
 ### APA
 
-CASTELO BRANCO, Bruno Mendes de Carvalho. (2026). *MacroData Brasil: dataset macroeconômico cross-country com variáveis heterodoxas e baseline SVAR* (Versão 2.0.0) [Data set]. GitHub. https://github.com/brunomendesdecarvalho/dataset-macroeconomia
-
-O DOI será adicionado a este README e ao `CITATION.cff` após a primeira release no Zenodo.
+CASTELO BRANCO, Bruno Mendes de Carvalho. (2026). *MacroData Brasil: dataset macroeconômico cross-country com variáveis heterodoxas e baseline SVAR* (Versão 2.0.0) [Data set]. Zenodo. https://doi.org/10.5281/zenodo.24480760
 
 ## Licenças
 
