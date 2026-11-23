@@ -6,13 +6,13 @@ Extração: **2026-11-23T16:43:19Z**. Âncora: **Brasil**. Anual 1960–2026; tr
 
 | Arquivo | Grão | Linhas | Uso |
 |---|---|---|---|
-| `data/processed/macro_long.parquet` | país × data × variável | 121.175 | dataset longo completo (anual + trimestral) |
-| `data/processed/macro_annual_long.parquet` | país × ano × variável | 101.818 | painel anual |
-| `data/processed/macro_quarterly_long.parquet` | país × trimestre × variável | 19.357 | subamostra trimestral |
+| `data/processed/macro_long.parquet` | país × data × variável | 121,175 | dataset longo completo (anual + trimestral) |
+| `data/processed/macro_annual_long.parquet` | país × ano × variável | 101,818 | painel anual |
+| `data/processed/macro_quarterly_long.parquet` | país × trimestre × variável | 19,357 | subamostra trimestral |
 | `data/processed/wide/annual/{ISO3}.csv` | data × variável | 22+2 países | série wide por país |
 | `data/processed/wide/quarterly/{ISO3}.csv` | data × variável | 16 países | série wide trimestral |
-| `data/processed/regime_matrix_annual.csv` | país × ano × dummy | 1.474 × 99 | matriz 0/1 de regimes |
-| `data/processed/regime_matrix_quarterly.csv` | país × trimestre × dummy | 2.048 × 95 | matriz 0/1 trimestral |
+| `data/processed/regime_matrix_annual.csv` | país × ano × dummy | 1,474 × 101 | matriz 0/1 de regimes |
+| `data/processed/regime_matrix_quarterly.csv` | país × trimestre × dummy | 2,048 × 97 | matriz 0/1 trimestral |
 | `data/processed/coverage_matrix_annual.csv` | variável × país | 89 × 24 | % de cobertura |
 | `data/processed/coverage_panel_annual.csv` | país × variável × ano | 131.538 | matriz 0/1 de presença |
 
@@ -55,7 +55,8 @@ Extração: **2026-11-23T16:43:19Z**. Âncora: **Brasil**. Anual 1960–2026; tr
 - **Câmbio nominal**: unidades de moeda local por 1 USD (aumento = depreciação). Para EUR/GBP/AUD, a série do FRED (USD por LC) foi invertida.
 - **Deflator**: `gdp_deflator` tem base igual ao ano-base do PIB real do país (identidade nominal = real × deflator/100). `gdp_deflator_2010` é a versão 2010=100 para comparação.
 - **Juros**: % a.a. no anual; % a.a. no trimestral (média do período). A taxa trimestral usada no DSGE é i/4.
-- **Inflação**: % a.a. (variação 12 meses). No trimestral, a inflação brasileira é calculada do IPCA mensal; a dos demais países vem do OECD-MEI.
+- **Inflação**: % a.a. (variação 12 meses). No Brasil, `inflation` anual e trimestral vem do IPCA (BCB/IBGE), não do GMD; nos demais países, do GMD/OECD-MEI.
+- **Spread de crédito**: não há série trimestral harmonizada; a variável foi removida do dataset e a lacuna está registrada na auditoria.
 - **PIB real**: milhões de LC a preços constantes; a base varia por país. Não comparar níveis entre países sem `gdp_real_usd`.
 - **PPPs**: `gdp_ppp_usd` em milhões de int$ (WEO PPPGDP × 1000).
 - **Forecast**: 2026 é ano em curso (preliminary); 2027+ não entra. Projeções WEO/GMD para 2026 são marcadas.

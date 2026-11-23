@@ -25,7 +25,7 @@ OBS = ["x", "pi", "i", "c", "inv", "g"]
 CALIB = dict(
     beta=0.9925, sigma=1.5, a_x=0.50, theta_g=0.20, theta_y=0.10,
     bp=0.50, kappa=0.10, bw=0.50, kappa_w=0.10, sigma_c=1.5, phi=1.0,
-    alpha=0.33, delta=0.025, a_i=0.50, kappa_x=0.30, kappa_r=0.10,
+    alpha=0.33, delta=0.025, kappa_x=0.30, kappa_r=0.10,
     rho=0.80, phi_pi=1.50, phi_x=0.125,
     c_y=0.60, i_y=0.20, g_y=0.20,
     rho_g=0.50, rho_y=0.50, rho_r=0.50, rho_a=0.50,
