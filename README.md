@@ -118,6 +118,6 @@ O DOI será adicionado a este README e ao `CITATION.cff` após a primeira releas
 
 ## Licenças
 
-- **Dados:** CC-BY-4.0, preservando as licenças das fontes originais (GMD/WDI/PWT CC BY 4.0; FRED/OCDE/BIS/FMI/BCB/IBGE conforme termos).
-- **Código:** MIT.
+- **Código:** MIT — ver [LICENSE](LICENSE).
+- **Dados:** CC-BY-4.0, preservando as licenças das fontes originais (GMD/WDI/PWT CC BY 4.0; FRED/OCDE/BIS/FMI/BCB/IBGE conforme termos) — ver [LICENSE-DATA.md](LICENSE-DATA.md).
 - **Citação:** `CITATION.cff` na raiz, compatível com GitHub/Zenodo.
